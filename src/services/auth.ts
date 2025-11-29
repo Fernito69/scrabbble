@@ -1,23 +1,21 @@
+import { auth } from '@/config/firebase';
 import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
+  GoogleAuthProvider,
   User,
   UserCredential,
-  GoogleAuthProvider,
+  onAuthStateChanged,
   signInWithPopup,
+  signOut
 } from 'firebase/auth';
-import { auth } from '@/config/firebase';
 
 export const authService = {
-  signUp: (email: string, password: string): Promise<UserCredential> => {
-    return createUserWithEmailAndPassword(auth, email, password);
-  },
+  // signUp: (email: string, password: string): Promise<UserCredential> => {
+  //   return createUserWithEmailAndPassword(auth, email, password);
+  // },
 
-  signIn: (email: string, password: string): Promise<UserCredential> => {
-    return signInWithEmailAndPassword(auth, email, password);
-  },
+  // signIn: (email: string, password: string): Promise<UserCredential> => {
+  //   return signInWithEmailAndPassword(auth, email, password);
+  // },
 
   signInWithGoogle: (): Promise<UserCredential> => {
     const provider = new GoogleAuthProvider();

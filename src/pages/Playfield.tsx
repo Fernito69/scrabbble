@@ -1,6 +1,11 @@
-import { useAuth } from '@/contexts/AuthContext';
-import { authService } from '@/services/auth';
-import { useNavigate } from 'react-router-dom';
+import { Switch } from "@/components/ui";
+import { useAuth } from "@/contexts/AuthContext";
+import { authService } from "@/services/auth";
+import {
+  useGetUserConfig,
+  useUpdateUserConfig,
+} from "@/services/collections/userConfig/userConfig.hook";
+import { useNavigate } from "react-router-dom";
 
 export const Playfield = () => {
   const { user } = useAuth();
@@ -9,11 +14,24 @@ export const Playfield = () => {
   const handleSignOut = async () => {
     try {
       await authService.signOut();
-      navigate('/login');
+      navigate("/login");
     } catch (err) {
-      console.error('Failed to sign out:', err);
+      console.error("Failed to sign out:", err);
     }
   };
+
+  const handleUpdateTheme = async () => {
+    try {
+      const theme =
+        !userConfig?.theme || userConfig.theme === "light" ? "dark" : "light";
+      await updateUserConfig({ ...userConfig, theme });
+    } catch (err) {
+      console.error("Failed to update user config:", err);
+    }
+  };
+
+  const userConfig = useGetUserConfig();
+  const updateUserConfig = useUpdateUserConfig();
 
   return (
     <div className="min-h-screen bg-background p-8">
@@ -21,9 +39,7 @@ export const Playfield = () => {
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold">Playfield</h1>
-            <p className="text-muted-foreground mt-1">
-              Welcome, {user?.email}
-            </p>
+            <p className="text-muted-foreground mt-1">Welcome, {user?.email}</p>
           </div>
           <button
             onClick={handleSignOut}
@@ -31,6 +47,11 @@ export const Playfield = () => {
           >
             Sign Out
           </button>
+          <Switch
+            checked={userConfig?.theme === "dark"}
+            onCheckedChange={handleUpdateTheme}
+          />
+          CURRENT USER CONFIG: {JSON.stringify(userConfig, null, 2)}
         </div>
 
         <div className="border-2 border-dashed border-border rounded-lg p-12 text-center">

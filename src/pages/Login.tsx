@@ -1,39 +1,37 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { authService } from '@/services/auth';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { authService } from "@/services/auth";
 
 export const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   setError('');
+  //   setLoading(true);
 
-    try {
-      await authService.signIn(email, password);
-      navigate('/');
-    } catch (err) {
-      setError('Failed to sign in. Please check your credentials.');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  //   try {
+  //     await authService.signIn(email, password);
+  //     navigate('/');
+  //   } catch (err) {
+  //     setError('Failed to sign in. Please check your credentials.');
+  //     console.error(err);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const handleGoogleSignIn = async () => {
-    setError('');
+    setError("");
     setLoading(true);
 
     try {
       await authService.signInWithGoogle();
-      navigate('/');
+      navigate("/");
     } catch (err) {
-      setError('Failed to sign in with Google.');
+      setError("Failed to sign in with Google.");
       console.error(err);
     } finally {
       setLoading(false);
@@ -48,14 +46,16 @@ export const Login = () => {
           {/* <p className="text-muted-foreground mt-2">Sign in to continue</p> */}
         </div>
 
-        {/* <form onSubmit={handleSubmit} className="space-y-4">
-          {error && (
-            <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
-              {error}
-            </div>
-          )} */}
+        {error && (
+          <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
+            {error}
+          </div>
+        )}
 
-          {/* <div className="space-y-2">
+        {/* <form onSubmit={handleSubmit} className="space-y-4">
+         */}
+
+        {/* <div className="space-y-2">
             <label htmlFor="emaFil" className="text-sm font-medium">
               Email
             </label>
@@ -85,7 +85,7 @@ export const Login = () => {
             />
           </div> */}
 
-          {/* <button
+        {/* <button
             type="submit"
             disabled={loading}
             className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
