@@ -1,5 +1,6 @@
 import { db } from "@/config/firebase";
 import { authService } from "@/services/auth";
+import { initLanguageTemplate } from "@/services/collections/letterValueMap/languageTemplate";
 import { initUserConfig } from "@/services/collections/userConfig/userConfig";
 import { User } from "firebase/auth";
 import {
@@ -48,6 +49,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   useEffect(() => {
     if (user) {
       initUserConfig(db, user.uid);
+      initLanguageTemplate(db);
     }
   }, [user]);
 
