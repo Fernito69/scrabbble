@@ -1,12 +1,21 @@
-import { useEffect, useState } from "react";
-import { DbGame } from "./game.model";
-import { getGameSnapshot } from "./game";
 import { db } from "@/config/firebase";
+import { GameState } from "@/model/core.model";
+import { useEffect, useState } from "react";
+import { LanguageTemplate } from "../letterValueMap/languageTemplate.model";
+import { getGameSnapshot } from "./game";
 
 export const useGetGameSnapshot = (id: string) => {
-  const [game, setGame] = useState<DbGame | undefined>();
+  const [state, setState] = useState<GameState | undefined>();
+  const [template, setTemplate] = useState<LanguageTemplate | undefined>();
 
-  useEffect(() => getGameSnapshot(db, id, (g) => setGame(g)), [id]);
+  useEffect(
+    () =>
+      getGameSnapshot(db, id, (s, t) => {
+        setState(s);
+        setTemplate(t);
+      }),
+    [id]
+  );
 
-  return game;
+  return { state, template };
 };

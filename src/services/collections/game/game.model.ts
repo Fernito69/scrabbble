@@ -1,16 +1,26 @@
-import { GameState } from "@/model/core.model";
+import { Board, PlayerMove, ScoreState, Vote } from "@/model/core.model";
 import { LanguageTemplate } from "../letterValueMap/languageTemplate.model";
 
-export interface DbGame {
+interface DbGameBase {
   createdByUserId: string;
-  createdAt: Date;
-  state: GameState;
   template: LanguageTemplate;
+  playerIds: [string | null, string | null, string | null, string | null];
+  currentPlayerId: string | null;
+  currentTurn: number;
+  score: ScoreState;
+  gameStarted: boolean;
+  gameOver: boolean;
+  currentProposedMove: PlayerMove | null;
+  currentVote: Vote | null;
 }
 
-export interface DbGamePayload {
-  createdByUserId: string;
+export interface DbGame extends DbGameBase {
   createdAt: Date;
-  state: string;
-  template: string;
+  board: Board;
+}
+
+export interface DbGamePayload extends DbGameBase {
+  createdAt: Date | { _seconds: number; _nanoseconds: number };
+  // Stringify the board because of firestore limitations
+  board: string;
 }

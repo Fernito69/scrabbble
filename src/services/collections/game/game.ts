@@ -11,18 +11,30 @@ import {
 import { DEFAULT_LANGUAGE_TEMPLATE } from "../letterValueMap/languageTemplate.defaults";
 import { LanguageTemplate } from "../letterValueMap/languageTemplate.model";
 import { GAME_COLLECTION } from "./game.defaults";
-import { DbGame, DbGamePayload } from "./game.model";
-import { cloneDeep } from "lodash";
+import { mapDbGamePayloadToGameState } from "./game.mappers";
+import { DbGamePayload } from "./game.model";
 
 export const createGame = async (
   db: Firestore,
   userId: string
 ): Promise<string> => {
+  const { playerIds, score, gameStarted, gameOver, currentTurn, board } =
+    DEFAULT_GAME_STATE;
+
   const payload = {
     createdByUserId: userId,
     createdAt: new Date(),
-    state: JSON.stringify(DEFAULT_GAME_STATE),
-    template: JSON.stringify(DEFAULT_LANGUAGE_TEMPLATE),
+    // TODO: this should come from the db
+    template: DEFAULT_LANGUAGE_TEMPLATE,
+    playerIds,
+    currentPlayerId: null,
+    currentProposedMove: null,
+    currentVote: null,
+    score,
+    gameStarted,
+    currentTurn,
+    gameOver,
+    board: JSON.stringify(board),
   } satisfies DbGamePayload;
 
   const docRef = await addDoc(collection(db, GAME_COLLECTION), payload);
@@ -32,20 +44,17 @@ export const createGame = async (
 export const getGameSnapshot = (
   db: Firestore,
   id: string,
-  callback: (data: DbGame) => void
+  callback: (state: GameState, template: LanguageTemplate) => void
 ) => {
   const docRef = doc(db, GAME_COLLECTION, id);
   const unsubscribe = onSnapshot(docRef, {
     next: (docSnap) => {
       const res = docSnap.data() as DbGamePayload;
-      // Convert
-      const data = {
-        ...cloneDeep(res),
-        state: JSON.parse(res.state) as GameState,
-        template: JSON.parse(res.template) as LanguageTemplate,
-      } satisfies DbGame;
 
-      callback(data);
+      // Convert state
+      const state = mapDbGamePayloadToGameState(res);
+
+      callback(state, res.template);
     },
   });
 

@@ -3,7 +3,7 @@ import { DEFAULT_GAME_STATE } from "@/model/core.defaults";
 import { GameState } from "@/model/core.model";
 import { updateGame } from "@/services/collections/game/game";
 import { useGetGameSnapshot } from "@/services/collections/game/game.hooks";
-import { DbGame, DbGamePayload } from "@/services/collections/game/game.model";
+import { DbGamePayload } from "@/services/collections/game/game.model";
 import { LanguageTemplate } from "@/services/collections/letterValueMap/languageTemplate.model";
 import {
   PropsWithChildren,
@@ -47,7 +47,7 @@ export const GameStateProvider = ({
 }: GameStateProviderProps) => {
   // Data
   const { user } = useAuth();
-  const game: DbGame | undefined = useGetGameSnapshot(gameId);
+  const { state, template } = useGetGameSnapshot(gameId);
 
   // State
   const [initted, setInitted] = useState<boolean>(false);
@@ -55,46 +55,34 @@ export const GameStateProvider = ({
   // TODO: create GameState en DB and fetch it with the gameId
 
   useEffect(() => {
-    if (initted || !user || !game?.template || !game?.state) return;
+    if (initted || !user || !template || !state) return;
 
     // TODO: if more than 4 or it already started, redirect to lobby with toast
 
     // TODO: On start, check if players already exist in DB doc. If not, add them.
-    let added = game.state.playerIds.some((v) => v === user.uid);
-    console.log("ADDED", added);
+    let added = state.playerIds.some((v) => v === user.uid);
+
     let payload = {
-      state: JSON.stringify({
-        ...game.state,
-        playerIds: game.state.playerIds.map((v) => {
-          if (v === null && !added) {
-            added = true;
-            return user.uid;
-          }
-          return v;
-        }),
+      playerIds: state.playerIds.map((v) => {
+        if (v === null && !added) {
+          added = true;
+          return user.uid;
+        }
+        return v;
       }),
-    } satisfies Partial<DbGamePayload>;
-console.log("payuload", {
-  ...game.state,
-  playerIds: game.state.playerIds.map((v) => {
-    if (v === null && !added) {
-      added = true;
-      return user.uid;
-    }
-    return v;
-  }),
-})
+    } as Partial<DbGamePayload>;
+
     updateGame(db, gameId, payload);
 
     setInitted(true);
 
     return () => setInitted(false);
-  }, [game, user]);
+  }, [state, template, user]);
 
   // FETCH GAME STATE
   const value = {
-    state: game?.state,
-    template: game?.template,
+    state,
+    template,
     initted,
     gameId,
   } satisfies GameInterface;

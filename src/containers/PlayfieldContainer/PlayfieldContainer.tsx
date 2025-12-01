@@ -3,6 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useGame } from "@/contexts/GameState.context";
 import { authService } from "@/services/auth";
 import { updateGame } from "@/services/collections/game/game";
+import { DbGamePayload } from "@/services/collections/game/game.model";
 import { useGetUserConfig } from "@/services/collections/userConfig/userConfig.hooks";
 import { useNavigate } from "react-router-dom";
 
@@ -25,10 +26,9 @@ export const PlayfieldContainer = () => {
   const handleBack = () => {
     // Remove the user from the game
     updateGame(db, gameId, {
-      state: JSON.stringify({
-        ...state,
-        playerIds: state!.playerIds.map((v) => (v === user!.uid ? null : v)),
-      }),
+      playerIds: state!.playerIds.map((v) =>
+        v === user!.uid ? null : v
+      ) as DbGamePayload["playerIds"],
     });
     navigate("/");
   };

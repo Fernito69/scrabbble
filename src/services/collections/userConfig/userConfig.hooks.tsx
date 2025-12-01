@@ -22,7 +22,6 @@ export const useGetUserConfig = (): UserConfig | null => {
       next: (docSnap) => {
         if (docSnap.exists()) {
           const data = docSnap.data() as UserConfig;
-          console.log("fetching user config", data);
           setUserConfig(data);
         } else {
           setUserConfig(null);
