@@ -1,9 +1,40 @@
-import { Firestore, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
-import { UserConfig } from "./userConfig.model";
+import { GameState } from "@/model/core.model";
+import {
+  Firestore,
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  query,
+  setDoc,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import {
   DEFAULT_USER_CONFIG,
   USER_CONFIG_COLLECTION,
 } from "./userConfig.defaults";
+import { UserConfig } from "./userConfig.model";
+
+export const getUserConfigsSnapshot = async (
+  db: Firestore,
+  playerIds: GameState["playerIds"],
+  callback: (data: UserConfig[]) => void
+) => {
+  const q = query(
+    collection(db, USER_CONFIG_COLLECTION),
+    where("id", "in", playerIds)
+  );
+
+  const unsubscribe = onSnapshot(q, {
+    next: (collSnap) => {
+      const data = collSnap.docs.map((d) => d.data() as UserConfig);
+      callback(data);
+    },
+  });
+
+  return unsubscribe;
+};
 
 export const getUserConfig = async (
   db: Firestore,
@@ -15,6 +46,7 @@ export const getUserConfig = async (
   if (docSnap.exists()) {
     return docSnap.data() as UserConfig;
   }
+
   return null;
 };
 
@@ -32,12 +64,15 @@ export const initUserConfig = async (
   userId: string
 ): Promise<void> => {
   const docRef = doc(db, USER_CONFIG_COLLECTION, userId);
-  const docSnap = await getDoc(docRef);
 
-  if (docSnap.exists()) {
+  if ((await getDoc(docRef)).exists()) {
     return;
   }
 
-  await setDoc(docRef, DEFAULT_USER_CONFIG);
+  await setDoc(docRef, {
+    ...DEFAULT_USER_CONFIG,
+    id: userId,
+  } satisfies UserConfig);
+
   console.log("Initialized user config for user", userId);
 };

@@ -4,7 +4,10 @@ import { useGame } from "@/contexts/GameState.context";
 import { authService } from "@/services/auth";
 import { updateGame } from "@/services/collections/game/game";
 import { DbGamePayload } from "@/services/collections/game/game.model";
-import { useGetUserConfig } from "@/services/collections/userConfig/userConfig.hooks";
+import {
+  useGetPlayerName,
+  useGetUserConfig,
+} from "@/services/collections/userConfig/userConfig.hooks";
 import { useNavigate } from "react-router-dom";
 
 export const PlayfieldContainer = () => {
@@ -12,6 +15,7 @@ export const PlayfieldContainer = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { state, gameId } = useGame();
+  const getPlayerName = useGetPlayerName();
 
   // Handlers
   const handleSignOut = async () => {
@@ -52,7 +56,7 @@ export const PlayfieldContainer = () => {
               onClick={handleBack}
               className="px-4 py-2 text-sm border border-input rounded-md hover:bg-accent"
             >
-              Back
+              Leave Game
             </button>
             <button
               onClick={handleSignOut}
@@ -72,7 +76,11 @@ export const PlayfieldContainer = () => {
           </p>
           <p className="text-muted-foreground text-sm mt-2">
             {/* Implement get user name  */}
-            Players: {state?.playerIds.join(", ")}
+            Players:&nbsp;
+            {(state?.playerIds ?? [])
+              .filter(Boolean)
+              .map(getPlayerName)
+              .join(", ")}
           </p>
         </div>
       </div>

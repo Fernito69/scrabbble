@@ -13,6 +13,7 @@ import { LanguageTemplate } from "../letterValueMap/languageTemplate.model";
 import { GAME_COLLECTION } from "./game.defaults";
 import { mapDbGamePayloadToGameState } from "./game.mappers";
 import { DbGamePayload } from "./game.model";
+import { getDefaultLanguageTemplate } from "../letterValueMap/languageTemplate";
 
 export const createGame = async (
   db: Firestore,
@@ -21,11 +22,13 @@ export const createGame = async (
   const { playerIds, score, gameStarted, gameOver, currentTurn, board } =
     DEFAULT_GAME_STATE;
 
+  const template =
+    (await getDefaultLanguageTemplate(db)) ?? DEFAULT_LANGUAGE_TEMPLATE;
+
   const payload = {
     createdByUserId: userId,
     createdAt: new Date(),
-    // TODO: this should come from the db
-    template: DEFAULT_LANGUAGE_TEMPLATE,
+    template,
     playerIds,
     currentPlayerId: null,
     currentProposedMove: null,
@@ -47,6 +50,7 @@ export const getGameSnapshot = (
   callback: (state: GameState, template: LanguageTemplate) => void
 ) => {
   const docRef = doc(db, GAME_COLLECTION, id);
+
   const unsubscribe = onSnapshot(docRef, {
     next: (docSnap) => {
       const res = docSnap.data() as DbGamePayload;

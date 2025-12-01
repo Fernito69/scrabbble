@@ -2,8 +2,10 @@ import { doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { authService } from "../../auth";
 import { db } from "@/config/firebase";
 import { UserConfig } from "./userConfig.model";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { USER_CONFIG_COLLECTION } from "./userConfig.defaults";
+import { useGame } from "@/contexts/GameState.context";
+import { getUserConfigsSnapshot } from "./userConfig";
 
 export const useGetUserConfig = (): UserConfig | null => {
   const [userConfig, setUserConfig] = useState<UserConfig | null>(null);
@@ -33,6 +35,28 @@ export const useGetUserConfig = (): UserConfig | null => {
   }, []);
 
   return userConfig;
+};
+
+export const useGetPlayerName = () => {
+  const { state } = useGame();
+
+  const [userConfigs, setUserConfigs] = useState<UserConfig[]>([]);
+
+  useEffect(() => {
+    if (!state) {
+      return;
+    }
+
+    getUserConfigsSnapshot(db, state.playerIds, (data) => {
+      setUserConfigs(data);
+    });
+  }, [state]);
+
+  return useCallback(
+    (id: string | null) =>
+      userConfigs.find((v) => v.id === id)?.displayName ?? "Player",
+    [userConfigs]
+  );
 };
 
 export const useUpdateUserConfig = () => {

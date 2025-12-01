@@ -4,17 +4,21 @@ import { useEffect, useState } from "react";
 import { LanguageTemplate } from "../letterValueMap/languageTemplate.model";
 import { getGameSnapshot } from "./game";
 
-export const useGetGameSnapshot = (id: string) => {
+type UseGetGameSnapshot = {
+  state: GameState | undefined;
+  template: LanguageTemplate | undefined;
+};
+export const useGetGameSnapshot = (gameId: string): UseGetGameSnapshot => {
   const [state, setState] = useState<GameState | undefined>();
   const [template, setTemplate] = useState<LanguageTemplate | undefined>();
 
   useEffect(
     () =>
-      getGameSnapshot(db, id, (s, t) => {
-        setState(s);
-        setTemplate(t);
+      getGameSnapshot(db, gameId, (newS, newT) => {
+        setState(newS);
+        setTemplate(newT);
       }),
-    [id]
+    [gameId]
   );
 
   return { state, template };

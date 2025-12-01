@@ -1,5 +1,5 @@
-import { UserConfig } from "./userConfig.model";
+import { UserConfigBase } from "./userConfig.model";
 
 export const USER_CONFIG_COLLECTION = "userConfig" as const;
 
-export const DEFAULT_USER_CONFIG: UserConfig = {};
+export const DEFAULT_USER_CONFIG: UserConfigBase = {};
