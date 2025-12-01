@@ -1,4 +1,4 @@
-import { Board, Bonus, LetterValueMap } from "./core.model";
+import { Board, Bonus, GameState, LetterValueMap } from "./core.model";
 
 export const SPANISH_LETTER_VALUE_MAP: LetterValueMap = {
   a: 1,
@@ -291,3 +291,18 @@ export const EMPTY_BOARD: Board = [
     { bonus: Bonus.TRIPLE_WORD },
   ],
 ];
+
+export const DEFAULT_GAME_STATE: GameState = {
+  board: EMPTY_BOARD,
+  playerIds: [null, null, null, null],
+  currentPlayerId: undefined,
+  currentTurn: 0,
+  score: {
+    total: {},
+    perTurn: [],
+  },
+  currentProposedMove: undefined,
+  gameStarted: false,
+  gameOver: false,
+  currentVote: undefined,
+};

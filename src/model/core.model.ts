@@ -124,12 +124,7 @@ export type PlayerMove = {
 
 export type GameState = {
   board: Board;
-  playerIds: [
-    string,
-    string | undefined,
-    string | undefined,
-    string | undefined
-  ];
+  playerIds: [string | null, string | null, string | null, string | null];
   currentPlayerId: string | undefined;
   currentTurn: number;
   score: ScoreState;
