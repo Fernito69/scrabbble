@@ -1,10 +1,9 @@
 import { Firestore, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { UserConfig } from "./userConfig.model";
-export const USER_CONFIG_COLLECTION = "userConfig" as const;
-
-const DEFAULT_USER_CONFIG: UserConfig = {
-  theme: "light",
-};
+import {
+  DEFAULT_USER_CONFIG,
+  USER_CONFIG_COLLECTION,
+} from "./userConfig.defaults";
 
 export const getUserConfig = async (
   db: Firestore,
@@ -30,7 +29,7 @@ export const updateUserConfig = async (
 
 export const initUserConfig = async (
   db: Firestore,
-  userId: string,
+  userId: string
 ): Promise<void> => {
   const docRef = doc(db, USER_CONFIG_COLLECTION, userId);
   const docSnap = await getDoc(docRef);

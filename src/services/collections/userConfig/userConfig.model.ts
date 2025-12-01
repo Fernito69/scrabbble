@@ -1,3 +1,3 @@
 export type UserConfig = {
-  theme: "light" | "dark";
+  displayName?: string;
 };

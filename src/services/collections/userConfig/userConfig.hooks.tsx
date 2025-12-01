@@ -1,9 +1,9 @@
 import { doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { authService } from "../../auth";
 import { db } from "@/config/firebase";
-import { USER_CONFIG_COLLECTION } from "./userConfig";
 import { UserConfig } from "./userConfig.model";
 import { useEffect, useState } from "react";
+import { USER_CONFIG_COLLECTION } from "./userConfig.defaults";
 
 export const useGetUserConfig = (): UserConfig | null => {
   const [userConfig, setUserConfig] = useState<UserConfig | null>(null);
