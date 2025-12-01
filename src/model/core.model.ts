@@ -47,7 +47,7 @@ export type LetterValueMap = {
   [key in StandardLetterLiteral]: number;
 } & { [key in ExoticLetterLiteral]?: number };
 
-export enum BonusType {
+export enum Bonus {
   DOUBLE_LETTER = "double_letter",
   DOUBLE_WORD = "double_word",
   TRIPLE_LETTER = "triple_letter",
@@ -62,7 +62,7 @@ export type Tile = {
 
 export type Square = {
   tile?: Tile;
-  bonus?: BonusType;
+  bonus?: Bonus;
 };
 
 // Each row has 15 squares, and there are 15 rows,
@@ -111,6 +111,17 @@ export type ScoreState = {
   perTurn: (PlayerScore & { turn: number })[];
 };
 
+// requires x,y coordinates, and a letter. It's an array of moves, fix in model below
+export type Move = {
+  x: number;
+  y: number;
+  letter: LetterLiteral;
+};
+export type PlayerMove = {
+  playerId: string;
+  move: Move;
+};
+
 export type GameState = {
   board: Board;
   playerIds: [
@@ -124,4 +135,18 @@ export type GameState = {
   score: ScoreState;
   gameStarted: boolean;
   gameOver: boolean;
+  currentProposedMove: PlayerMove | undefined;
+  currentVote: Vote | undefined;
+};
+
+// For now just boolean votes
+export type Vote = {
+  proposerId?: string;
+  description: string;
+  timeLeft?: number;
+  voteFinished: boolean;
+  votes: {
+    playerId: string;
+    voted: boolean;
+  }[];
 };
