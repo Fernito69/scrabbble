@@ -4,7 +4,7 @@ import { db } from "@/config/firebase";
 import { UserConfig } from "./userConfig.model";
 import { useCallback, useEffect, useState } from "react";
 import { USER_CONFIG_COLLECTION } from "./userConfig.defaults";
-import { useGame } from "@/contexts/GameState.context";
+import { useGameContext } from "@/contexts/GameState.context";
 import { getUserConfigsSnapshot } from "./userConfig";
 
 export const useGetUserConfig = (): UserConfig | null => {
@@ -38,7 +38,7 @@ export const useGetUserConfig = (): UserConfig | null => {
 };
 
 export const useGetPlayerName = () => {
-  const { state } = useGame();
+  const { state } = useGameContext();
 
   const [userConfigs, setUserConfigs] = useState<UserConfig[]>([]);
 

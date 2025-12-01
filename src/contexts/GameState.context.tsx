@@ -30,7 +30,7 @@ const DefaultGame: GameInterface = {
 
 const GameContext = createContext<GameInterface>(DefaultGame);
 
-export const useGame = () => {
+export const useGameContext = () => {
   const context = useContext(GameContext);
   if (!context) {
     throw new Error("useGameState must be used within a GameStateProvider");

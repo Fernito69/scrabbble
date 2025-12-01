@@ -1,6 +1,6 @@
 import { db } from "@/config/firebase";
 import { useAuth } from "@/contexts/AuthContext";
-import { useGame } from "@/contexts/GameState.context";
+import { useGameContext } from "@/contexts/GameState.context";
 import { authService } from "@/services/auth";
 import { updateGame } from "@/services/collections/game/game";
 import { DbGamePayload } from "@/services/collections/game/game.model";
@@ -14,7 +14,7 @@ export const PlayfieldContainer = () => {
   // Hooks
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { state, gameId } = useGame();
+  const { state, gameId } = useGameContext();
   const getPlayerName = useGetPlayerName();
 
   // Handlers
