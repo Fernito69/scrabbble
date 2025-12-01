@@ -1,0 +1,5 @@
+- Create GameState in DB
+- Create Page for Lobbies
+- Create Page for Game
+- Create Service for GameState, and in update, paste the previous snapshot into a history collection
+- Remember that board will have to be stringified because of [][]

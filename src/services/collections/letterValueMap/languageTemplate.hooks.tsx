@@ -1,29 +1,59 @@
 import { db } from "@/config/firebase";
-import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  onSnapshot,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { LANGUAGE_TEMPLATE_COLLECTION } from "./languageTemplate.defaults";
+import {
+  DEFAULT_LANGUAGE_TEMPLATE,
+  LANGUAGE_TEMPLATE_COLLECTION,
+} from "./languageTemplate.defaults";
 import { LanguageTemplate } from "./languageTemplate.model";
+import { getLanguageTemplatesSnapshot } from "./languageTemplate";
+
+const collectionRef = collection(db, LANGUAGE_TEMPLATE_COLLECTION);
 
 export const useGetLanguageTemplates = (): LanguageTemplate[] => {
   const [languageTemplates, setLanguageTemplates] = useState<
     LanguageTemplate[]
   >([]);
 
+  useEffect(
+    () => getLanguageTemplatesSnapshot(db, (d) => setLanguageTemplates(d)),
+    []
+  );
+
+  return languageTemplates;
+};
+
+export const useGetDefaultLanguageTemplate = ():
+  | LanguageTemplate
+  | undefined => {
+  const [languageTemplate, setLanguageTemplate] = useState<
+    LanguageTemplate | undefined
+  >(undefined);
+
   useEffect(() => {
-    const unsubscribe = onSnapshot(
-      collection(db, LANGUAGE_TEMPLATE_COLLECTION),
-      {
-        next: (collSnap) => {
-          const data = collSnap.docs.map((d) => d.data() as LanguageTemplate);
-          setLanguageTemplates(data);
-        },
-      }
+    const q = query(
+      collectionRef,
+      where("name", "==", DEFAULT_LANGUAGE_TEMPLATE.name)
     );
+
+    const unsubscribe = onSnapshot(q, {
+      next: (collSnap) => {
+        const data = collSnap.docs.map((d) => d.data() as LanguageTemplate)[0];
+        setLanguageTemplate(data);
+      },
+    });
 
     return unsubscribe;
   }, []);
 
-  return languageTemplates;
+  return languageTemplate;
 };
 
 export const useUpdateLanguageTemplate = (templateId: string) => {

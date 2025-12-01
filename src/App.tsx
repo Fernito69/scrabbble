@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { Login } from '@/pages/Login';
+import { Lobby } from '@/pages/Lobby';
 import { Playfield } from '@/pages/Playfield';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -11,6 +12,14 @@ function App() {
         <Route path="/login" element={<LoginRoute />} />
         <Route
           path="/"
+          element={
+            <ProtectedRoute>
+              <Lobby />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/game/:gameId"
           element={
             <ProtectedRoute>
               <Playfield />

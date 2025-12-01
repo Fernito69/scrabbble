@@ -1,54 +1,21 @@
-import { useAuth } from "@/contexts/AuthContext";
-import { authService } from "@/services/auth";
-import { useGetUserConfig } from "@/services/collections/userConfig/userConfig.hooks";
-import { useNavigate } from "react-router-dom";
+import { PlayfieldContainer } from "@/containers/PlayfieldContainer/PlayfieldContainer";
+import { GameStateProvider } from "@/contexts/GameState.context";
+import { useParams } from "react-router-dom";
 
 export const Playfield = () => {
-  // Hooks
-  const { user } = useAuth();
-  const navigate = useNavigate();
+  const gameId = useParams().gameId;
 
-  // Handlers
-  const handleSignOut = async () => {
-    try {
-      await authService.signOut();
-      navigate("/login");
-    } catch (err) {
-      console.error("Failed to sign out:", err);
-    }
-  };
-
-  // Data
-  const userConfig = useGetUserConfig();
-
-  // Consts
-  const userName = userConfig?.displayName ?? user?.email;
+  if (!gameId) {
+    return (
+      <div className="w-full h-full flex justify-center items-center text-3xl">
+        Game ID not found
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-background p-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold">Playfield</h1>
-            <p className="text-muted-foreground mt-1">Welcome, {userName}</p>
-          </div>
-          <button
-            onClick={handleSignOut}
-            className="px-4 py-2 text-sm border border-input rounded-md hover:bg-accent"
-          >
-            Sign Out
-          </button>
-        </div>
-
-        <div className="border-2 border-dashed border-border rounded-lg p-12 text-center">
-          <p className="text-muted-foreground text-lg">
-            Game board will be here
-          </p>
-          <p className="text-muted-foreground text-sm mt-2">
-            This is a placeholder for the Playfield component
-          </p>
-        </div>
-      </div>
-    </div>
+    <GameStateProvider gameId={gameId}>
+      <PlayfieldContainer />
+    </GameStateProvider>
   );
 };

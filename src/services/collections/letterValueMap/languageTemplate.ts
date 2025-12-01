@@ -4,6 +4,7 @@ import {
   collection,
   doc,
   getDocs,
+  onSnapshot,
   updateDoc,
 } from "firebase/firestore";
 import {
@@ -12,15 +13,6 @@ import {
 } from "./languageTemplate.defaults";
 import { LanguageTemplate } from "./languageTemplate.model";
 
-export const getLanguageTemplates = async (
-  db: Firestore
-): Promise<LanguageTemplate[]> => {
-  const colRef = collection(db, LANGUAGE_TEMPLATE_COLLECTION);
-  const docSnap = await getDocs(colRef);
-
-  return docSnap.docs.map((doc) => doc.data() as LanguageTemplate);
-};
-
 export const updateLanguageTemplate = async (
   db: Firestore,
   docId: string,
@@ -28,6 +20,20 @@ export const updateLanguageTemplate = async (
 ): Promise<void> => {
   const docRef = doc(db, LANGUAGE_TEMPLATE_COLLECTION, docId);
   await updateDoc(docRef, languageTemplate);
+};
+
+export const getLanguageTemplatesSnapshot = (
+  db: Firestore,
+  callback: (data: LanguageTemplate[]) => void
+) => {
+  const unsubscribe = onSnapshot(collection(db, LANGUAGE_TEMPLATE_COLLECTION), {
+    next: (collSnap) => {
+      const data = collSnap.docs.map((d) => d.data() as LanguageTemplate);
+      callback(data);
+    },
+  });
+
+  return unsubscribe;
 };
 
 export const initLanguageTemplate = async (db: Firestore): Promise<void> => {
