@@ -6,5 +6,6 @@ export type LanguageTemplate = {
   createdAt: Date;
   name: string;
   description?: string;
-  letterValueMap: LetterValueMap;
+  scoreMap: LetterValueMap;
+  quantityMap: LetterValueMap;
 };

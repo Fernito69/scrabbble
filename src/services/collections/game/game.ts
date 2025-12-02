@@ -14,6 +14,7 @@ import { LanguageTemplate } from "../letterValueMap/languageTemplate.model";
 import { GAME_COLLECTION } from "./game.defaults";
 import { mapDbGamePayloadToGameState } from "./game.mappers";
 import { DbGamePayload } from "./game.model";
+import { computeTilePouch } from "./game.utils";
 
 export const createGame = async (
   db: Firestore,
@@ -38,6 +39,7 @@ export const createGame = async (
     currentTurn,
     gameOver,
     board: JSON.stringify(board),
+    tilePouch: computeTilePouch(template.quantityMap),
   } satisfies DbGamePayload;
 
   const docRef = await addDoc(collection(db, GAME_COLLECTION), payload);

@@ -1,9 +1,16 @@
-import { Board, PlayerMove, ScoreState, Vote } from "@/model/core.model";
+import {
+  Board,
+  LetterLiteral,
+  PlayerMove,
+  ScoreState,
+  Vote,
+} from "@/model/core.model";
 import { LanguageTemplate } from "../letterValueMap/languageTemplate.model";
 
 interface DbGameBase {
   createdByUserId: string;
   template: LanguageTemplate;
+  tilePouch: LetterLiteral[];
   playerIds: [string | null, string | null, string | null, string | null];
   currentPlayerId: string | null;
   currentTurn: number;

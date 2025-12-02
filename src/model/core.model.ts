@@ -123,6 +123,7 @@ export type PlayerMove = {
 
 export type GameState = {
   board: Board;
+  tilePouch: LetterLiteral[];
   playerIds: [string | null, string | null, string | null, string | null];
   currentPlayerId: string | undefined;
   currentTurn: number;
@@ -137,15 +138,17 @@ export type GameState = {
 export enum VoteType {
   START_VOTE = "start_vote",
 }
+export type PlayerVote = {
+  playerId: string;
+  // null means not voted
+  voted: boolean | null;
+};
+
 export type Vote = {
   proposerId?: string;
   type: VoteType;
   description: string;
   timeLeft?: number;
   voteFinished: boolean;
-  votes: {
-    playerId: string;
-    // null means not voted
-    voted: boolean | null;
-  }[];
+  votes: PlayerVote[];
 };

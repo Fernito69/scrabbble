@@ -1,6 +1,6 @@
 import { Board, Bonus, GameState, LetterValueMap } from "./core.model";
 
-export const SPANISH_LETTER_VALUE_MAP: LetterValueMap = {
+export const SPANISH_SCORE_MAP: LetterValueMap = {
   a: 1,
   b: 3,
   c: 3,
@@ -26,6 +26,40 @@ export const SPANISH_LETTER_VALUE_MAP: LetterValueMap = {
   w: 4,
   x: 8,
   y: 4,
+  z: 10,
+  // Spanish letters
+  ñ: 5,
+  ch: 5,
+  rr: 5,
+  ll: 5,
+};
+
+export const SPANISH_LETTER_QUANTITY_MAP: LetterValueMap = {
+  a: 10,
+  b: 10,
+  c: 10,
+  d: 10,
+  e: 10,
+  f: 10,
+  g: 10,
+  h: 10,
+  i: 10,
+  j: 10,
+  k: 10,
+  l: 10,
+  m: 10,
+  n: 10,
+  o: 10,
+  p: 10,
+  q: 10,
+  r: 10,
+  s: 10,
+  t: 10,
+  u: 10,
+  v: 10,
+  w: 10,
+  x: 10,
+  y: 10,
   z: 10,
   // Spanish letters
   ñ: 5,
@@ -294,6 +328,7 @@ export const EMPTY_BOARD: Board = [
 
 export const DEFAULT_GAME_STATE: GameState = {
   board: EMPTY_BOARD,
+  tilePouch: [],
   playerIds: [null, null, null, null],
   currentPlayerId: undefined,
   currentTurn: 0,
