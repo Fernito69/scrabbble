@@ -64,7 +64,7 @@ export const BoardComponent = () => {
               }
 
               // Tile
-              const letterScore = template.letterValueMap[letter ?? "a"];
+              const letterScore = template.letterValueMap[letter];
               const tileClassName = cn(
                 "flex items-center justify-center text-2xl border-2 rounded-md h-full shadow",
                 !!proposedMove
