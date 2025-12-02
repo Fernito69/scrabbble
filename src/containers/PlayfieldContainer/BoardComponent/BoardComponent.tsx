@@ -71,11 +71,10 @@ export const BoardComponent = () => {
                   ? "border-red-500 bg-yellow-300 text-red-800 animate-pulse-scale"
                   : "border-gray-300 bg-gray-50 text-gray-400"
               );
-              const renderedLetter = (letter ?? "a").toUpperCase();
 
               return (
                 <div key={key} className="bg-green-800 relative">
-                  <div className={tileClassName}>{renderedLetter}</div>
+                  <div className={tileClassName}>{letter.toUpperCase()}</div>
                   <div className="absolute bottom-[2px] right-1 text-[8px]">
                     <i className="text-red-800 font-bold">{letterScore}</i>
                   </div>
