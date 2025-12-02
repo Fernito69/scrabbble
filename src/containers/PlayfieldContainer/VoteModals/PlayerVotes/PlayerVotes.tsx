@@ -1,7 +1,7 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import { Check, X } from "lucide-react";
-import { PlayerBadge } from "../PlayerBadge/PlayerBadge";
+import { PlayerBadge } from "../../PlayerBadge/PlayerBadge";
 import { PlayerVote } from "@/model/core.model";
 import { useAuth } from "@/contexts/AuthContext";
 

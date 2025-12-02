@@ -10,7 +10,7 @@ import {
   useGetUserConfig,
 } from "@/services/collections/userConfig/userConfig.hooks";
 import { useNavigate } from "react-router-dom";
-import { StartVoteModal } from "./StartVoteModal/StartVoteModal";
+import { StartVoteModal } from "./VoteModals/StartVoteModal/StartVoteModal";
 import { BoardComponent } from "./BoardComponent/BoardComponent";
 
 export const PlayfieldContainer = () => {
