@@ -1,6 +1,7 @@
 import { db } from "@/config/firebase";
 import { useAuth } from "@/contexts/AuthContext";
 import { useGameContext } from "@/contexts/GameState.context";
+import { VoteType } from "@/model/core.model";
 import { authService } from "@/services/auth";
 import { updateGame } from "@/services/collections/game/game";
 import { DbGamePayload } from "@/services/collections/game/game.model";
@@ -9,6 +10,8 @@ import {
   useGetUserConfig,
 } from "@/services/collections/userConfig/userConfig.hooks";
 import { useNavigate } from "react-router-dom";
+import { StartVoteModal } from "./StartVoteModal/StartVoteModal";
+import { BoardComponent } from "./BoardComponent/BoardComponent";
 
 export const PlayfieldContainer = () => {
   // Hooks
@@ -42,6 +45,9 @@ export const PlayfieldContainer = () => {
 
   // Consts
   const userName = userConfig?.displayName ?? user?.email;
+  const showStartVoteModal =
+    state?.currentVote?.type === VoteType.START_VOTE &&
+    !state?.currentVote?.voteFinished;
 
   return (
     <div className="min-h-screen bg-background p-8">
@@ -68,21 +74,16 @@ export const PlayfieldContainer = () => {
         </div>
 
         <div className="border-2 border-dashed border-border rounded-lg p-12 text-center">
-          <p className="text-muted-foreground text-lg">
-            Game board will be here
-          </p>
           <p className="text-muted-foreground text-sm mt-2">
-            This is a placeholder for the Playfield component
-          </p>
-          <p className="text-muted-foreground text-sm mt-2">
-            {/* Implement get user name  */}
             Players:&nbsp;
             {(state?.playerIds ?? [])
               .filter(Boolean)
               .map(getPlayerName)
               .join(", ")}
           </p>
+          {!!state && <BoardComponent />}
         </div>
+        {showStartVoteModal && <StartVoteModal vote={state!.currentVote!} />}
       </div>
     </div>
   );

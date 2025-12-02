@@ -1,8 +1,9 @@
-import { db } from "@/config/firebase";
 import { DEFAULT_GAME_STATE } from "@/model/core.defaults";
-import { GameState } from "@/model/core.model";
-import { updateGame } from "@/services/collections/game/game";
-import { useGetGameSnapshot } from "@/services/collections/game/game.hooks";
+import { GameState, Vote, VoteType } from "@/model/core.model";
+import {
+  useGetGameSnapshot,
+  useUpdateGame,
+} from "@/services/collections/game/game.hooks";
 import { DbGamePayload } from "@/services/collections/game/game.model";
 import { LanguageTemplate } from "@/services/collections/letterValueMap/languageTemplate.model";
 import {
@@ -10,6 +11,7 @@ import {
   createContext,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 import { useAuth } from "./AuthContext";
@@ -19,6 +21,8 @@ interface GameInterface {
   template: LanguageTemplate | undefined;
   initted: boolean;
   gameId: string;
+  numPlayers: number;
+  isGameOrganizer: boolean;
 }
 
 const DefaultGame: GameInterface = {
@@ -26,6 +30,8 @@ const DefaultGame: GameInterface = {
   template: undefined,
   initted: false,
   gameId: "",
+  numPlayers: 0,
+  isGameOrganizer: false,
 };
 
 const GameContext = createContext<GameInterface>(DefaultGame);
@@ -47,13 +53,26 @@ export const GameStateProvider = ({
 }: GameStateProviderProps) => {
   // Data
   const { user } = useAuth();
-  const { state, template } = useGetGameSnapshot(gameId);
+  const { state, template, createdByUserId } = useGetGameSnapshot(gameId);
+
+  // Mutations
+  const updateGame = useUpdateGame(gameId);
 
   // State
   const [initted, setInitted] = useState<boolean>(false);
 
-  // TODO: create GameState en DB and fetch it with the gameId
+  // Consts
+  const numPlayers: number = useMemo(
+    () => state?.playerIds.filter(Boolean).length ?? 0,
+    [state?.playerIds]
+  );
+  const isGameOrganizer = useMemo(
+    () => user?.uid === createdByUserId,
+    [user?.uid, createdByUserId]
+  );
 
+  // Effects
+  // INIT
   useEffect(() => {
     if (initted || !user || !template || !state) return;
 
@@ -72,19 +91,38 @@ export const GameStateProvider = ({
       }),
     } as Partial<DbGamePayload>;
 
-    updateGame(db, gameId, payload);
+    updateGame(payload);
 
     setInitted(true);
 
     return () => setInitted(false);
   }, [state, template, user]);
 
-  // FETCH GAME STATE
+  // Initial vote
+  useEffect(() => {
+    if (!state || !isGameOrganizer) return;
+    if (numPlayers > 1 && !state.currentVote && !state.gameStarted) {
+      const currentVote = {
+        type: VoteType.START_VOTE,
+        description: "Waiting until all players are ready to start the game",
+        voteFinished: false,
+        votes: state.playerIds
+          .filter(Boolean)
+          .map((id) => ({ playerId: id!, voted: false })),
+      } satisfies Vote;
+
+      updateGame({ currentVote });
+    }
+  }, [state]);
+
+  // Provider
   const value = {
     state,
     template,
     initted,
     gameId,
+    numPlayers,
+    isGameOrganizer,
   } satisfies GameInterface;
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;

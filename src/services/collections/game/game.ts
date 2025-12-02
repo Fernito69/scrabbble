@@ -8,12 +8,12 @@ import {
   onSnapshot,
   updateDoc,
 } from "firebase/firestore";
+import { getDefaultLanguageTemplate } from "../letterValueMap/languageTemplate";
 import { DEFAULT_LANGUAGE_TEMPLATE } from "../letterValueMap/languageTemplate.defaults";
 import { LanguageTemplate } from "../letterValueMap/languageTemplate.model";
 import { GAME_COLLECTION } from "./game.defaults";
 import { mapDbGamePayloadToGameState } from "./game.mappers";
 import { DbGamePayload } from "./game.model";
-import { getDefaultLanguageTemplate } from "../letterValueMap/languageTemplate";
 
 export const createGame = async (
   db: Firestore,
@@ -47,7 +47,11 @@ export const createGame = async (
 export const getGameSnapshot = (
   db: Firestore,
   id: string,
-  callback: (state: GameState, template: LanguageTemplate) => void
+  callback: (
+    state: GameState,
+    template: LanguageTemplate,
+    createdByUserId: string
+  ) => void
 ) => {
   const docRef = doc(db, GAME_COLLECTION, id);
 
@@ -58,7 +62,7 @@ export const getGameSnapshot = (
       // Convert state
       const state = mapDbGamePayloadToGameState(res);
 
-      callback(state, res.template);
+      callback(state, res.template, res.createdByUserId);
     },
   });
 

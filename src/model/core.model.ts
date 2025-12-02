@@ -57,7 +57,6 @@ export enum Bonus {
 export type Tile = {
   ownerId: string;
   letter: LetterLiteral;
-  newlyPlaced?: boolean;
 };
 
 export type Square = {
@@ -119,7 +118,7 @@ export type Move = {
 };
 export type PlayerMove = {
   playerId: string;
-  move: Move;
+  move: Move[];
 };
 
 export type GameState = {
@@ -135,13 +134,18 @@ export type GameState = {
 };
 
 // For now just boolean votes
+export enum VoteType {
+  START_VOTE = "start_vote",
+}
 export type Vote = {
   proposerId?: string;
+  type: VoteType;
   description: string;
   timeLeft?: number;
   voteFinished: boolean;
   votes: {
     playerId: string;
-    voted: boolean;
+    // null means not voted
+    voted: boolean | null;
   }[];
 };

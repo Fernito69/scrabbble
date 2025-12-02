@@ -1,11 +1,12 @@
-import { doc, onSnapshot, updateDoc } from "firebase/firestore";
-import { authService } from "../../auth";
 import { db } from "@/config/firebase";
-import { UserConfig } from "./userConfig.model";
 import { useCallback, useEffect, useState } from "react";
-import { USER_CONFIG_COLLECTION } from "./userConfig.defaults";
-import { useGameContext } from "@/contexts/GameState.context";
-import { getUserConfigsSnapshot } from "./userConfig";
+import { authService } from "../../auth";
+import {
+  getUserConfigSnapshot,
+  getUserConfigsSnapshot,
+  updateUserConfig,
+} from "./userConfig";
+import { UserConfig } from "./userConfig.model";
 
 export const useGetUserConfig = (): UserConfig | null => {
   const [userConfig, setUserConfig] = useState<UserConfig | null>(null);
@@ -18,39 +19,24 @@ export const useGetUserConfig = (): UserConfig | null => {
       return;
     }
 
-    const userRef = doc(db, USER_CONFIG_COLLECTION, user.uid);
-
-    const unsubscribe = onSnapshot(userRef, {
-      next: (docSnap) => {
-        if (docSnap.exists()) {
-          const data = docSnap.data() as UserConfig;
-          setUserConfig(data);
-        } else {
-          setUserConfig(null);
-        }
-      },
+    return getUserConfigSnapshot(db, user.uid, (data) => {
+      setUserConfig(data);
     });
-
-    return unsubscribe;
   }, []);
 
   return userConfig;
 };
 
 export const useGetPlayerName = () => {
-  const { state } = useGameContext();
-
   const [userConfigs, setUserConfigs] = useState<UserConfig[]>([]);
 
-  useEffect(() => {
-    if (!state) {
-      return;
-    }
-
-    getUserConfigsSnapshot(db, state.playerIds, (data) => {
-      setUserConfigs(data);
-    });
-  }, [state]);
+  useEffect(
+    () =>
+      getUserConfigsSnapshot(db, (data) => {
+        setUserConfigs(data);
+      }),
+    []
+  );
 
   return useCallback(
     (id: string | null) =>
@@ -66,11 +52,9 @@ export const useUpdateUserConfig = () => {
     throw new Error("User not found");
   }
 
-  const userRef = doc(db, USER_CONFIG_COLLECTION, user.uid);
-
   return async (userConfig: Partial<UserConfig>) => {
     try {
-      await updateDoc(userRef, userConfig);
+      await updateUserConfig(db, user.uid, userConfig);
     } catch (err) {
       console.error("Failed to update user config:", err);
     }

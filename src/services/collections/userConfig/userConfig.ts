@@ -1,4 +1,3 @@
-import { GameState } from "@/model/core.model";
 import {
   Firestore,
   collection,
@@ -7,8 +6,7 @@ import {
   onSnapshot,
   query,
   setDoc,
-  updateDoc,
-  where,
+  updateDoc
 } from "firebase/firestore";
 import {
   DEFAULT_USER_CONFIG,
@@ -16,20 +14,43 @@ import {
 } from "./userConfig.defaults";
 import { UserConfig } from "./userConfig.model";
 
-export const getUserConfigsSnapshot = async (
+// This will explode eventually, optimize it later
+export const getUserConfigsSnapshot = (
   db: Firestore,
-  playerIds: GameState["playerIds"],
+  // playerIds: GameState["playerIds"],
   callback: (data: UserConfig[]) => void
 ) => {
-  const q = query(
-    collection(db, USER_CONFIG_COLLECTION),
-    where("id", "in", playerIds)
-  );
+  // const q = query(
+  //   collection(db, USER_CONFIG_COLLECTION),
+  //   where("id", "in", playerIds)
+  // );
+  const q = query(collection(db, USER_CONFIG_COLLECTION));
 
   const unsubscribe = onSnapshot(q, {
     next: (collSnap) => {
       const data = collSnap.docs.map((d) => d.data() as UserConfig);
       callback(data);
+    },
+  });
+
+  return unsubscribe;
+};
+
+export const getUserConfigSnapshot = (
+  db: Firestore,
+  userId: string,
+  callback: (data: UserConfig | null) => void
+) => {
+  const userRef = doc(db, USER_CONFIG_COLLECTION, userId);
+
+  const unsubscribe = onSnapshot(userRef, {
+    next: (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data() as UserConfig;
+        callback(data);
+      } else {
+        callback(null);
+      }
     },
   });
 
