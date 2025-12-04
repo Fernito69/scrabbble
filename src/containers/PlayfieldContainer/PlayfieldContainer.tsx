@@ -10,8 +10,8 @@ import {
   useGetUserConfig,
 } from "@/services/collections/userConfig/userConfig.hooks";
 import { useNavigate } from "react-router-dom";
-import { StartVoteModal } from "./VoteModals/StartVoteModal/StartVoteModal";
 import { BoardComponent } from "./BoardComponent/BoardComponent";
+import { StartVoteModal } from "./VoteModals/StartVoteModal/StartVoteModal";
 
 export const PlayfieldContainer = () => {
   // Hooks
@@ -57,13 +57,15 @@ export const PlayfieldContainer = () => {
             <h1 className="text-3xl font-bold">Playfield</h1>
             <p className="text-muted-foreground mt-1">Welcome, {userName}</p>
           </div>
-          <div className="flex gap-4">
-            <button
-              onClick={handleBack}
-              className="px-4 py-2 text-sm border border-input rounded-md hover:bg-accent"
-            >
-              Leave Game
-            </button>
+          <div className="flex gap-4">          
+            {(!state || !state.gameStarted) && (
+              <button
+                onClick={handleBack}
+                className="px-4 py-2 text-sm border border-input rounded-md hover:bg-accent"
+              >
+                Leave Game
+              </button>
+            )}
             <button
               onClick={handleSignOut}
               className="px-4 py-2 text-sm border border-input rounded-md hover:bg-accent"

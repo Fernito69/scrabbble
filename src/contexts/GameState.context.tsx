@@ -1,4 +1,4 @@
-import { DEFAULT_GAME_STATE } from "@/model/core.defaults";
+import { DEFAULT_GAME_STATE, MAX_PLAYERS } from "@/model/core.defaults";
 import { GameState, Vote, VoteType } from "@/model/core.model";
 import {
   useGetGameSnapshot,
@@ -9,12 +9,15 @@ import { LanguageTemplate } from "@/services/collections/letterValueMap/language
 import {
   PropsWithChildren,
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
   useState,
 } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
+import { toast } from "sonner";
 
 interface GameInterface {
   state: GameState | undefined;
@@ -23,6 +26,7 @@ interface GameInterface {
   gameId: string;
   numPlayers: number;
   isGameOrganizer: boolean;
+  getPlayerNumber: (playerId: string) => number;
 }
 
 const DefaultGame: GameInterface = {
@@ -32,6 +36,7 @@ const DefaultGame: GameInterface = {
   gameId: "",
   numPlayers: 0,
   isGameOrganizer: false,
+  getPlayerNumber: () => 1,
 };
 
 const GameContext = createContext<GameInterface>(DefaultGame);
@@ -55,6 +60,9 @@ export const GameStateProvider = ({
   const { user } = useAuth();
   const { state, template, createdByUserId } = useGetGameSnapshot(gameId);
 
+  // Hooks
+  const navigate = useNavigate();
+
   // Mutations
   const updateGame = useUpdateGame(gameId);
 
@@ -71,20 +79,41 @@ export const GameStateProvider = ({
     [user?.uid, createdByUserId]
   );
 
+  // Functions
+  const getPlayerNumber = useCallback(
+    (playerId: string) => {
+      const playerIdx = state?.playerIds.indexOf(playerId)!;
+      return playerIdx + 1;
+    },
+    [state?.playerIds]
+  );
+
   // Effects
   // INIT
   useEffect(() => {
     if (initted || !user || !template || !state) return;
 
-    // TODO: if more than 4 or it already started, redirect to lobby with toast
+    let userIsPartOfGame = state.playerIds.includes(user.uid);
 
-    // TODO: On start, check if players already exist in DB doc. If not, add them.
-    let added = state.playerIds.some((v) => v === user.uid);
+    // If more than 4 players, redirect to lobby
+    if (numPlayers >= MAX_PLAYERS && !userIsPartOfGame) {
+      toast("We are sorry, this game is already full!");
+      navigate("/");
+      return;
+    }
 
+    // If already started, redirect to lobby
+    if (state.gameStarted && !userIsPartOfGame) {
+      toast("This game already started, you can't join anymore.");
+      navigate("/");
+      return;
+    }
+
+    // Add player to game
     let payload = {
       playerIds: state.playerIds.map((v) => {
-        if (v === null && !added) {
-          added = true;
+        if (v === null && !userIsPartOfGame) {
+          userIsPartOfGame = true;
           return user.uid;
         }
         return v;
@@ -123,6 +152,7 @@ export const GameStateProvider = ({
     gameId,
     numPlayers,
     isGameOrganizer,
+    getPlayerNumber,
   } satisfies GameInterface;
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;

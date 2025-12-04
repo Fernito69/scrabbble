@@ -1,5 +1,7 @@
 import { Board, Bonus, GameState, LetterValueMap } from "./core.model";
 
+export const MAX_PLAYERS = 4;
+
 export const SPANISH_SCORE_MAP: LetterValueMap = {
   a: 1,
   b: 3,
