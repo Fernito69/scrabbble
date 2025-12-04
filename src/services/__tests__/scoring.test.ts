@@ -1,0 +1,39 @@
+import { describe, expect, it } from "vitest";
+import { DEFAULT_LANGUAGE_TEMPLATE } from "../collections/letterValueMap/languageTemplate.defaults";
+import { ScoringService } from "../scoring";
+import { scoringTestData } from "./scoring.testData";
+
+describe("Test ", () => {
+  scoringTestData.forEach(
+    ({ name, board, playerMove, expectedScore, skip }) => {
+      if (skip) return;
+      it(name, () => {
+        const { score, updatedBoard } = new ScoringService(
+          board(),
+          DEFAULT_LANGUAGE_TEMPLATE
+        ).score(playerMove);
+
+        console.log(
+          "updatedBoard\n" +
+            updatedBoard
+              .map(
+                (row) =>
+                  "|" +
+                  row
+                    .map(
+                      (tile) =>
+                        tile.tile?.letter.toUpperCase() ??
+                        tile.bonus?.[0] ??
+                        " "
+                    )
+                    .join("|") +
+                  "|"
+              )
+              .join("\n")
+        );
+
+        expect(score).toEqual(expectedScore);
+      });
+    }
+  );
+});
