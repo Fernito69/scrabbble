@@ -1,6 +1,7 @@
 import {
   Board,
   LetterLiteral,
+  PlayerHand,
   PlayerMove,
   ScoreState,
   Vote,
@@ -12,7 +13,7 @@ interface DbGameBase {
   template: LanguageTemplate;
   tilePouch: LetterLiteral[];
   playerIds: [string | null, string | null, string | null, string | null];
-  playerHands: Record<string, LetterLiteral[]>;
+  playerHands: Record<string, PlayerHand>;
   currentPlayerId: string | null;
   currentTurn: number;
   score: ScoreState;

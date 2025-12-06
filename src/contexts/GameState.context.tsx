@@ -1,5 +1,11 @@
 import { DEFAULT_GAME_STATE, MAX_PLAYERS } from "@/model/core.defaults";
-import { GameState, Vote, VoteType } from "@/model/core.model";
+import {
+  GameState,
+  Move,
+  PlayerHand,
+  Vote,
+  VoteType,
+} from "@/model/core.model";
 import {
   useGetGameSnapshot,
   useUpdateGame,
@@ -16,8 +22,8 @@ import {
   useState,
 } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "./AuthContext";
 import { toast } from "sonner";
+import { useAuth } from "./AuthContext";
 
 interface GameInterface {
   state: GameState | undefined;
@@ -27,6 +33,10 @@ interface GameInterface {
   numPlayers: number;
   isGameOrganizer: boolean;
   getPlayerNumber: (playerId: string) => number;
+  localProposedMove: Move[];
+  localPlayerHand: PlayerHand;
+  setLocalProposedMove: (move: Move[]) => void;
+  setLocalPlayerHand: (hand: PlayerHand) => void;
 }
 
 const DefaultGame: GameInterface = {
@@ -37,6 +47,10 @@ const DefaultGame: GameInterface = {
   numPlayers: 0,
   isGameOrganizer: false,
   getPlayerNumber: () => 1,
+  localProposedMove: [],
+  localPlayerHand: [null, null, null, null, null, null, null],
+  setLocalProposedMove: () => {},
+  setLocalPlayerHand: () => {},
 };
 
 const GameContext = createContext<GameInterface>(DefaultGame);
@@ -59,6 +73,7 @@ export const GameStateProvider = ({
   // Data
   const { user } = useAuth();
   const { state, template, createdByUserId } = useGetGameSnapshot(gameId);
+  const initialPlayerHand = state?.playerHands?.[user!.uid];
 
   // Hooks
   const navigate = useNavigate();
@@ -68,6 +83,12 @@ export const GameStateProvider = ({
 
   // State
   const [initted, setInitted] = useState<boolean>(false);
+  const [localPlayerHand, setLocalPlayerHand] = useState<PlayerHand>(
+    initialPlayerHand ?? DefaultGame.localPlayerHand
+  );
+  const [localProposedMove, setLocalProposedMove] = useState<Move[]>(
+    state?.currentProposedMove?.move ?? []
+  );
 
   // Consts
   const numPlayers: number = useMemo(
@@ -89,6 +110,7 @@ export const GameStateProvider = ({
   );
 
   // Effects
+
   // INIT
   useEffect(() => {
     if (initted || !user || !template || !state) return;
@@ -144,6 +166,10 @@ export const GameStateProvider = ({
     }
   }, [state]);
 
+  useEffect(() => {
+    setLocalPlayerHand(initialPlayerHand ?? DefaultGame.localPlayerHand);
+  }, [initialPlayerHand]);
+
   // Provider
   const value = {
     state,
@@ -153,6 +179,10 @@ export const GameStateProvider = ({
     numPlayers,
     isGameOrganizer,
     getPlayerNumber,
+    localProposedMove,
+    localPlayerHand,
+    setLocalProposedMove,
+    setLocalPlayerHand,
   } satisfies GameInterface;
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;

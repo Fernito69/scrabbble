@@ -7,11 +7,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useGameContext } from "@/contexts/GameState.context";
-import { LetterLiteral, Vote } from "@/model/core.model";
+import { PlayerHand, Vote } from "@/model/core.model";
 import { useUpdateGame } from "@/services/collections/game/game.hooks";
+import { cloneDeep } from "lodash";
 import { useEffect } from "react";
 import { PlayerVotes } from "../PlayerVotes/PlayerVotes";
-import { cloneDeep } from "lodash";
 
 interface Props {
   vote: Vote;
@@ -69,12 +69,11 @@ export const StartVoteModal = ({ vote }: Props) => {
     ) {
       // Initialize player hands and update pouch
       const tilePouch = cloneDeep(state.tilePouch);
-      const playerHands: Record<string, LetterLiteral[]> =
-        state.playerIds.reduce(
-          (acc, id) =>
-            id != null ? { ...acc, [id]: tilePouch.splice(0, 7) } : acc,
-          {} satisfies Record<string, LetterLiteral[]>
-        );
+      const playerHands = state.playerIds.reduce(
+        (acc, id) =>
+          id != null ? { ...acc, [id]: tilePouch.splice(0, 7) } : acc,
+        {} satisfies Record<string, PlayerHand>
+      );
 
       updateGame({
         currentVote: null,

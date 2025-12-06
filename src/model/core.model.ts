@@ -128,12 +128,21 @@ export type PlayerMove = {
   playerId: string;
   move: Move[];
 };
+export type PlayerHand = [
+  LetterLiteral | null,
+  LetterLiteral | null,
+  LetterLiteral | null,
+  LetterLiteral | null,
+  LetterLiteral | null,
+  LetterLiteral | null,
+  LetterLiteral | null
+];
 
 export type GameState = {
   board: Board;
   tilePouch: LetterLiteral[];
   playerIds: [string | null, string | null, string | null, string | null];
-  playerHands: Record<string, LetterLiteral[]>;
+  playerHands: Record<string, PlayerHand>;
   currentPlayerId: string | undefined;
   currentTurn: number;
   score: ScoreState;

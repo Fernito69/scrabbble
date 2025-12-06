@@ -6,7 +6,7 @@ import { stringifyBoard } from "../utils/core";
 
 describe("Test ", () => {
   scoringTestData.forEach(
-    ({ name, board, playerMove, expectedScore, skip }) => {
+    ({ name, board, playerMove, expectedScore }) => {
       // if (skip) return;
       it(name, () => {
         const { score, updatedBoard } = new ScoringService(

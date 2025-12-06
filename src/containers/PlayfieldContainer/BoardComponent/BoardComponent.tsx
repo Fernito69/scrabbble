@@ -1,7 +1,8 @@
 import { useGameContext } from "@/contexts/GameState.context";
-import { cn } from "@/lib/utils";
 import { Bonus, Move } from "@/model/core.model";
 import { TileComponent } from "../TileComponent/TileComponent";
+import { DroppableBoardSquare } from "./DroppableBoardSquare";
+import { DraggableBoardTile } from "../TileComponent/DraggableBoardTile";
 
 const bonusColorMap: Record<Bonus, string> = {
   [Bonus.DOUBLE_LETTER]: "bg-blue-200",
@@ -19,11 +20,12 @@ const bonusMessageMap: Record<Bonus, string[]> = {
 
 export const BoardComponent = () => {
   // Context
-  const { state: { board, currentProposedMove } = {}, template } =
-    useGameContext();
+  const { state, template, localProposedMove } = useGameContext();
 
   // Render
-  if (!board || !template) return null;
+  if (!template || !state) return null;
+
+  const { board, currentProposedMove } = state;
 
   return (
     <div className="flex justify-center items-center">
@@ -34,39 +36,49 @@ export const BoardComponent = () => {
               const key = `${xIndex}-${yIndex}`;
 
               // Check whether it's a proposed move
-              const proposedMove: Move | undefined =
-                currentProposedMove?.move?.find(
-                  (m) => m.x === xIndex && m.y === yIndex
-                );
+              const proposedMove: Move | undefined = (
+                localProposedMove ?? currentProposedMove?.move
+              )?.find((m) => m.x === xIndex && m.y === yIndex);
 
               const letter = proposedMove?.letter ?? tile?.letter;
 
+              const squareColor = bonus
+                ? bonusColorMap[bonus ?? Bonus.DOUBLE_LETTER]
+                : "bg-green-600";
+
               // Empty square
               if (!letter) {
-                const squareColor = bonus
-                  ? bonusColorMap[bonus ?? Bonus.DOUBLE_LETTER]
-                  : "bg-green-600";
-
-                const squareClassName = cn(
-                  "w-12 h-12 border border-black",
-                  squareColor
-                );
-
                 return (
-                  <div key={key} className={squareClassName}>
+                  <DroppableBoardSquare
+                    key={key}
+                    x={xIndex}
+                    y={yIndex}
+                    squareColor={squareColor}
+                  >
                     <div className="text-[10px] flex flex-col items-center justify-center h-full">
                       {bonus &&
                         bonusMessageMap[bonus].map((v, i) => (
                           <p key={i}>{v}</p>
                         ))}
                     </div>
-                  </div>
+                  </DroppableBoardSquare>
                 );
               }
 
               // Tile
               return (
-                <TileComponent letter={letter} proposedMove={!!proposedMove} />
+                <DroppableBoardSquare
+                  key={key}
+                  x={xIndex}
+                  y={yIndex}
+                  squareColor={squareColor}
+                >
+                  {proposedMove ? (
+                    <DraggableBoardTile letter={letter} x={xIndex} y={yIndex} />
+                  ) : (
+                    <TileComponent letter={letter} proposedMove={false} />
+                  )}
+                </DroppableBoardSquare>
               );
             })
           )}
