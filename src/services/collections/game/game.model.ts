@@ -12,6 +12,7 @@ interface DbGameBase {
   template: LanguageTemplate;
   tilePouch: LetterLiteral[];
   playerIds: [string | null, string | null, string | null, string | null];
+  playerHands: Record<string, LetterLiteral[]>;
   currentPlayerId: string | null;
   currentTurn: number;
   score: ScoreState;

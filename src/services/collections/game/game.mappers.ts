@@ -15,6 +15,7 @@ export const mapDbGamePayloadToGameState = (dbGame: DbGamePayload) => {
     currentProposedMove: dbGame.currentProposedMove ?? undefined,
     currentVote: dbGame.currentVote ?? undefined,
     tilePouch: dbGame.tilePouch,
+    playerHands: dbGame.playerHands,
   } satisfies GameState;
 };
 
@@ -34,5 +35,6 @@ export const mapGameStateToDbGamePayload = (
     currentVote: gameState.currentVote,
     tilePouch: gameState.tilePouch,
     template,
+    playerHands: gameState.playerHands,
   } satisfies Partial<DbGamePayload>;
 };

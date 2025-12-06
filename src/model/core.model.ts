@@ -13,7 +13,6 @@ export type StandardLetterLiteral =
   | "h"
   | "i"
   | "j"
-  | "k"
   | "l"
   | "m"
   | "n"
@@ -25,12 +24,13 @@ export type StandardLetterLiteral =
   | "t"
   | "u"
   | "v"
-  | "w"
   | "x"
   | "y"
   | "z";
 
 export type ExoticLetterLiteral =
+  | "w"
+  | "k"
   | "ñ"
   | "ch"
   | "rr"
@@ -42,10 +42,18 @@ export type ExoticLetterLiteral =
   | "œ"
   | "å";
 
-export type LetterLiteral = StandardLetterLiteral | ExoticLetterLiteral;
+// Used to represent the wildcard
+export type SpecialLetterLiteral = "0";
+
+export type LetterLiteral =
+  | StandardLetterLiteral
+  | ExoticLetterLiteral
+  | SpecialLetterLiteral;
 export type LetterValueMap = {
   [key in StandardLetterLiteral]: number;
-} & { [key in ExoticLetterLiteral]?: number };
+} & { [key in ExoticLetterLiteral]?: number } & {
+  [key in SpecialLetterLiteral]?: number;
+};
 
 export enum Bonus {
   DOUBLE_LETTER = "double_letter",
@@ -125,6 +133,7 @@ export type GameState = {
   board: Board;
   tilePouch: LetterLiteral[];
   playerIds: [string | null, string | null, string | null, string | null];
+  playerHands: Record<string, LetterLiteral[]>;
   currentPlayerId: string | undefined;
   currentTurn: number;
   score: ScoreState;

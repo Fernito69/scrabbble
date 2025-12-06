@@ -1,6 +1,7 @@
 import { useGameContext } from "@/contexts/GameState.context";
 import { cn } from "@/lib/utils";
 import { Bonus, Move } from "@/model/core.model";
+import { TileComponent } from "../TileComponent/TileComponent";
 
 const bonusColorMap: Record<Bonus, string> = {
   [Bonus.DOUBLE_LETTER]: "bg-blue-200",
@@ -27,7 +28,7 @@ export const BoardComponent = () => {
   return (
     <div className="flex justify-center items-center">
       <div className="flex justify-center items-center p-8 rounded-xl bg-green-200 border-green-400 border-1">
-        <div className="grid grid-cols-15 gap-0 w-[600px]">
+        <div className="grid grid-cols-15 gap-0 w-[720px]">
           {board.map((row, yIndex) =>
             row.map(({ tile, bonus }, xIndex) => {
               const key = `${xIndex}-${yIndex}`;
@@ -47,13 +48,13 @@ export const BoardComponent = () => {
                   : "bg-green-600";
 
                 const squareClassName = cn(
-                  "w-10 h-10 border border-black",
+                  "w-12 h-12 border border-black",
                   squareColor
                 );
 
                 return (
                   <div key={key} className={squareClassName}>
-                    <div className="text-[8px] flex flex-col items-center justify-center h-full">
+                    <div className="text-[10px] flex flex-col items-center justify-center h-full">
                       {bonus &&
                         bonusMessageMap[bonus].map((v, i) => (
                           <p key={i}>{v}</p>
@@ -64,21 +65,8 @@ export const BoardComponent = () => {
               }
 
               // Tile
-              const letterScore = template.scoreMap[letter];
-              const tileClassName = cn(
-                "flex items-center justify-center text-2xl border-2 rounded-md h-full shadow",
-                !!proposedMove
-                  ? "border-red-500 bg-yellow-300 text-red-800 animate-pulse-scale"
-                  : "border-gray-300 bg-gray-50 text-gray-400"
-              );
-
               return (
-                <div key={key} className="bg-green-800 relative">
-                  <div className={tileClassName}>{letter.toUpperCase()}</div>
-                  <div className="absolute bottom-[2px] right-1 text-[8px]">
-                    <i className="text-red-800 font-bold">{letterScore}</i>
-                  </div>
-                </div>
+                <TileComponent letter={letter} proposedMove={!!proposedMove} />
               );
             })
           )}

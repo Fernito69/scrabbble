@@ -12,6 +12,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { BoardComponent } from "./BoardComponent/BoardComponent";
 import { StartVoteModal } from "./VoteModals/StartVoteModal/StartVoteModal";
+import { PlayerHand } from "./PlayerHand/PlayerHand";
 
 export const PlayfieldContainer = () => {
   // Hooks
@@ -57,7 +58,7 @@ export const PlayfieldContainer = () => {
             <h1 className="text-3xl font-bold">Playfield</h1>
             <p className="text-muted-foreground mt-1">Welcome, {userName}</p>
           </div>
-          <div className="flex gap-4">          
+          <div className="flex gap-4">
             {(!state || !state.gameStarted) && (
               <button
                 onClick={handleBack}
@@ -86,6 +87,11 @@ export const PlayfieldContainer = () => {
           {!!state && <BoardComponent />}
         </div>
         {showStartVoteModal && <StartVoteModal vote={state!.currentVote!} />}
+      </div>
+      <div className="max-w-7xl mx-auto">
+        <div className="flex justify-between items-center mb-8">
+          <PlayerHand />
+        </div>
       </div>
     </div>
   );

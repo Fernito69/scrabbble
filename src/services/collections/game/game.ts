@@ -40,6 +40,7 @@ export const createGame = async (
     gameOver,
     board: JSON.stringify(board),
     tilePouch: computeTilePouch(template.quantityMap),
+    playerHands: {},
   } satisfies DbGamePayload;
 
   const docRef = await addDoc(collection(db, GAME_COLLECTION), payload);
