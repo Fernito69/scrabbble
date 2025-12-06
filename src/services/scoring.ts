@@ -30,6 +30,9 @@ const dirMapping: Record<Dir, Tuple> = {
   [Dir.RIGHT]: [1, 0],
 };
 
+// const HORIZONTAL_DIRS = [Dir.LEFT, Dir.RIGHT] as const;
+// const VERTICAL_DIRS = [Dir.UP, Dir.DOWN] as const;
+
 type WordLetter = {
   letter: Move & { score: number };
   bonus: Bonus | undefined;
@@ -65,9 +68,7 @@ export class ScoringService {
 
     // Identify words formed by the move
     const words: Word[] = [];
-    console.log("WORDS CREATED");
 
-    // console.log("moves", moves);
     for (const move of moves) {
       const { letter, x, y } = move;
       const { bonus, tile } = this.board[y][x];
@@ -117,7 +118,6 @@ export class ScoringService {
           horizontal,
           word: [],
         };
-        console.log("WORD CREATED", dir);
 
         if (horizontal) {
           // Check all the way to the left and right to find the start/end of the word
@@ -144,13 +144,12 @@ export class ScoringService {
               }
             );
 
-            // console.log("alreadyAccountedFor", alreadyAccountedFor);
-
-            if (alreadyAccountedFor) continue;
+            if (alreadyAccountedFor) {
+              continue;
+            }
 
             if (x === x2) {
               if (moveLetter) {
-                console.log("pushing x === x2", letter, x, y);
                 word.word.push({
                   letter: {
                     letter,
@@ -166,8 +165,6 @@ export class ScoringService {
 
               const currLetter = (moveLetter?.letter ?? tile?.letter)!;
               const currBonus = moveLetter ? bonus : undefined;
-
-              console.log("pushing else x", currLetter, x, y);
 
               word.word.push({
                 letter: {
@@ -198,19 +195,18 @@ export class ScoringService {
                   ({ letter: l }) =>
                     l.x === x &&
                     l.y === y2 &&
-                    moveLetter &&
+                    // moveLetter &&
                     horizontal === thisWordHorizontal
                 );
               }
             );
 
-            if (alreadyAccountedFor) continue;
-
-            console.log("MOVE LETTER", moveLetter, letter);
+            if (alreadyAccountedFor) {
+              continue;
+            }
 
             if (y === y2) {
               if (moveLetter) {
-                console.log("pushing y === y2", letter, x, y);
                 word.word.push({
                   letter: {
                     letter,
@@ -227,9 +223,6 @@ export class ScoringService {
               const currLeter = (moveLetter?.letter ?? tile?.letter)!;
               const currBonus = moveLetter ? bonus : undefined;
 
-              if (!moveLetter && )
-
-              console.log("pushing else y", currLeter, x, y, moveLetter, tile);
               word.word.push({
                 letter: {
                   letter: currLeter,
@@ -242,16 +235,10 @@ export class ScoringService {
             }
           }
 
-          console.log(
-            "pushing word",
-            word.word.map((v) => v.letter.letter).join("")
-          );
           if (word.word.length > 0) words.push(word);
         }
       }
     }
-
-    // console.log("words", JSON.stringify(words, null, 2));
 
     // Now that we have the words, let's compute the scores
     let score: number = 0;
@@ -260,19 +247,15 @@ export class ScoringService {
       let wordMulti: number = 1;
       let wordScore: number = 0;
 
-      console.log("word", word);
-
       word.forEach(({ letter, bonus }) => {
         let letterScore = letter.score;
         if (bonus && WORD_BONUSES.includes(bonus)) {
-          wordMulti = bonusMultiplierMap[bonus];
+          wordMulti *= bonusMultiplierMap[bonus];
         }
         if (bonus && LETTER_BONUSES.includes(bonus)) {
           letterScore *= bonusMultiplierMap[bonus];
         }
         wordScore += letterScore;
-
-        // console.log("letter", letter, "score", letterScore);
       });
 
       score += wordScore * wordMulti;

@@ -407,4 +407,63 @@ export const scoringTestData: ScoringTestData[] = [
     },
     expectedScore: 7,
   },
+  {
+    name: "2x word bonus + 2nd word extension",
+    skip: false,
+    board: () => {
+      const newBoard = cloneDeep(EMPTY_BOARD);
+      newBoard[5][4] = toSquare("r");
+      newBoard[6][4] = toSquare("o");
+      newBoard[7][4] = toSquare("q");
+      newBoard[8][4] = toSquare("u");
+      newBoard[9][4] = toSquare("e");
+      newBoard[10][5] = toSquare("e");
+      newBoard[10][6] = toSquare("c");
+      newBoard[10][7] = toSquare("o");
+      return newBoard;
+    },
+    playerMove: {
+      playerId: "player1",
+      move: [
+        {
+          x: 4,
+          y: 3,
+          letter: "e",
+        },
+        {
+          x: 4,
+          y: 4,
+          letter: "n",
+        },
+        {
+          x: 4,
+          y: 10,
+          letter: "s",
+        },
+      ],
+    },
+    expectedScore: 68 + 12,
+  },
+  {
+    name: "Corner word",
+    skip: false,
+    board: () => {
+      const newBoard = cloneDeep(EMPTY_BOARD);
+      newBoard[1][0] = toSquare("a");
+      newBoard[1][1] = toSquare("l");
+      newBoard[0][1] = toSquare("a");
+      return newBoard;
+    },
+    playerMove: {
+      playerId: "player1",
+      move: [
+        {
+          x: 0,
+          y: 0,
+          letter: "l",
+        },
+      ],
+    },
+    expectedScore: 12,
+  },
 ];
