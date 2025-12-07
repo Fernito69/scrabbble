@@ -45,8 +45,8 @@ export const GameStateProvider = ({
     [user?.uid, createdByUserId]
   );
   const isMyTurn: boolean = useMemo(
-    () => state?.currentTurn === user?.uid,
-    [state?.currentTurn, user?.uid]
+    () => state?.currentPlayerId === user?.uid,
+    [state?.currentPlayerId, user?.uid]
   );
 
   // State

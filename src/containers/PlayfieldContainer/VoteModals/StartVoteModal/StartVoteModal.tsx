@@ -11,6 +11,7 @@ import { Vote } from "@/model/core.model";
 import { useUpdateGame } from "@/services/collections/game/game.hooks";
 import { useEffect } from "react";
 import { PlayerVotes } from "../PlayerVotes/PlayerVotes";
+import { getInitGamePayload } from "@/services/collections/game/game.utils";
 
 interface Props {
   vote: Vote;
@@ -66,10 +67,7 @@ export const StartVoteModal = ({ vote }: Props) => {
       !state.gameStarted &&
       vote.votes.every((v) => v.voted)
     ) {
-      updateGame({
-        currentVote: null,
-        gameStarted: true,
-      });
+      updateGame(getInitGamePayload(state));
     }
   }, [vote]);
 

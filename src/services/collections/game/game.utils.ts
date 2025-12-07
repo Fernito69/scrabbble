@@ -1,5 +1,16 @@
 import { PLAYER_HAND_LENGTH } from "@/model/core.defaults";
-import { LetterLiteral, LetterValueMap, PlayerHand } from "@/model/core.model";
+import {
+  GameState,
+  LetterLiteral,
+  LetterValueMap,
+  Move,
+  PlayerHand,
+  VoteType,
+} from "@/model/core.model";
+import { cloneDeep } from "lodash";
+import { DbGamePayload } from "./game.model";
+import { LanguageTemplate } from "../letterValueMap/languageTemplate.model";
+import { ScoringService } from "@/services/scoring";
 
 export const computeTilePouch = (
   quantityMap: LetterValueMap
@@ -10,6 +21,27 @@ export const computeTilePouch = (
       [] as LetterLiteral[]
     )
     .sort(() => Math.random() - 0.5);
+};
+
+export const getInitGamePayload = (
+  state: GameState
+): Partial<DbGamePayload> => {
+  // Shuffle players random (for now)
+  const playerIds = cloneDeep(state.playerIds)
+    .sort(() => Math.random() - 0.5)
+    .sort((a, b) => (a === null ? 1 : b === null ? -1 : 0));
+
+  return {
+    currentVote: null,
+    gameStarted: true,
+    currentTurn: 1,
+    currentPlayerId: playerIds[0],
+    playerIds,
+    score: {
+      total: {},
+      perTurn: [],
+    },
+  } satisfies Partial<DbGamePayload>;
 };
 
 export const drawCards = (
@@ -33,4 +65,125 @@ export const drawCards = (
   }
 
   return { hand: newHand, tilePouch: newTilePouch };
+};
+
+// It's not perfect, but at least let's us check whether it's a straight line
+export const isMoveValid = (
+  move: Move[]
+): {
+  valid: boolean;
+  error?: string;
+} => {
+  let valid: boolean = true;
+
+  // Check if the move is valid
+  if (move.length === 0) {
+    valid = false;
+    return { valid, error: "Empty move" };
+  }
+
+  if (move.length < 2) return { valid };
+
+  // Check if the move is a straight line
+  valid =
+    new Set(move.map(({ x }) => x)).size === 1 ||
+    new Set(move.map(({ y }) => y)).size === 1;
+
+  return {
+    valid,
+    error: valid ? undefined : "It doesn't seem to be a valid move",
+  };
+};
+
+export const buildMovePayload = (
+  state: GameState,
+  template: LanguageTemplate
+): Partial<DbGamePayload> | undefined => {
+  if (
+    !state.currentVote ||
+    state.currentVote.type !== VoteType.ACCEPT_PROPOSED_MOVE ||
+    !state.currentProposedMove ||
+    !state.currentPlayerId
+  )
+    return undefined;
+
+  const {
+    currentPlayerId,
+    currentProposedMove,
+    playerIds,
+    currentVote,
+    board,
+    playerHands,
+    currentTurn,
+  } = state;
+
+  const rejected = currentVote.votes.every((v) => !v.voted);
+  const accepted = currentVote.votes.every((v) => v.voted);
+
+  if (!rejected && !accepted) return undefined;
+
+  // Prepare base payload
+  const currentPlayerIdx = playerIds.findIndex((id) => id === currentPlayerId);
+  const isEndOfTurn = currentPlayerIdx >= playerIds.filter(Boolean).length - 1;
+  const nextPlayerIndex = isEndOfTurn ? 0 : currentPlayerIdx + 1;
+
+  const payload: Partial<DbGamePayload> = {
+    currentVote: null,
+    currentProposedMove: null,
+    currentPlayerId: playerIds[nextPlayerIndex],
+  };
+
+  // If it's the end of the turn
+  if (isEndOfTurn) {
+    payload.currentTurn = state.currentTurn + 1;
+  }
+
+  // If move is rejected
+  if (currentVote.votes.every((v) => !v.voted)) {
+    const perTurn = [
+      ...state.score.perTurn,
+      { playerId: currentPlayerId, turn: currentTurn, score: 0 },
+    ];
+    payload.score = {
+      ...state.score,
+      perTurn,
+    };
+    return payload;
+  }
+
+  // If move is accepted
+  if (currentVote.votes.every((v) => v.voted)) {
+    // Draw cards
+    const { hand, tilePouch } = drawCards(
+      state.tilePouch,
+      currentProposedMove.tentativeNewHand
+    );
+    payload.tilePouch = tilePouch;
+    payload.playerHands = {
+      ...playerHands,
+      [currentPlayerId]: hand,
+    };
+
+    // Calculate score and new board
+    const { score, updatedBoard } = new ScoringService(board, template).score(
+      currentProposedMove
+    );
+
+    const perTurn = [
+      ...state.score.perTurn,
+      { playerId: currentPlayerId, turn: currentTurn, score },
+    ];
+    const total = {
+      ...state.score.total,
+      [currentPlayerId]: (state.score.total[currentPlayerId] ?? 0) + score,
+    };
+
+    payload.score = {
+      total,
+      perTurn,
+    };
+    payload.board = JSON.stringify(updatedBoard);
+  }
+
+  return payload;
 };

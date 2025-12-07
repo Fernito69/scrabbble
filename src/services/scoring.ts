@@ -136,10 +136,7 @@ export class ScoringService {
               ({ horizontal: thisWordHorizontal, word }) => {
                 return word.some(
                   ({ letter: l }) =>
-                    l.x === x2 &&
-                    l.y === y &&
-                    moveLetter &&
-                    horizontal === thisWordHorizontal
+                    l.x === x2 && l.y === y && horizontal === thisWordHorizontal
                 );
               }
             );
@@ -193,10 +190,7 @@ export class ScoringService {
               ({ horizontal: thisWordHorizontal, word }) => {
                 return word.some(
                   ({ letter: l }) =>
-                    l.x === x &&
-                    l.y === y2 &&
-                    // moveLetter &&
-                    horizontal === thisWordHorizontal
+                    l.x === x && l.y === y2 && horizontal === thisWordHorizontal
                 );
               }
             );
@@ -246,6 +240,8 @@ export class ScoringService {
     words.forEach(({ word }) => {
       let wordMulti: number = 1;
       let wordScore: number = 0;
+
+      console.log("word", word.map((w) => w.letter.letter).join(""));
 
       word.forEach(({ letter, bonus }) => {
         let letterScore = letter.score;

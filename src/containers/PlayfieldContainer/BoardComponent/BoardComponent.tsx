@@ -37,7 +37,9 @@ export const BoardComponent = () => {
 
               // Check whether it's a proposed move
               const proposedMove: Move | undefined = (
-                localProposedMove ?? currentProposedMove?.move
+                localProposedMove.length > 0
+                  ? localProposedMove
+                  : currentProposedMove?.move
               )?.find((m) => m.x === xIndex && m.y === yIndex);
 
               const letter = proposedMove?.letter ?? tile?.letter;

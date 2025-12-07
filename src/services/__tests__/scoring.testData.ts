@@ -20,6 +20,7 @@ export const scoringTestData: ScoringTestData[] = [
     skip: true,
     board: () => EMPTY_BOARD,
     playerMove: {
+      tentativeNewHand: [] as any,
       playerId: "player1",
       move: [
         {
@@ -51,6 +52,7 @@ export const scoringTestData: ScoringTestData[] = [
     skip: true,
     board: () => EMPTY_BOARD,
     playerMove: {
+      tentativeNewHand: [] as any,
       playerId: "player1",
       move: [
         {
@@ -82,6 +84,7 @@ export const scoringTestData: ScoringTestData[] = [
     skip: true,
     board: () => EMPTY_BOARD,
     playerMove: {
+      tentativeNewHand: [] as any,
       playerId: "player1",
       move: [
         {
@@ -113,6 +116,7 @@ export const scoringTestData: ScoringTestData[] = [
     skip: true,
     board: () => EMPTY_BOARD,
     playerMove: {
+      tentativeNewHand: [] as any,
       playerId: "player1",
       move: [
         {
@@ -144,6 +148,7 @@ export const scoringTestData: ScoringTestData[] = [
     skip: true,
     board: () => EMPTY_BOARD,
     playerMove: {
+      tentativeNewHand: [] as any,
       playerId: "player1",
       move: [
         {
@@ -175,6 +180,7 @@ export const scoringTestData: ScoringTestData[] = [
     skip: true,
     board: () => EMPTY_BOARD,
     playerMove: {
+      tentativeNewHand: [] as any,
       playerId: "player1",
       move: [
         {
@@ -227,6 +233,7 @@ export const scoringTestData: ScoringTestData[] = [
       return newBoard;
     },
     playerMove: {
+      tentativeNewHand: [] as any,
       playerId: "player1",
       move: [
         {
@@ -252,6 +259,7 @@ export const scoringTestData: ScoringTestData[] = [
       return newBoard;
     },
     playerMove: {
+      tentativeNewHand: [] as any,
       playerId: "player1",
       move: [
         {
@@ -277,6 +285,7 @@ export const scoringTestData: ScoringTestData[] = [
       return newBoard;
     },
     playerMove: {
+      tentativeNewHand: [] as any,
       playerId: "player1",
       move: [
         {
@@ -302,6 +311,7 @@ export const scoringTestData: ScoringTestData[] = [
       return newBoard;
     },
     playerMove: {
+      tentativeNewHand: [] as any,
       playerId: "player1",
       move: [
         {
@@ -324,6 +334,7 @@ export const scoringTestData: ScoringTestData[] = [
       return newBoard;
     },
     playerMove: {
+      tentativeNewHand: [] as any,
       playerId: "player1",
       move: [
         {
@@ -360,6 +371,7 @@ export const scoringTestData: ScoringTestData[] = [
     },
     playerMove: {
       playerId: "player1",
+      tentativeNewHand: [] as any,
       move: [
         {
           x: 6,
@@ -386,6 +398,7 @@ export const scoringTestData: ScoringTestData[] = [
       return newBoard;
     },
     playerMove: {
+      tentativeNewHand: [] as any,
       playerId: "player1",
       move: [
         {
@@ -423,6 +436,7 @@ export const scoringTestData: ScoringTestData[] = [
       return newBoard;
     },
     playerMove: {
+      tentativeNewHand: [] as any,
       playerId: "player1",
       move: [
         {
@@ -442,7 +456,7 @@ export const scoringTestData: ScoringTestData[] = [
         },
       ],
     },
-    expectedScore: 68 + 12,
+    expectedScore: 60,
   },
   {
     name: "Corner word",
@@ -455,6 +469,7 @@ export const scoringTestData: ScoringTestData[] = [
       return newBoard;
     },
     playerMove: {
+      tentativeNewHand: [] as any,
       playerId: "player1",
       move: [
         {
@@ -465,5 +480,43 @@ export const scoringTestData: ScoringTestData[] = [
       ],
     },
     expectedScore: 12,
+  },
+  {
+    name: "Tuja + Roquero",
+    skip: false,
+    board: () => {
+      const newBoard = cloneDeep(EMPTY_BOARD);
+      newBoard[6][8] = toSquare("r");
+      newBoard[7][8] = toSquare("o");
+      newBoard[8][8] = toSquare("q");
+      newBoard[9][8] = toSquare("u");
+      newBoard[10][8] = toSquare("e");
+      newBoard[11][8] = toSquare("r");
+      newBoard[12][8] = toSquare("o");
+
+      return newBoard;
+    },
+    playerMove: {
+      tentativeNewHand: [] as any,
+      playerId: "player1",
+      move: [
+        {
+          x: 7,
+          y: 9,
+          letter: "t",
+        },
+        {
+          x: 9,
+          y: 9,
+          letter: "j",
+        },
+        {
+          x: 10,
+          y: 9,
+          letter: "a",
+        },
+      ],
+    },
+    expectedScore: 27,
   },
 ];

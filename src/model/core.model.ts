@@ -113,9 +113,14 @@ export type Board = [
 type PlayerScore = {
   [PlayerId: string]: number;
 };
+type ScorePerTurn = {
+  playerId: string;
+  turn: number;
+  score: number;
+};
 export type ScoreState = {
   total: PlayerScore;
-  perTurn: (PlayerScore & { turn: number })[];
+  perTurn: ScorePerTurn[];
 };
 
 // requires x,y coordinates, and a letter. It's an array of moves, fix in model below
@@ -127,6 +132,7 @@ export type Move = {
 export type PlayerMove = {
   playerId: string;
   move: Move[];
+  tentativeNewHand: PlayerHand;
 };
 export type PlayerHand = [
   LetterLiteral | null,
@@ -155,6 +161,7 @@ export type GameState = {
 // For now just boolean votes
 export enum VoteType {
   START_VOTE = "start_vote",
+  ACCEPT_PROPOSED_MOVE = "accept_proposed_move",
 }
 export type PlayerVote = {
   playerId: string;

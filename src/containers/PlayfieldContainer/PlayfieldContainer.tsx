@@ -1,6 +1,7 @@
 import { db } from "@/config/firebase";
 import { useAuth } from "@/contexts/AuthContext";
 import { useGameContext } from "@/contexts/GameState.context";
+import { cn } from "@/lib/utils";
 import {
   LetterLiteral,
   PlayerHand as PlayerHandType,
@@ -30,6 +31,7 @@ import { BoardComponent } from "./BoardComponent/BoardComponent";
 import { PlayerHand } from "./PlayerHand/PlayerHand";
 import { TileComponent } from "./TileComponent/TileComponent";
 import { StartVoteModal } from "./VoteModals/StartVoteModal/StartVoteModal";
+import { ScoreBoard } from "./ScoreBoard/ScoreBoard";
 
 export const PlayfieldContainer = () => {
   // Hooks
@@ -42,6 +44,7 @@ export const PlayfieldContainer = () => {
     localProposedMove,
     setLocalPlayerHand,
     setLocalProposedMove,
+    isMyTurn,
   } = useGameContext();
   const getPlayerName = useGetPlayerName();
 
@@ -100,6 +103,9 @@ export const PlayfieldContainer = () => {
     const activeSource = active.data.current?.source;
     const activeLetter = active.data.current?.letter as LetterLiteral | null;
 
+    // If vote is in progress, ignore
+    if (state.currentVote) return;
+
     // Case 1: Reordering within hand
     if (activeSource === "hand" && over.data.current?.source === "hand") {
       const oldIndex = active.data.current?.index;
@@ -115,6 +121,9 @@ export const PlayfieldContainer = () => {
       }
       return;
     }
+
+    // All the rest of the cases are only for the current player
+    if (!isMyTurn) return;
 
     // Case 2: Dragging from hand to board
     if (activeSource === "hand" && over.data.current?.type === "board-square") {
@@ -244,11 +253,13 @@ export const PlayfieldContainer = () => {
   // Data
   const userConfig = useGetUserConfig();
 
+  if (!state) return null;
+
   // Consts
   const userName = userConfig?.displayName ?? user?.email;
   const showStartVoteModal =
-    state?.currentVote?.type === VoteType.START_VOTE &&
-    !state?.currentVote?.voteFinished;
+    state.currentVote?.type === VoteType.START_VOTE &&
+    !state.currentVote?.voteFinished;
 
   return (
     <DndContext
@@ -264,7 +275,7 @@ export const PlayfieldContainer = () => {
               <p className="text-muted-foreground mt-1">Welcome, {userName}</p>
             </div>
             <div className="flex gap-4">
-              {(!state || !state.gameStarted) && (
+              {!state.gameStarted && (
                 <button
                   onClick={handleBack}
                   className="px-4 py-2 text-sm border border-input rounded-md hover:bg-accent"
@@ -282,22 +293,35 @@ export const PlayfieldContainer = () => {
           </div>
 
           <div className="border-2 border-dashed border-border rounded-lg p-12 text-center">
-            <div className="flex flex-col gap-2">
-              <div className="flex flex-row gap-2 border-2 rounded-md p-2 border-green-300 shadow text-muted-foreground text-sm mt-2 w-fit">
-                Players:
-                {(state?.playerIds ?? [])
+            <div className="flex flex-row gap-2 mb-4">
+              <Badge
+                label="Players:"
+                value={(state.playerIds ?? [])
                   .filter(Boolean)
                   .map(getPlayerName)
                   .join(", ")}
-              </div>
+              />
+              {state.gameStarted && (
+                <>
+                  <Badge label="Turn:" value={state.currentTurn} />
+                  {state.currentPlayerId != null && (
+                    <Badge
+                      label="Current move:"
+                      value={getPlayerName(state.currentPlayerId)}
+                    />
+                  )}
+                  <Badge label="Tiles left:" value={state.tilePouch.length} />
+                </>
+              )}
             </div>
             <BoardComponent />
           </div>
           {showStartVoteModal && <StartVoteModal vote={state!.currentVote!} />}
         </div>
         <div className="max-w-7xl mx-auto">
-          <div className="flex justify-between items-center mb-8">
+          <div className="flex flex-col justify-between items-center mb-8 gap-4">
             <PlayerHand />
+            <ScoreBoard />
           </div>
         </div>
       </div>
@@ -305,5 +329,29 @@ export const PlayfieldContainer = () => {
         {activeLetter ? <TileComponent letter={activeLetter} /> : null}
       </DragOverlay>
     </DndContext>
+  );
+};
+
+/**********/
+interface BadgeProps<T extends string | number = string | number> {
+  label: string;
+  value: T;
+  color?: string;
+}
+export const Badge = ({
+  label,
+  value,
+  color = "border-green-300",
+}: BadgeProps) => {
+  const className = cn(
+    "flex flex-row gap-2 border-2 rounded-md p-2 shadow text-muted-foreground text-sm w-fit",
+    color
+  );
+
+  return (
+    <div className={className}>
+      <b>{label}</b>
+      <span>{value}</span>
+    </div>
   );
 };

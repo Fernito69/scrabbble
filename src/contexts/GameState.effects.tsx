@@ -2,12 +2,15 @@ import { MAX_PLAYERS } from "@/model/core.defaults";
 import { Vote, VoteType } from "@/model/core.model";
 import { useUpdateGame } from "@/services/collections/game/game.hooks";
 import { DbGamePayload } from "@/services/collections/game/game.model";
+import {
+  buildMovePayload,
+  drawCards,
+} from "@/services/collections/game/game.utils";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useAuth } from "./AuthContext";
 import { DefaultGame, UseGameStateEffects } from "./GameState.model";
-import { drawCards } from "@/services/collections/game/game.utils";
 
 export const useGameStateEffects = ({
   gameId,
@@ -79,7 +82,6 @@ export const useGameStateEffects = ({
   /***************/
   // Initial vote
   /***************/
-
   useEffect(() => {
     if (!state || !isGameOrganizer) return;
     if (numPlayers > 1 && !state.currentVote && !state.gameStarted) {
@@ -95,6 +97,22 @@ export const useGameStateEffects = ({
       updateGame({ currentVote });
     }
   }, [state]);
+
+  /***************/
+  // Vote for proposed move
+  /***************/
+  useEffect(() => {
+    if (
+      !isGameOrganizer ||
+      state?.currentVote?.type !== VoteType.ACCEPT_PROPOSED_MOVE ||
+      !template
+    )
+      return;
+
+    const payload = buildMovePayload(state, template);
+
+    if (payload) updateGame(payload);
+  }, [state?.currentVote]);
 
   /***************/
   // Update local player hand if a change is detected in the db
