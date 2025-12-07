@@ -19,7 +19,7 @@ export const ScoreBoard = () => {
 
   if (!state?.score) return null;
 
-  // Conts
+  // Consts
   const aggregateScores: ScoreRow[] = Array(state.currentTurn)
     .fill(0)
     .map((_, turn) => {
@@ -36,14 +36,16 @@ export const ScoreBoard = () => {
       };
     });
 
+  const presentPlayerIds = state.playerIds.filter(Boolean) as string[];
+
   // Render
   return (
-    <div className="rounded-lg border">
+    <div className="rounded-lg border w-1/2">
       <Table>
         <TableHeader className="bg-muted">
           <TableRow>
             <TableHead>Turn</TableHead>
-            {state.playerIds.filter(Boolean).map((id, i) => (
+            {presentPlayerIds.map((id, i) => (
               <TableHead key={i}>
                 <PlayerBadge playerId={id!} />
               </TableHead>
@@ -59,6 +61,12 @@ export const ScoreBoard = () => {
               ))}
             </TableRow>
           ))}
+          <TableRow className="bg-gray-100 font-semibold">
+            <TableCell>TOTAL</TableCell>
+            {presentPlayerIds.map((id, i) => (
+              <TableCell key={i}>{state.score.total[id] ?? 0}</TableCell>
+            ))}
+          </TableRow>
         </TableBody>
       </Table>
     </div>
