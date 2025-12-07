@@ -282,13 +282,15 @@ export const PlayfieldContainer = () => {
           </div>
 
           <div className="border-2 border-dashed border-border rounded-lg p-12 text-center">
-            <p className="text-muted-foreground text-sm mt-2">
-              Players:&nbsp;
-              {(state?.playerIds ?? [])
-                .filter(Boolean)
-                .map(getPlayerName)
-                .join(", ")}
-            </p>
+            <div className="flex flex-col gap-2">
+              <div className="flex flex-row gap-2 border-2 rounded-md p-2 border-green-300 shadow text-muted-foreground text-sm mt-2 w-fit">
+                Players:
+                {(state?.playerIds ?? [])
+                  .filter(Boolean)
+                  .map(getPlayerName)
+                  .join(", ")}
+              </div>
+            </div>
             <BoardComponent />
           </div>
           {showStartVoteModal && <StartVoteModal vote={state!.currentVote!} />}

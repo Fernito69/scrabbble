@@ -1,8 +1,8 @@
 import { useGameContext } from "@/contexts/GameState.context";
 import { useDroppable } from "@dnd-kit/core";
 import {
-    SortableContext,
-    horizontalListSortingStrategy,
+  SortableContext,
+  horizontalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { SortableTile } from "../TileComponent/SortableTile";
 

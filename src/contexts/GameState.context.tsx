@@ -1,57 +1,16 @@
-import { DEFAULT_GAME_STATE, MAX_PLAYERS } from "@/model/core.defaults";
-import {
-  GameState,
-  Move,
-  PlayerHand,
-  Vote,
-  VoteType,
-} from "@/model/core.model";
-import {
-  useGetGameSnapshot,
-  useUpdateGame,
-} from "@/services/collections/game/game.hooks";
-import { DbGamePayload } from "@/services/collections/game/game.model";
-import { LanguageTemplate } from "@/services/collections/letterValueMap/languageTemplate.model";
+import { Move, PlayerHand } from "@/model/core.model";
+import { useGetGameSnapshot } from "@/services/collections/game/game.hooks";
 import {
   PropsWithChildren,
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
   useState,
 } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 import { useAuth } from "./AuthContext";
-
-interface GameInterface {
-  state: GameState | undefined;
-  template: LanguageTemplate | undefined;
-  initted: boolean;
-  gameId: string;
-  numPlayers: number;
-  isGameOrganizer: boolean;
-  getPlayerNumber: (playerId: string) => number;
-  localProposedMove: Move[];
-  localPlayerHand: PlayerHand;
-  setLocalProposedMove: (move: Move[]) => void;
-  setLocalPlayerHand: (hand: PlayerHand) => void;
-}
-
-const DefaultGame: GameInterface = {
-  state: DEFAULT_GAME_STATE,
-  template: undefined,
-  initted: false,
-  gameId: "",
-  numPlayers: 0,
-  isGameOrganizer: false,
-  getPlayerNumber: () => 1,
-  localProposedMove: [],
-  localPlayerHand: [null, null, null, null, null, null, null],
-  setLocalProposedMove: () => {},
-  setLocalPlayerHand: () => {},
-};
+import { useGameStateEffects } from "./GameState.effects";
+import { DefaultGame, GameInterface } from "./GameState.model";
 
 const GameContext = createContext<GameInterface>(DefaultGame);
 
@@ -73,13 +32,22 @@ export const GameStateProvider = ({
   // Data
   const { user } = useAuth();
   const { state, template, createdByUserId } = useGetGameSnapshot(gameId);
-  const initialPlayerHand = state?.playerHands?.[user!.uid];
 
-  // Hooks
-  const navigate = useNavigate();
-
-  // Mutations
-  const updateGame = useUpdateGame(gameId);
+  // Data-derived consts
+  const initialPlayerHand: PlayerHand | undefined =
+    state?.playerHands?.[user!.uid];
+  const numPlayers: number = useMemo(
+    () => state?.playerIds.filter(Boolean).length ?? 0,
+    [state?.playerIds]
+  );
+  const isGameOrganizer: boolean = useMemo(
+    () => user?.uid === createdByUserId,
+    [user?.uid, createdByUserId]
+  );
+  const isMyTurn: boolean = useMemo(
+    () => state?.currentTurn === user?.uid,
+    [state?.currentTurn, user?.uid]
+  );
 
   // State
   const [initted, setInitted] = useState<boolean>(false);
@@ -88,16 +56,6 @@ export const GameStateProvider = ({
   );
   const [localProposedMove, setLocalProposedMove] = useState<Move[]>(
     state?.currentProposedMove?.move ?? []
-  );
-
-  // Consts
-  const numPlayers: number = useMemo(
-    () => state?.playerIds.filter(Boolean).length ?? 0,
-    [state?.playerIds]
-  );
-  const isGameOrganizer = useMemo(
-    () => user?.uid === createdByUserId,
-    [user?.uid, createdByUserId]
   );
 
   // Functions
@@ -109,69 +67,8 @@ export const GameStateProvider = ({
     [state?.playerIds]
   );
 
-  // Effects
-
-  // INIT
-  useEffect(() => {
-    if (initted || !user || !template || !state) return;
-
-    let userIsPartOfGame = state.playerIds.includes(user.uid);
-
-    // If more than 4 players, redirect to lobby
-    if (numPlayers >= MAX_PLAYERS && !userIsPartOfGame) {
-      toast("We are sorry, this game is already full!");
-      navigate("/");
-      return;
-    }
-
-    // If already started, redirect to lobby
-    if (state.gameStarted && !userIsPartOfGame) {
-      toast("This game already started, you can't join anymore.");
-      navigate("/");
-      return;
-    }
-
-    // Add player to game
-    let payload = {
-      playerIds: state.playerIds.map((v) => {
-        if (v === null && !userIsPartOfGame) {
-          userIsPartOfGame = true;
-          return user.uid;
-        }
-        return v;
-      }),
-    } as Partial<DbGamePayload>;
-
-    updateGame(payload);
-
-    setInitted(true);
-
-    return () => setInitted(false);
-  }, [state, template, user]);
-
-  // Initial vote
-  useEffect(() => {
-    if (!state || !isGameOrganizer) return;
-    if (numPlayers > 1 && !state.currentVote && !state.gameStarted) {
-      const currentVote = {
-        type: VoteType.START_VOTE,
-        description: "Waiting until all players are ready to start the game",
-        voteFinished: false,
-        votes: state.playerIds
-          .filter(Boolean)
-          .map((id) => ({ playerId: id!, voted: false })),
-      } satisfies Vote;
-
-      updateGame({ currentVote });
-    }
-  }, [state]);
-
-  useEffect(() => {
-    setLocalPlayerHand(initialPlayerHand ?? DefaultGame.localPlayerHand);
-  }, [initialPlayerHand]);
-
   // Provider
-  const value = {
+  const providerProps = {
     state,
     template,
     initted,
@@ -183,7 +80,22 @@ export const GameStateProvider = ({
     localPlayerHand,
     setLocalProposedMove,
     setLocalPlayerHand,
+    isMyTurn,
   } satisfies GameInterface;
 
-  return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
+  // Initialize game effects
+  useGameStateEffects({
+    ...providerProps,
+    gameId,
+    initted,
+    initialPlayerHand,
+    isMyTurn,
+    setInitted,
+  });
+
+  return (
+    <GameContext.Provider value={providerProps}>
+      {children}
+    </GameContext.Provider>
+  );
 };

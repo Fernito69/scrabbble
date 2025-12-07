@@ -7,9 +7,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useGameContext } from "@/contexts/GameState.context";
-import { PlayerHand, Vote } from "@/model/core.model";
+import { Vote } from "@/model/core.model";
 import { useUpdateGame } from "@/services/collections/game/game.hooks";
-import { cloneDeep } from "lodash";
 import { useEffect } from "react";
 import { PlayerVotes } from "../PlayerVotes/PlayerVotes";
 
@@ -67,19 +66,9 @@ export const StartVoteModal = ({ vote }: Props) => {
       !state.gameStarted &&
       vote.votes.every((v) => v.voted)
     ) {
-      // Initialize player hands and update pouch
-      const tilePouch = cloneDeep(state.tilePouch);
-      const playerHands = state.playerIds.reduce(
-        (acc, id) =>
-          id != null ? { ...acc, [id]: tilePouch.splice(0, 7) } : acc,
-        {} satisfies Record<string, PlayerHand>
-      );
-
       updateGame({
         currentVote: null,
         gameStarted: true,
-        playerHands,
-        tilePouch,
       });
     }
   }, [vote]);
