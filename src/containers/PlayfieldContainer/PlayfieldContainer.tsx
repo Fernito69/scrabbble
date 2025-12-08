@@ -11,8 +11,7 @@ import { authService } from "@/services/auth";
 import { updateGame } from "@/services/collections/game/game";
 import { DbGamePayload } from "@/services/collections/game/game.model";
 import {
-  useGetPlayerName,
-  useGetUserConfig,
+  useGetUserConfig
 } from "@/services/collections/userConfig/userConfig.hooks";
 import {
   DndContext,
@@ -25,13 +24,14 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BoardComponent } from "./BoardComponent/BoardComponent";
+import { PlayerBadge } from "./PlayerBadge/PlayerBadge";
 import { PlayerHand } from "./PlayerHand/PlayerHand";
+import { ScoreBoard } from "./ScoreBoard/ScoreBoard";
 import { TileComponent } from "./TileComponent/TileComponent";
 import { StartVoteModal } from "./VoteModals/StartVoteModal/StartVoteModal";
-import { ScoreBoard } from "./ScoreBoard/ScoreBoard";
 
 export const PlayfieldContainer = () => {
   // Hooks
@@ -46,7 +46,6 @@ export const PlayfieldContainer = () => {
     setLocalProposedMove,
     isMyTurn,
   } = useGameContext();
-  const getPlayerName = useGetPlayerName();
 
   // Drag and drop state
   const [activeLetter, setActiveLetter] = useState<LetterLiteral | null>(null);
@@ -213,6 +212,9 @@ export const PlayfieldContainer = () => {
       const toX = over.data.current.x;
       const toY = over.data.current.y;
 
+      // Cancel if there's a tile at the destination
+      if (state.board[toY][toX].tile) return;
+
       if (
         activeLetter &&
         typeof fromX === "number" &&
@@ -220,8 +222,8 @@ export const PlayfieldContainer = () => {
         typeof toX === "number" &&
         typeof toY === "number"
       ) {
-        // Check if there's a tile at the destination
-        const existingTileAtDestination = localProposedMove.find(
+        // Check if there's a proposed move at the destination
+        const existingMoveAtDestination = localProposedMove.find(
           (m) => m.x === toX && m.y === toY
         );
 
@@ -229,7 +231,7 @@ export const PlayfieldContainer = () => {
           (m) => !(m.x === fromX && m.y === fromY)
         );
 
-        if (existingTileAtDestination) {
+        if (existingMoveAtDestination) {
           // Swap: move destination tile to source position
           newProposedMove = newProposedMove.filter(
             (m) => !(m.x === toX && m.y === toY)
@@ -237,7 +239,7 @@ export const PlayfieldContainer = () => {
           newProposedMove.push({
             x: fromX,
             y: fromY,
-            letter: existingTileAtDestination.letter,
+            letter: existingMoveAtDestination.letter,
           });
         }
 
@@ -296,10 +298,13 @@ export const PlayfieldContainer = () => {
             <div className="flex flex-row gap-2 mb-4">
               <Badge
                 label="Players:"
-                value={(state.playerIds ?? [])
-                  .filter(Boolean)
-                  .map(getPlayerName)
-                  .join(", ")}
+                value={
+                  <div className="flex flex-row gap-2">
+                    {(state.playerIds ?? []).filter(Boolean).map((v) => (
+                      <PlayerBadge playerId={v!} />
+                    ))}
+                  </div>
+                }
               />
               {state.gameStarted && (
                 <>
@@ -307,7 +312,7 @@ export const PlayfieldContainer = () => {
                   {state.currentPlayerId != null && (
                     <Badge
                       label="Current move:"
-                      value={getPlayerName(state.currentPlayerId)}
+                      value={<PlayerBadge playerId={state.currentPlayerId} />}
                     />
                   )}
                   <Badge label="Tiles left:" value={state.tilePouch.length} />
@@ -333,9 +338,9 @@ export const PlayfieldContainer = () => {
 };
 
 /**********/
-interface BadgeProps<T extends string | number = string | number> {
+interface BadgeProps {
   label: string;
-  value: T;
+  value: ReactNode;
   color?: string;
 }
 export const Badge = ({
