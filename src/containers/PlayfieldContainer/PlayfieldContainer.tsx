@@ -10,9 +10,7 @@ import {
 import { authService } from "@/services/auth";
 import { updateGame } from "@/services/collections/game/game";
 import { DbGamePayload } from "@/services/collections/game/game.model";
-import {
-  useGetUserConfig
-} from "@/services/collections/userConfig/userConfig.hooks";
+import { useGetUserConfig } from "@/services/collections/userConfig/userConfig.hooks";
 import {
   DndContext,
   DragEndEvent,
@@ -45,6 +43,7 @@ export const PlayfieldContainer = () => {
     setLocalPlayerHand,
     setLocalProposedMove,
     isMyTurn,
+    template,
   } = useGameContext();
 
   // Drag and drop state
@@ -294,7 +293,7 @@ export const PlayfieldContainer = () => {
             </div>
           </div>
 
-          <div className="border-2 border-dashed border-border rounded-lg p-12 text-center">
+          <div className="border-2 border-border rounded-lg text-center p-2">
             <div className="flex flex-row gap-2 mb-4">
               <Badge
                 label="Players:"
@@ -306,6 +305,7 @@ export const PlayfieldContainer = () => {
                   </div>
                 }
               />
+              {template && <Badge label="Language:" value={template.name} />}
               {state.gameStarted && (
                 <>
                   <Badge label="Turn:" value={state.currentTurn} />

@@ -8,8 +8,6 @@ import {
   onSnapshot,
   updateDoc,
 } from "firebase/firestore";
-import { getDefaultLanguageTemplate } from "../letterValueMap/languageTemplate";
-import { DEFAULT_LANGUAGE_TEMPLATE } from "../letterValueMap/languageTemplate.defaults";
 import { LanguageTemplate } from "../letterValueMap/languageTemplate.model";
 import { GAME_COLLECTION } from "./game.defaults";
 import { mapDbGamePayloadToGameState } from "./game.mappers";
@@ -18,13 +16,11 @@ import { computeTilePouch } from "./game.utils";
 
 export const createGame = async (
   db: Firestore,
-  userId: string
+  userId: string,
+  template: LanguageTemplate
 ): Promise<string> => {
   const { playerIds, score, gameStarted, gameOver, currentTurn, board } =
     DEFAULT_GAME_STATE;
-
-  const template =
-    (await getDefaultLanguageTemplate(db)) ?? DEFAULT_LANGUAGE_TEMPLATE;
 
   const payload = {
     createdByUserId: userId,

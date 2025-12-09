@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { DEFAULT_LANGUAGE_TEMPLATE } from "../collections/letterValueMap/languageTemplate.defaults";
+import { SPANISH_LANGUAGE_TEMPLATE } from "../collections/letterValueMap/languageTemplate.defaults";
 import { ScoringService } from "../scoring";
 import { scoringTestData } from "./scoring.testData";
 import { stringifyBoard } from "../utils/core";
@@ -11,7 +11,7 @@ describe("Test ", () => {
       it(name, () => {
         const { score, updatedBoard } = new ScoringService(
           board(),
-          DEFAULT_LANGUAGE_TEMPLATE
+          SPANISH_LANGUAGE_TEMPLATE
         ).score(playerMove);
 
         console.log("updatedBoard\n" + stringifyBoard(updatedBoard));
