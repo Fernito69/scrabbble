@@ -30,7 +30,7 @@ export const DraggableBoardTile = ({ letter, x, y }: Props) => {
 
   return (
     <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
-      <TileComponent letter={letter} proposedMove={true} />
+      <TileComponent letter={letter} proposedMove />
     </div>
   );
 };

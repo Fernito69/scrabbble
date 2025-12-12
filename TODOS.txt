@@ -1,5 +1,7 @@
-- Create GameState in DB
-- Create Page for Lobbies
-- Create Page for Game
-- Create Service for GameState, and in update, paste the previous snapshot into a history collection
-- Remember that board will have to be stringified because of [][]
+- Add skip turn
+- Add shuffle first move
+- Add english dict
+- Add useeffect para evitar que se quede pegado el modal de iniciar juego
+
+
+- DONE Add email to userConfig

@@ -7,6 +7,7 @@ import {
 } from "@/model/core.model";
 import { cloneDeep } from "lodash";
 import { LanguageTemplate } from "./collections/letterValueMap/languageTemplate.model";
+import { bonusMultiplierMap } from "./collections/game/game.utils";
 
 interface ScoringResult {
   score: number;
@@ -41,13 +42,6 @@ type WordLetter = {
 type Word = {
   horizontal: boolean;
   word: WordLetter[];
-};
-
-const bonusMultiplierMap: Record<Bonus, number> = {
-  [Bonus.DOUBLE_LETTER]: 2,
-  [Bonus.DOUBLE_WORD]: 2,
-  [Bonus.TRIPLE_LETTER]: 3,
-  [Bonus.TRIPLE_WORD]: 3,
 };
 
 const LETTER_BONUSES = [Bonus.DOUBLE_LETTER, Bonus.TRIPLE_LETTER] as Bonus[];
@@ -241,8 +235,6 @@ export class ScoringService {
       let wordMulti: number = 1;
       let wordScore: number = 0;
 
-      console.log("word", word.map((w) => w.letter.letter).join(""));
-
       word.forEach(({ letter, bonus }) => {
         let letterScore = letter.score;
         if (bonus && WORD_BONUSES.includes(bonus)) {
@@ -273,6 +265,7 @@ export class ScoringService {
 
     playerMove.move.forEach(({ x, y, letter }) => {
       newBoard[y][x] = {
+        ...newBoard[y][x],
         tile: { letter, ownerId: playerMove.playerId },
       };
     });

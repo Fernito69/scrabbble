@@ -57,7 +57,7 @@ export const ScoreBoard = () => {
             <TableRow key={i}>
               <TableCell>{turn + 1}</TableCell>
               {playerScores.map((score, j) => (
-                <TableCell key={j}>{score}</TableCell>
+                <TableCell key={j}>{score === 0 ? "-" : score}</TableCell>
               ))}
             </TableRow>
           ))}

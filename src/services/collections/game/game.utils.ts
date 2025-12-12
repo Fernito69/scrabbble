@@ -1,5 +1,6 @@
 import { PLAYER_HAND_LENGTH } from "@/model/core.defaults";
 import {
+  Bonus,
   GameState,
   LetterLiteral,
   LetterValueMap,
@@ -186,4 +187,20 @@ export const buildMovePayload = (
   }
 
   return payload;
+};
+
+// TODO: MOVE THIS?
+export const bonusColorMap: Record<Bonus, string> = {
+  [Bonus.DOUBLE_LETTER]: "bg-blue-200",
+  [Bonus.DOUBLE_WORD]: "bg-yellow-200",
+  [Bonus.TRIPLE_LETTER]: "bg-blue-600 text-white",
+  [Bonus.TRIPLE_WORD]:
+    "text-white bg-gradient-to-b from-red-600 via-red-500 to-red-500",
+};
+
+export const bonusMultiplierMap: Record<Bonus, number> = {
+  [Bonus.DOUBLE_LETTER]: 2,
+  [Bonus.DOUBLE_WORD]: 2,
+  [Bonus.TRIPLE_LETTER]: 3,
+  [Bonus.TRIPLE_WORD]: 3,
 };

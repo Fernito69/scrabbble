@@ -40,7 +40,7 @@ export const useGetPlayerName = () => {
 
   return useCallback(
     (id: string | null) =>
-      userConfigs.find((v) => v.id === id)?.displayName ?? "Player",
+      userConfigs.find((v) => v.id === id)?.displayName ?? id,
     [userConfigs]
   );
 };

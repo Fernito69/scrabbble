@@ -300,7 +300,7 @@ export const PlayfieldContainer = () => {
                 value={
                   <div className="flex flex-row gap-2">
                     {(state.playerIds ?? []).filter(Boolean).map((v) => (
-                      <PlayerBadge playerId={v!} />
+                      <PlayerBadge key={v} playerId={v!} />
                     ))}
                   </div>
                 }
