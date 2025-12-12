@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useSearchParams } from "react-router-dom";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { Login } from "@/pages/Login";
 import { Lobby } from "@/pages/Lobby";
@@ -33,6 +33,8 @@ function App() {
 
 function LoginRoute() {
   const { user, loading } = useAuth();
+  const [searchParams] = useSearchParams();
+  const returnUrl = searchParams.get("returnUrl") || "/";
 
   if (loading) {
     return (
@@ -45,7 +47,7 @@ function LoginRoute() {
   }
 
   if (user) {
-    return <Navigate to="/" replace />;
+    return <Navigate to={returnUrl} replace />;
   }
 
   return <Login />;

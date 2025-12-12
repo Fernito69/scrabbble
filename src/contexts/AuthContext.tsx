@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   useEffect(() => {
     if (user) {
-      initUserConfig(db, user.uid);
+      initUserConfig(db, user);
       initLanguageTemplate(db);
     }
   }, [user]);

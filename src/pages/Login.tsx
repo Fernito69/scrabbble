@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { authService } from "@/services/auth";
 
 export const Login = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const returnUrl = searchParams.get("returnUrl") || "/";
 
   // const handleSubmit = async (e: React.FormEvent) => {
   //   e.preventDefault();
@@ -29,7 +31,7 @@ export const Login = () => {
 
     try {
       await authService.signInWithGoogle();
-      navigate("/");
+      navigate(returnUrl);
     } catch (err) {
       setError("Failed to sign in with Google.");
       console.error(err);

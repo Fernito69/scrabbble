@@ -6,24 +6,20 @@ import {
   onSnapshot,
   query,
   setDoc,
-  updateDoc
+  updateDoc,
 } from "firebase/firestore";
 import {
   DEFAULT_USER_CONFIG,
   USER_CONFIG_COLLECTION,
 } from "./userConfig.defaults";
 import { UserConfig } from "./userConfig.model";
+import { User } from "firebase/auth";
 
 // This will explode eventually, optimize it later
 export const getUserConfigsSnapshot = (
   db: Firestore,
-  // playerIds: GameState["playerIds"],
   callback: (data: UserConfig[]) => void
 ) => {
-  // const q = query(
-  //   collection(db, USER_CONFIG_COLLECTION),
-  //   where("id", "in", playerIds)
-  // );
   const q = query(collection(db, USER_CONFIG_COLLECTION));
 
   const unsubscribe = onSnapshot(q, {
@@ -82,9 +78,11 @@ export const updateUserConfig = async (
 
 export const initUserConfig = async (
   db: Firestore,
-  userId: string
+  user: User | null
 ): Promise<void> => {
-  const docRef = doc(db, USER_CONFIG_COLLECTION, userId);
+  if (!user) return;
+
+  const docRef = doc(db, USER_CONFIG_COLLECTION, user.uid);
 
   if ((await getDoc(docRef)).exists()) {
     return;
@@ -92,8 +90,10 @@ export const initUserConfig = async (
 
   await setDoc(docRef, {
     ...DEFAULT_USER_CONFIG,
-    id: userId,
+    id: user.uid,
+    displayName: user.displayName ?? undefined,
+    email: user.email ?? undefined,
   } satisfies UserConfig);
 
-  console.log("Initialized user config for user", userId);
+  console.log("Initialized user config for user", user.uid);
 };
