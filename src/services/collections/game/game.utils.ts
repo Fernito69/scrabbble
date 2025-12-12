@@ -6,12 +6,12 @@ import {
   LetterValueMap,
   Move,
   PlayerHand,
-  VoteType,
+  VoteType
 } from "@/model/core.model";
-import { cloneDeep } from "lodash";
-import { DbGamePayload } from "./game.model";
-import { LanguageTemplate } from "../letterValueMap/languageTemplate.model";
 import { ScoringService } from "@/services/scoring";
+import { cloneDeep } from "lodash";
+import { LanguageTemplate } from "../letterValueMap/languageTemplate.model";
+import { DbGamePayload } from "./game.model";
 
 export const computeTilePouch = (
   quantityMap: LetterValueMap
@@ -96,6 +96,21 @@ export const isMoveValid = (
   };
 };
 
+export const getNextPlayerAndTurn = (
+  currentPlayerId: string,
+  state: GameState
+): { nextPlayerId: string; nextTurn: number } => {
+  const currentPlayerIdx = state.playerIds.findIndex(
+    (id) => id === currentPlayerId
+  );
+  const isEndOfTurn =
+    currentPlayerIdx >= state.playerIds.filter(Boolean).length - 1;
+  const nextPlayerIndex = isEndOfTurn ? 0 : currentPlayerIdx + 1;
+  const nextTurn = isEndOfTurn ? state.currentTurn + 1 : state.currentTurn;
+
+  return { nextPlayerId: state.playerIds[nextPlayerIndex]!, nextTurn };
+};
+
 export const buildMovePayload = (
   state: GameState,
   template: LanguageTemplate
@@ -111,7 +126,6 @@ export const buildMovePayload = (
   const {
     currentPlayerId,
     currentProposedMove,
-    playerIds,
     currentVote,
     board,
     playerHands,
@@ -124,20 +138,17 @@ export const buildMovePayload = (
   if (!rejected && !accepted) return undefined;
 
   // Prepare base payload
-  const currentPlayerIdx = playerIds.findIndex((id) => id === currentPlayerId);
-  const isEndOfTurn = currentPlayerIdx >= playerIds.filter(Boolean).length - 1;
-  const nextPlayerIndex = isEndOfTurn ? 0 : currentPlayerIdx + 1;
+  const { nextPlayerId, nextTurn } = getNextPlayerAndTurn(
+    currentPlayerId,
+    state
+  );
 
   const payload: Partial<DbGamePayload> = {
     currentVote: null,
     currentProposedMove: null,
-    currentPlayerId: playerIds[nextPlayerIndex],
+    currentPlayerId: nextPlayerId,
+    currentTurn: nextTurn,
   };
-
-  // If it's the end of the turn
-  if (isEndOfTurn) {
-    payload.currentTurn = state.currentTurn + 1;
-  }
 
   // If move is rejected
   if (currentVote.votes.every((v) => !v.voted)) {
@@ -185,6 +196,34 @@ export const buildMovePayload = (
     };
     payload.board = JSON.stringify(updatedBoard);
   }
+
+  return payload;
+};
+
+export const buildSkipTurnPayload = (
+  currentPlayerId: string,
+  state: GameState
+) => {
+  const { nextPlayerId, nextTurn } = getNextPlayerAndTurn(
+    currentPlayerId,
+    state
+  );
+
+  const perTurn = [
+    ...state.score.perTurn,
+    { playerId: currentPlayerId, turn: state.currentTurn, score: 0 },
+  ];
+
+  const payload = {
+    currentVote: null,
+    currentProposedMove: null,
+    currentPlayerId: nextPlayerId,
+    currentTurn: nextTurn,
+    score: {
+      ...state.score,
+      perTurn,
+    },
+  } satisfies Partial<DbGamePayload>;
 
   return payload;
 };

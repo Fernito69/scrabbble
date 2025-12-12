@@ -5,7 +5,10 @@ import { useGameContext } from "@/contexts/GameState.context";
 import { VoteType } from "@/model/core.model";
 import { useUpdateGame } from "@/services/collections/game/game.hooks";
 import { DbGamePayload } from "@/services/collections/game/game.model";
-import { isMoveValid } from "@/services/collections/game/game.utils";
+import {
+  buildSkipTurnPayload,
+  isMoveValid,
+} from "@/services/collections/game/game.utils";
 import { useDroppable } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -68,6 +71,12 @@ export const PlayerHand = ({}: Props) => {
     setLocalProposedMove([]);
   };
 
+  const handleSkipTurn = () => {
+    if (!state || !user) return;
+    updateGame(buildSkipTurnPayload(user.uid, state));
+    setLocalProposedMove([]);
+  };
+
   // Consts
   const { valid, error } = isMoveValid(localProposedMove);
 
@@ -78,7 +87,7 @@ export const PlayerHand = ({}: Props) => {
   const tileIds = localPlayerHand.map((_, i) => `hand-tile-${i}`);
 
   const proposeMoveButtonDisabled = !isMyTurn || !valid;
-
+  const skipTurnDisabled = !isMyTurn || !!state.currentVote;
   const showControls = isMyTurn || !!state.currentVote;
 
   // Effects
@@ -101,17 +110,39 @@ export const PlayerHand = ({}: Props) => {
           </SortableContext>
         </div>
         {showControls && (
-          <div className="flex-1 flex flex-row h-fit p-2 border border-black rounded-md bg-gray-100 items-center">
+          <div className="flex-1 flex flex-row gap-2 h-fit p-2 border border-black rounded-md bg-gray-100 items-center">
             {isMyTurn && (
-              <ConfirmationDialog
-                isDisabled={proposeMoveButtonDisabled}
-                title="Propose"
-                description="Are you sure you want to propose this move?"
-                onAccept={handleProposeMove}
-                triggerElement={
-                  <Button disabled={proposeMoveButtonDisabled}>Propose</Button>
-                }
-              />
+              <>
+                <ConfirmationDialog
+                  isDisabled={proposeMoveButtonDisabled}
+                  title="Propose move"
+                  description="Are you sure you want to propose this move?"
+                  onAccept={handleProposeMove}
+                  triggerElement={
+                    <Button
+                      className="text-sm"
+                      disabled={proposeMoveButtonDisabled}
+                    >
+                      Propose move
+                    </Button>
+                  }
+                />
+                <ConfirmationDialog
+                  isDisabled={skipTurnDisabled}
+                  title="Skip"
+                  description="Are you sure you want to skip your turn?"
+                  onAccept={handleSkipTurn}
+                  triggerElement={
+                    <Button
+                      className="text-sm"
+                      variant={"destructive"}
+                      disabled={skipTurnDisabled}
+                    >
+                      Skip turn
+                    </Button>
+                  }
+                />
+              </>
             )}
             <AcceptProposedMoveButton />
           </div>

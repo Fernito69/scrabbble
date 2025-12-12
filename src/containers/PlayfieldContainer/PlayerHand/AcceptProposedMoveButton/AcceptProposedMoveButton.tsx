@@ -2,6 +2,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useAuth } from "@/contexts/AuthContext";
 import { useGameContext } from "@/contexts/GameState.context";
 import { useUpdateGame } from "@/services/collections/game/game.hooks";
+import { PlayerBadge } from "../../PlayerBadge/PlayerBadge";
 
 export const AcceptProposedMoveButton = () => {
   // Context
@@ -34,7 +35,14 @@ export const AcceptProposedMoveButton = () => {
   // Render
   return (
     <div className="flex flex-col gap-2 items-center justify-center w-full h-full">
-      <div className="text-muted-foreground">Accept </div>
+      <div className="text-muted-foreground whitespace-nowrap w-full flex flex-row gap-2 justify-center">
+        Accept move from{" "}
+        {state.currentPlayerId === user!.uid ? (
+          "myself"
+        ) : (
+          <PlayerBadge playerId={state.currentPlayerId!} />
+        )}
+      </div>
       <Checkbox
         className="bg-white"
         checked={isChecked}

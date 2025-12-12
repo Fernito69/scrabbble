@@ -144,10 +144,17 @@ export type PlayerHand = [
   LetterLiteral | null
 ];
 
+export type PlayerIds = [
+  string | null,
+  string | null,
+  string | null,
+  string | null
+];
+
 export type GameState = {
   board: Board;
   tilePouch: LetterLiteral[];
-  playerIds: [string | null, string | null, string | null, string | null];
+  playerIds: PlayerIds;
   playerHands: Record<string, PlayerHand>;
   currentPlayerId: string | undefined;
   currentTurn: number;
