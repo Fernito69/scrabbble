@@ -260,7 +260,7 @@ export const PlayfieldContainer = () => {
   const userName = userConfig?.displayName ?? user?.email;
   const showStartVoteModal =
     state.currentVote?.type === VoteType.START_VOTE &&
-    !state.currentVote?.voteFinished;
+    !state.currentVote?.voteFinished && !state.gameStarted;
 
   return (
     <DndContext

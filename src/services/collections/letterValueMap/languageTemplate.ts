@@ -5,9 +5,10 @@ import {
   doc,
   getDocs,
   onSnapshot,
-  updateDoc
+  updateDoc,
 } from "firebase/firestore";
 import {
+  ENGLISH_LANGUAGE_TEMPLATE,
   GERMAN_LANGUAGE_TEMPLATE,
   LANGUAGE_TEMPLATE_COLLECTION,
   SPANISH_LANGUAGE_TEMPLATE,
@@ -48,6 +49,7 @@ export const initLanguageTemplate = async (db: Firestore): Promise<void> => {
   const defaultTemplates: LanguageTemplate[] = [
     SPANISH_LANGUAGE_TEMPLATE,
     GERMAN_LANGUAGE_TEMPLATE,
+    ENGLISH_LANGUAGE_TEMPLATE,
   ];
 
   await Promise.all(

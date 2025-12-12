@@ -76,3 +76,5 @@ export const updateGame = (
   const docRef = doc(db, GAME_COLLECTION, id);
   return updateDoc(docRef, game);
 };
+
+// TODO: move skip turn and propose move handlers to here
