@@ -14,18 +14,20 @@ import { useGetLanguageTemplates } from "@/services/collections/letterValueMap/l
 import { LanguageTemplate } from "@/services/collections/letterValueMap/languageTemplate.model";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import Select from "react-select";
 
 interface Props {
   close: () => void;
 }
 export const LanguageSelectDialog = ({ close }: Props) => {
+  // Hooks
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+
   // Data
   const { user } = useAuth();
   const templates = useGetLanguageTemplates();
-
-  // Hooks
-  const navigate = useNavigate();
 
   // State
   const [selectedTemplate, setSelectedTemplate] = useState<
@@ -63,8 +65,8 @@ export const LanguageSelectDialog = ({ close }: Props) => {
     <Dialog open onOpenChange={close}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Select language</DialogTitle>
-          <DialogDescription>Select a language from the list</DialogDescription>
+          <DialogTitle>{t("languageSelect.title")}</DialogTitle>
+          <DialogDescription>{t("languageSelect.description")}</DialogDescription>
         </DialogHeader>
         <Select
           options={options}
@@ -75,10 +77,10 @@ export const LanguageSelectDialog = ({ close }: Props) => {
         />
         <DialogFooter>
           <Button disabled={!selectedTemplate} onClick={handleCreateGame}>
-            Accept
+            {t("languageSelect.accept")}
           </Button>
           <Button variant="secondary" onClick={close}>
-            Cancel
+            {t("languageSelect.cancel")}
           </Button>
         </DialogFooter>
       </DialogContent>

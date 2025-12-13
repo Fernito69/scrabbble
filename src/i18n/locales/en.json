@@ -1,0 +1,62 @@
+{
+  "lobby": {
+    "title": "Scrabbble Lobby",
+    "welcome": "Welcome, {{userName}}",
+    "createGame": "Create New Game",
+    "creatingGame": "Creating Game...",
+    "signOut": "Sign Out"
+  },
+  "languageSelect": {
+    "title": "Select language",
+    "description": "Select a language from the list",
+    "accept": "Accept",
+    "cancel": "Cancel"
+  },
+  "scoreBoard": {
+    "turn": "Turn",
+    "total": "TOTAL"
+  },
+  "reshuffleVote": {
+    "titlePrefix": "has requested a hand reshuffle",
+    "description": "Please accept or reject the request",
+    "aPlayer": "A player"
+  },
+  "readyCheckbox": {
+    "ready": "I'm ready!"
+  },
+  "acceptMove": {
+    "acceptFrom": "Accept move from",
+    "myself": "myself"
+  },
+  "playerControls": {
+    "proposeMove": "Propose move",
+    "proposeMoveConfirm": "Are you sure you want to propose this move?",
+    "skipTurn": "Skip turn",
+    "skipTurnConfirm": "Are you sure you want to skip your turn?",
+    "skip": "Skip",
+    "reshuffleHands": "Reshuffle hands",
+    "requestReshuffle": "Request reshuffle",
+    "requestReshuffleConfirm": "What a shitty hand! Do you want to request a reshuffle?"
+  },
+  "playfield": {
+    "welcome": "Welcome, {{userName}}",
+    "leaveGame": "Leave Game",
+    "backToHome": "Back to home",
+    "signOut": "Sign Out",
+    "players": "Players:",
+    "language": "Language:",
+    "turn": "Turn:",
+    "currentMove": "Current move:",
+    "tilesLeft": "Tiles left:"
+  },
+  "playerVotes": {
+    "accept": "Accept",
+    "reject": "Reject",
+    "awaitingVote": "Awaiting vote..."
+  },
+  "languageSwitcher": {
+    "selectLanguage": "Select Language",
+    "english": "English",
+    "spanish": "Spanish"
+  }
+}

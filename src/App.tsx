@@ -4,30 +4,33 @@ import { Login } from "@/pages/Login";
 import { Lobby } from "@/pages/Lobby";
 import { Playfield } from "@/pages/Playfield";
 import { useAuth } from "@/contexts/AuthContext";
+import { LanguageInitializer } from "@/components/LanguageInitializer/LanguageInitializer";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<LoginRoute />} />
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <Lobby />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/game/:gameId"
-          element={
-            <ProtectedRoute>
-              <Playfield />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
-    </BrowserRouter>
+    <LanguageInitializer>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<LoginRoute />} />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Lobby />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/game/:gameId"
+            element={
+              <ProtectedRoute>
+                <Playfield />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </LanguageInitializer>
   );
 }
 

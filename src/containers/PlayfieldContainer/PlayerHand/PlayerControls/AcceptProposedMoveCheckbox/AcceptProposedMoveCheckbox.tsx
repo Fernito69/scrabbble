@@ -4,8 +4,12 @@ import { useGameContext } from "@/contexts/GameState.context";
 import { useUpdateGame } from "@/services/collections/game/game.hooks";
 import { PlayerBadge } from "../../../PlayerBadge/PlayerBadge";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 export const AcceptProposedMoveCheckbox = () => {
+  // Hooks
+  const { t } = useTranslation();
+
   // Context
   const { gameId, state } = useGameContext();
   const { user } = useAuth();
@@ -41,9 +45,9 @@ export const AcceptProposedMoveCheckbox = () => {
   return (
     <div className={className}>
       <div className="text-muted-foreground whitespace-nowrap w-full flex flex-row gap-2 justify-center text-sm">
-        Accept move from{" "}
+        {t("acceptMove.acceptFrom")}{" "}
         {state.currentPlayerId === user!.uid ? (
-          "myself"
+          t("acceptMove.myself")
         ) : (
           <PlayerBadge playerId={state.currentPlayerId!} />
         )}

@@ -7,6 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useGameContext } from "@/contexts/GameState.context";
+import { useTranslation } from "react-i18next";
 import { PlayerBadge } from "../PlayerBadge/PlayerBadge";
 
 interface ScoreRow {
@@ -15,6 +16,7 @@ interface ScoreRow {
 }
 
 export const ScoreBoard = () => {
+  const { t } = useTranslation();
   const { state } = useGameContext();
 
   if (!state?.score) return null;
@@ -44,7 +46,7 @@ export const ScoreBoard = () => {
       <Table>
         <TableHeader className="bg-muted">
           <TableRow>
-            <TableHead>Turn</TableHead>
+            <TableHead>{t("scoreBoard.turn")}</TableHead>
             {presentPlayerIds.map((id, i) => (
               <TableHead key={i}>
                 <PlayerBadge playerId={id!} />
@@ -62,7 +64,7 @@ export const ScoreBoard = () => {
             </TableRow>
           ))}
           <TableRow className="bg-gray-100 font-semibold">
-            <TableCell>TOTAL</TableCell>
+            <TableCell>{t("scoreBoard.total")}</TableCell>
             {presentPlayerIds.map((id, i) => (
               <TableCell key={i}>{state.score.total[id] ?? 0}</TableCell>
             ))}

@@ -11,10 +11,14 @@ import {
   isMoveValid,
 } from "@/services/collections/game/game.utils";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import { ReadyCheckbox } from "./ReadyCheckbox/ReadyCheckbox";
 import { AcceptProposedMoveCheckbox } from "./AcceptProposedMoveCheckbox/AcceptProposedMoveCheckbox";
 
 export const PlayerControls = () => {
+  // Hooks
+  const { t } = useTranslation();
+
   // Context
   const { user } = useAuth();
   const {
@@ -82,26 +86,26 @@ export const PlayerControls = () => {
           <>
             <ConfirmationDialog
               isDisabled={proposeMoveButtonDisabled}
-              title="Propose move"
-              description="Are you sure you want to propose this move?"
+              title={t("playerControls.proposeMove")}
+              description={t("playerControls.proposeMoveConfirm")}
               onAccept={handleProposeMove}
               triggerElement={
                 <Button
                   className="text-sm"
                   disabled={proposeMoveButtonDisabled}
                 >
-                  Propose move
+                  {t("playerControls.proposeMove")}
                 </Button>
               }
             />
             {showSkipTurnButton && (
               <ConfirmationDialog
-                title="Skip"
-                description="Are you sure you want to skip your turn?"
+                title={t("playerControls.skip")}
+                description={t("playerControls.skipTurnConfirm")}
                 onAccept={handleSkipTurn}
                 triggerElement={
                   <Button className="text-sm" variant={"destructive"}>
-                    Skip turn
+                    {t("playerControls.skipTurn")}
                   </Button>
                 }
               />
@@ -111,12 +115,12 @@ export const PlayerControls = () => {
         {showReadyCheckbox && <ReadyCheckbox vote={state.currentVote!} />}
         {showReshuffleButton && (
           <ConfirmationDialog
-            title="Request reshuffle"
-            description="What a shitty hand! Do you want to request a reshuffle?"
+            title={t("playerControls.requestReshuffle")}
+            description={t("playerControls.requestReshuffleConfirm")}
             onAccept={handleReshuffle}
             triggerElement={
               <Button className="text-sm" variant={"destructive"}>
-                Reshuffle hands
+                {t("playerControls.reshuffleHands")}
               </Button>
             }
           />

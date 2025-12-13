@@ -24,15 +24,18 @@ import {
 import { arrayMove } from "@dnd-kit/sortable";
 import { ReactNode, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { BoardComponent } from "./BoardComponent/BoardComponent";
 import { PlayerBadge } from "./PlayerBadge/PlayerBadge";
 import { PlayerHand } from "./PlayerHand/PlayerHand";
 import { ScoreBoard } from "./ScoreBoard/ScoreBoard";
 import { TileComponent } from "./TileComponent/TileComponent";
 import { ReshuffleVoteModal } from "./VoteModals/ReshuffleVoteModal/ReshuffleVoteModal";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher/LanguageSwitcher";
 
 export const PlayfieldContainer = () => {
   // Hooks
+  const { t } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
   const {
@@ -279,7 +282,7 @@ export const PlayfieldContainer = () => {
           <div className="flex justify-between items-center mb-8">
             <div>
               {/* <h1 className="text-3xl font-bold">Playfield</h1> */}
-              <p className="text-muted-foreground mt-1">Welcome, {userName}</p>
+              <p className="text-muted-foreground mt-1">{t("playfield.welcome", { userName })}</p>
             </div>
             <div className="flex gap-4">
               {!state.gameStarted && (
@@ -287,20 +290,21 @@ export const PlayfieldContainer = () => {
                   onClick={handleLeave}
                   className="px-4 py-2 text-sm border border-input rounded-md hover:bg-accent"
                 >
-                  Leave Game
+                  {t("playfield.leaveGame")}
                 </button>
               )}
               <button
                 onClick={() => navigate("/")}
                 className="px-4 py-2 text-sm border border-input rounded-md hover:bg-accent"
               >
-                Back to home
+                {t("playfield.backToHome")}
               </button>
+              <LanguageSwitcher />
               <button
                 onClick={handleSignOut}
                 className="px-4 py-2 text-sm border border-input rounded-md hover:bg-accent"
               >
-                Sign Out
+                {t("playfield.signOut")}
               </button>
             </div>
           </div>
@@ -308,7 +312,7 @@ export const PlayfieldContainer = () => {
           <div className=" rounded-lg text-center p-2">
             <div className="flex flex-row gap-2 mb-4">
               <Badge
-                label="Players:"
+                label={t("playfield.players")}
                 value={
                   <div className="flex flex-row gap-2">
                     {(state.playerIds ?? []).filter(Boolean).map((v) => (
@@ -317,17 +321,17 @@ export const PlayfieldContainer = () => {
                   </div>
                 }
               />
-              {template && <Badge label="Language:" value={template.name} />}
+              {template && <Badge label={t("playfield.language")} value={template.name} />}
               {state.gameStarted && (
                 <>
-                  <Badge label="Turn:" value={state.currentTurn} />
+                  <Badge label={t("playfield.turn")} value={state.currentTurn} />
                   {state.currentPlayerId != null && (
                     <Badge
-                      label="Current move:"
+                      label={t("playfield.currentMove")}
                       value={<PlayerBadge playerId={state.currentPlayerId} />}
                     />
                   )}
-                  <Badge label="Tiles left:" value={state.tilePouch.length} />
+                  <Badge label={t("playfield.tilesLeft")} value={state.tilePouch.length} />
                 </>
               )}
             </div>

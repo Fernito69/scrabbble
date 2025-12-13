@@ -3,6 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 import { PlayerVote } from "@/model/core.model";
 import { Check, X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { PlayerBadge } from "../../PlayerBadge/PlayerBadge";
 
 interface Props {
@@ -11,6 +12,7 @@ interface Props {
 }
 
 export const PlayerVotesButtons = ({ votes, onChangeVote }: Props) => {
+  const { t } = useTranslation();
   const { user } = useAuth();
 
   return (
@@ -46,7 +48,7 @@ export const PlayerVotesButtons = ({ votes, onChangeVote }: Props) => {
                     onChangeVote(playerId, voted !== true ? true : null)
                   }
                 >
-                  Accept
+                  {t("playerVotes.accept")}
                 </Button>
                 <Button
                   className={rejectButtonClassname}
@@ -55,11 +57,11 @@ export const PlayerVotesButtons = ({ votes, onChangeVote }: Props) => {
                     onChangeVote(playerId, voted !== false ? false : null)
                   }
                 >
-                  Reject
+                  {t("playerVotes.reject")}
                 </Button>
               </div>
             ) : voted === null ? (
-              <i className="text-sm text-gray-500">Awaiting vote...</i>
+              <i className="text-sm text-gray-500">{t("playerVotes.awaitingVote")}</i>
             ) : voted ? (
               <Check />
             ) : (

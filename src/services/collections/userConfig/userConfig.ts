@@ -6,7 +6,6 @@ import {
   onSnapshot,
   query,
   setDoc,
-  updateDoc,
 } from "firebase/firestore";
 import {
   DEFAULT_USER_CONFIG,
@@ -73,7 +72,8 @@ export const updateUserConfig = async (
   userConfig: Partial<UserConfig>
 ): Promise<void> => {
   const docRef = doc(db, USER_CONFIG_COLLECTION, userId);
-  await updateDoc(docRef, userConfig);
+  // Use setDoc with merge to create document if it doesn't exist
+  await setDoc(docRef, userConfig, { merge: true });
 };
 
 export const initUserConfig = async (

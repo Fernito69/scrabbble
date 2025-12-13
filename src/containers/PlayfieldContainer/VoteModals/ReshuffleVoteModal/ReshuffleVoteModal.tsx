@@ -9,6 +9,7 @@ import {
 import { useGameContext } from "@/contexts/GameState.context";
 import { Vote } from "@/model/core.model";
 import { useUpdateGame } from "@/services/collections/game/game.hooks";
+import { useTranslation } from "react-i18next";
 import { PlayerBadge } from "../../PlayerBadge/PlayerBadge";
 import { PlayerVotesButtons } from "../PlayerVotesButtons/PlayerVotesButtons";
 
@@ -16,6 +17,9 @@ interface Props {
   vote: Vote;
 }
 export const ReshuffleVoteModal = ({ vote }: Props) => {
+  // Hooks
+  const { t } = useTranslation();
+
   // Context
   const { gameId } = useGameContext();
 
@@ -34,13 +38,6 @@ export const ReshuffleVoteModal = ({ vote }: Props) => {
     });
   };
 
-  // Consts
-  const proposerName = vote.proposerId ? (
-    <PlayerBadge playerId={vote.proposerId} />
-  ) : (
-    "A player"
-  );
-
   // Render
   return (
     <Dialog open>
@@ -48,11 +45,16 @@ export const ReshuffleVoteModal = ({ vote }: Props) => {
         <DialogHeader>
           <DialogTitle>
             <div className="flex flex-row gap-2">
-              {proposerName} has requested a hand reshuffle
+              {vote.proposerId ? (
+                <PlayerBadge playerId={vote.proposerId} />
+              ) : (
+                t("reshuffleVote.aPlayer")
+              )}
+              {t("reshuffleVote.titlePrefix")}
             </div>
           </DialogTitle>
           <DialogDescription>
-            Please accept or reject the request
+            {t("reshuffleVote.description")}
           </DialogDescription>
         </DialogHeader>
         <PlayerVotesButtons

@@ -9,3 +9,8 @@ export type LanguageTemplate = {
   scoreMap: LetterValueMap;
   quantityMap: LetterValueMap;
 };
+
+export enum Language {
+  EN = "en",
+  ES = "es",
+}

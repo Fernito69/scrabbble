@@ -1,0 +1,62 @@
+{
+  "lobby": {
+    "title": "Sala de Scrabbble",
+    "welcome": "Bienvenido, {{userName}}",
+    "createGame": "Crear Nueva Partida",
+    "creatingGame": "Creando Partida...",
+    "signOut": "Cerrar Sesión"
+  },
+  "languageSelect": {
+    "title": "Seleccionar idioma",
+    "description": "Selecciona un idioma de la lista",
+    "accept": "Aceptar",
+    "cancel": "Cancelar"
+  },
+  "scoreBoard": {
+    "turn": "Turno",
+    "total": "TOTAL"
+  },
+  "reshuffleVote": {
+    "titlePrefix": "ha solicitado barajar las fichas",
+    "description": "Por favor acepta o rechaza la solicitud",
+    "aPlayer": "Un jugador"
+  },
+  "readyCheckbox": {
+    "ready": "¡Estoy listo!"
+  },
+  "acceptMove": {
+    "acceptFrom": "Aceptar jugada de",
+    "myself": "mí mismo"
+  },
+  "playerControls": {
+    "proposeMove": "Proponer jugada",
+    "proposeMoveConfirm": "¿Estás seguro de que quieres proponer esta jugada?",
+    "skipTurn": "Saltar turno",
+    "skipTurnConfirm": "¿Estás seguro de que quieres saltar tu turno?",
+    "skip": "Saltar",
+    "reshuffleHands": "Barajar fichas",
+    "requestReshuffle": "Solicitar barajado",
+    "requestReshuffleConfirm": "¡Qué mano tan mala! ¿Quieres solicitar un barajado?"
+  },
+  "playfield": {
+    "welcome": "Bienvenido, {{userName}}",
+    "leaveGame": "Salir de la Partida",
+    "backToHome": "Volver al inicio",
+    "signOut": "Cerrar Sesión",
+    "players": "Jugadores:",
+    "language": "Idioma:",
+    "turn": "Turno:",
+    "currentMove": "Jugada actual:",
+    "tilesLeft": "Fichas restantes:"
+  },
+  "playerVotes": {
+    "accept": "Aceptar",
+    "reject": "Rechazar",
+    "awaitingVote": "Esperando voto..."
+  },
+  "languageSwitcher": {
+    "selectLanguage": "Seleccionar Idioma",
+    "english": "Inglés",
+    "spanish": "Español"
+  }
+}

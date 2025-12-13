@@ -3,9 +3,12 @@ import { authService } from "@/services/auth";
 import { useGetUserConfig } from "@/services/collections/userConfig/userConfig.hooks";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { LanguageSelectDialog } from "./LanguageSelectDialog/LanguageSelectDialog";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher/LanguageSwitcher";
 
 export const LobbyContainer = () => {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [isCreatingGame, setIsCreatingGame] = useState(false);
@@ -30,8 +33,8 @@ export const LobbyContainer = () => {
     <div className="min-h-screen flex flex-col items-center justify-center bg-background p-8">
       <div className="w-full max-w-2xl space-y-6">
         <div className="text-center space-y-2">
-          <h1 className="text-4xl font-bold">Scrabbble Lobby</h1>
-          <p className="text-muted-foreground">Welcome, {userName}</p>
+          <h1 className="text-4xl font-bold">{t("lobby.title")}</h1>
+          <p className="text-muted-foreground">{t("lobby.welcome", { userName })}</p>
         </div>
 
         <div className="flex flex-col gap-4">
@@ -40,15 +43,18 @@ export const LobbyContainer = () => {
             disabled={isCreatingGame}
             className="w-full px-6 py-3 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isCreatingGame ? "Creating Game..." : "Create New Game"}
+            {isCreatingGame ? t("lobby.creatingGame") : t("lobby.createGame")}
           </button>
 
-          <button
-            onClick={handleSignOut}
-            className="w-full px-6 py-3 border border-input rounded-md hover:bg-accent"
-          >
-            Sign Out
-          </button>
+          <div className="flex gap-4">
+            <LanguageSwitcher />
+            <button
+              onClick={handleSignOut}
+              className="flex-1 px-6 py-3 border border-input rounded-md hover:bg-accent"
+            >
+              {t("lobby.signOut")}
+            </button>
+          </div>
         </div>
         {isCreatingGame && (
           <LanguageSelectDialog close={() => setIsCreatingGame(false)} />

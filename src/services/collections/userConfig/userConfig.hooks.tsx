@@ -10,19 +10,27 @@ import { UserConfig } from "./userConfig.model";
 
 export const useGetUserConfig = (): UserConfig | null => {
   const [userConfig, setUserConfig] = useState<UserConfig | null>(null);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
+  // Listen to auth state changes
   useEffect(() => {
-    const user = authService.getCurrentUser();
+    const unsubscribe = authService.onAuthStateChange((user) => {
+      setCurrentUserId(user?.uid ?? null);
+    });
+    return unsubscribe;
+  }, []);
 
-    if (!user) {
+  // Load user config when user changes
+  useEffect(() => {
+    if (!currentUserId) {
       setUserConfig(null);
       return;
     }
 
-    return getUserConfigSnapshot(db, user.uid, (data) => {
+    return getUserConfigSnapshot(db, currentUserId, (data) => {
       setUserConfig(data);
     });
-  }, []);
+  }, [currentUserId]);
 
   return userConfig;
 };

@@ -6,11 +6,15 @@ import { Vote } from "@/model/core.model";
 import { useUpdateGame } from "@/services/collections/game/game.hooks";
 import { getInitGamePayload } from "@/services/collections/game/game.utils";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   vote: Vote;
 }
 export const ReadyCheckbox = ({ vote }: Props) => {
+  // Hooks
+  const { t } = useTranslation();
+
   // Context
   const { numPlayers, gameId, state, isGameOrganizer } = useGameContext();
   const { user } = useAuth();
@@ -77,7 +81,7 @@ export const ReadyCheckbox = ({ vote }: Props) => {
   return (
     <div className={className}>
       <div className="text-muted-foreground whitespace-nowrap w-full flex flex-row gap-2 justify-center text-sm">
-        I'm ready!
+        {t("readyCheckbox.ready")}
       </div>
       <Checkbox
         className="bg-white"
