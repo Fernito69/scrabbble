@@ -1,9 +1,15 @@
 import { db } from "@/config/firebase";
-import { GameState } from "@/model/core.model";
+import { GameState, Move, PlayerHand } from "@/model/core.model";
 import { useEffect, useState } from "react";
 import { LanguageTemplate } from "../letterValueMap/languageTemplate.model";
-import { getGameSnapshot, updateGame } from "./game";
+import {
+  getGameSnapshot,
+  proposeMove,
+  reshuffleInitialPlayerHands,
+  updateGame,
+} from "./game";
 import { DbGamePayload } from "./game.model";
+import { useAuth } from "@/contexts/AuthContext";
 
 type UseGetGameSnapshot = {
   state: GameState | undefined;
@@ -34,6 +40,28 @@ export const useUpdateGame = (gameId: string) => {
       await updateGame(db, gameId, game);
     } catch (err) {
       console.error("Failed to update user config:", err);
+    }
+  };
+};
+
+export const useProposeMove = (gameId: string) => {
+  const { user } = useAuth();
+
+  return async (move: Move[], hand: PlayerHand, state: GameState) => {
+    try {
+      await proposeMove(db, gameId, move, hand, state, user);
+    } catch (err) {
+      console.error("Failed to propose move:", err);
+    }
+  };
+};
+
+export const useReshuffleGame = (gameId: string) => {
+  return async (currState: GameState, currTemplate: LanguageTemplate) => {
+    try {
+      await reshuffleInitialPlayerHands(db, gameId, currState, currTemplate);
+    } catch (err) {
+      console.error("Failed to reshuffle game:", err);
     }
   };
 };

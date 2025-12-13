@@ -1,6 +1,9 @@
 import { MAX_PLAYERS } from "@/model/core.defaults";
 import { Vote, VoteType } from "@/model/core.model";
-import { useUpdateGame } from "@/services/collections/game/game.hooks";
+import {
+  useReshuffleGame,
+  useUpdateGame,
+} from "@/services/collections/game/game.hooks";
 import { DbGamePayload } from "@/services/collections/game/game.model";
 import {
   buildMovePayload,
@@ -28,6 +31,7 @@ export const useGameStateEffects = ({
 
   // Mutations
   const updateGame = useUpdateGame(gameId);
+  const reshuffleGame = useReshuffleGame(gameId);
 
   /**********/
   // Add new players to game
@@ -87,7 +91,6 @@ export const useGameStateEffects = ({
     if (numPlayers > 1 && !state.currentVote && !state.gameStarted) {
       const currentVote = {
         type: VoteType.START_VOTE,
-        description: "Waiting until all players are ready to start the game",
         voteFinished: false,
         votes: state.playerIds
           .filter(Boolean)
@@ -112,6 +115,29 @@ export const useGameStateEffects = ({
     const payload = buildMovePayload(state, template);
 
     if (payload) updateGame(payload);
+  }, [state?.currentVote]);
+
+  /***************/
+  // Vote for reshuffle
+  /***************/
+  useEffect(() => {
+    if (
+      !isGameOrganizer ||
+      state?.currentVote?.type !== VoteType.RESHUFFLE ||
+      !template
+    )
+      return;
+
+    // Shuffle accepted
+    if (state.currentVote.votes.every((v) => !!v.voted)) {
+      reshuffleGame(state, template);
+    }
+    // Shuffle rejected
+    else if (state.currentVote.votes.every((v) => v.voted === false)) {
+      updateGame({
+        currentVote: null,
+      });
+    }
   }, [state?.currentVote]);
 
   /***************/

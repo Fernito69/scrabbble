@@ -1,5 +1,4 @@
-import { DEFAULT_GAME_STATE } from "@/model/core.defaults";
-import { GameState } from "@/model/core.model";
+import { GameState, Move, PlayerHand } from "@/model/core.model";
 import {
   Firestore,
   addDoc,
@@ -12,32 +11,15 @@ import { LanguageTemplate } from "../letterValueMap/languageTemplate.model";
 import { GAME_COLLECTION } from "./game.defaults";
 import { mapDbGamePayloadToGameState } from "./game.mappers";
 import { DbGamePayload } from "./game.model";
-import { computeTilePouch } from "./game.utils";
+import { buildProposeMovePayload, getInitialGamePayload } from "./game.utils";
+import { User } from "firebase/auth";
 
 export const createGame = async (
   db: Firestore,
   userId: string,
   template: LanguageTemplate
 ): Promise<string> => {
-  const { playerIds, score, gameStarted, gameOver, currentTurn, board } =
-    DEFAULT_GAME_STATE;
-
-  const payload = {
-    createdByUserId: userId,
-    createdAt: new Date(),
-    template,
-    playerIds,
-    currentPlayerId: null,
-    currentProposedMove: null,
-    currentVote: null,
-    score,
-    gameStarted,
-    currentTurn,
-    gameOver,
-    board: JSON.stringify(board),
-    tilePouch: computeTilePouch(template.quantityMap),
-    playerHands: {},
-  } satisfies DbGamePayload;
+  const payload = getInitialGamePayload(userId, template);
 
   const docRef = await addDoc(collection(db, GAME_COLLECTION), payload);
   return docRef.id;
@@ -78,3 +60,30 @@ export const updateGame = (
 };
 
 // TODO: move skip turn and propose move handlers to here
+
+export const proposeMove = async (
+  db: Firestore,
+  gameId: string,
+  move: Move[],
+  hand: PlayerHand,
+  state: GameState,
+  user: User | null
+) => {
+  const payload = buildProposeMovePayload(move, hand, state, user);
+  await updateGame(db, gameId, payload);
+};
+
+export const reshuffleInitialPlayerHands = async (
+  db: Firestore,
+  gameId: string,
+  currState: GameState,
+  currTemplate: LanguageTemplate
+) => {
+  if (!currState) return;
+  const payload = {
+    ...getInitialGamePayload(currState.playerIds[0]!, currTemplate),
+    currentVote: null,
+  } satisfies Partial<DbGamePayload>;
+
+  await updateGame(db, gameId, payload);
+};

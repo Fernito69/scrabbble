@@ -10,7 +10,7 @@ interface Props {
   onChangeVote: (playerId: string) => void;
 }
 
-export const PlayerVotes = ({ votes, onChangeVote }: Props) => {
+export const PlayerVotesCheckboxes = ({ votes, onChangeVote }: Props) => {
   const { user } = useAuth();
 
   return (

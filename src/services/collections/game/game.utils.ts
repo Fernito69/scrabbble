@@ -1,4 +1,4 @@
-import { PLAYER_HAND_LENGTH } from "@/model/core.defaults";
+import { DEFAULT_GAME_STATE, PLAYER_HAND_LENGTH } from "@/model/core.defaults";
 import {
   Bonus,
   GameState,
@@ -6,12 +6,14 @@ import {
   LetterValueMap,
   Move,
   PlayerHand,
-  VoteType
+  Vote,
+  VoteType,
 } from "@/model/core.model";
 import { ScoringService } from "@/services/scoring";
 import { cloneDeep } from "lodash";
 import { LanguageTemplate } from "../letterValueMap/languageTemplate.model";
 import { DbGamePayload } from "./game.model";
+import { User } from "firebase/auth";
 
 export const computeTilePouch = (
   quantityMap: LetterValueMap
@@ -200,6 +202,55 @@ export const buildMovePayload = (
   return payload;
 };
 
+export const buildProposeMovePayload = (
+  localProposedMove: Move[],
+  localPlayerHand: PlayerHand,
+  state: GameState,
+  user: User | null
+): Partial<DbGamePayload> => {
+  if (!user) throw new Error("User not found");
+
+  const payload = {
+    currentProposedMove: {
+      playerId: user.uid,
+      move: localProposedMove,
+      tentativeNewHand: localPlayerHand,
+    },
+    currentVote: {
+      type: VoteType.ACCEPT_PROPOSED_MOVE,
+      voteFinished: false,
+      votes: state.playerIds.filter(Boolean).map((id) => ({
+        playerId: id!,
+        voted: id === user.uid ? true : null,
+      })),
+    },
+  } satisfies Partial<DbGamePayload>;
+
+  return payload;
+};
+
+export const buildReshuffleVotePayload = (
+  state: GameState,
+  user: User | null
+): Partial<DbGamePayload> => {
+  if (!user) throw new Error("User not found");
+
+  const currentVote = {
+    type: VoteType.RESHUFFLE,
+    proposerId: user.uid,
+    voteFinished: false,
+    votes: state.playerIds
+      .filter(Boolean)
+      .map((id) => ({ playerId: id!, voted: id === user.uid ? true : null })),
+  } satisfies Vote;
+
+  const payload = {
+    currentVote,
+  } satisfies Partial<DbGamePayload>;
+
+  return payload;
+};
+
 export const buildSkipTurnPayload = (
   currentPlayerId: string,
   state: GameState
@@ -224,6 +275,33 @@ export const buildSkipTurnPayload = (
       perTurn,
     },
   } satisfies Partial<DbGamePayload>;
+
+  return payload;
+};
+
+export const getInitialGamePayload = (
+  userId: string,
+  template: LanguageTemplate
+): Partial<DbGamePayload> => {
+  const { playerIds, score, gameStarted, gameOver, currentTurn, board } =
+    DEFAULT_GAME_STATE;
+
+  const payload = {
+    createdByUserId: userId,
+    createdAt: new Date(),
+    template,
+    playerIds,
+    currentPlayerId: null,
+    currentProposedMove: null,
+    currentVote: null,
+    score,
+    gameStarted,
+    currentTurn,
+    gameOver,
+    board: JSON.stringify(board),
+    tilePouch: computeTilePouch(template.quantityMap),
+    playerHands: {},
+  } satisfies DbGamePayload;
 
   return payload;
 };

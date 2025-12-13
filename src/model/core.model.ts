@@ -169,6 +169,7 @@ export type GameState = {
 export enum VoteType {
   START_VOTE = "start_vote",
   ACCEPT_PROPOSED_MOVE = "accept_proposed_move",
+  RESHUFFLE = "reshuffle",
 }
 export type PlayerVote = {
   playerId: string;
@@ -179,7 +180,6 @@ export type PlayerVote = {
 export type Vote = {
   proposerId?: string;
   type: VoteType;
-  description: string;
   timeLeft?: number;
   voteFinished: boolean;
   votes: PlayerVote[];

@@ -1,35 +1,30 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useAuth } from "@/contexts/AuthContext";
 import { useGameContext } from "@/contexts/GameState.context";
+import { cn } from "@/lib/utils";
 import { Vote } from "@/model/core.model";
 import { useUpdateGame } from "@/services/collections/game/game.hooks";
-import { useEffect } from "react";
-import { PlayerVotes } from "../PlayerVotes/PlayerVotes";
 import { getInitGamePayload } from "@/services/collections/game/game.utils";
+import { useEffect } from "react";
 
 interface Props {
   vote: Vote;
 }
-export const StartVoteModal = ({ vote }: Props) => {
+export const ReadyCheckbox = ({ vote }: Props) => {
   // Context
   const { numPlayers, gameId, state, isGameOrganizer } = useGameContext();
+  const { user } = useAuth();
 
   // Mutations
   const updateGame = useUpdateGame(gameId);
 
   // Handlers
-  const handleChangeVote = (playerId: string) => {
+  const handleChangeVote = () => {
     updateGame({
       currentVote: {
         ...vote,
         votes: vote.votes.map((v) =>
-          v.playerId === playerId ? { ...v, voted: !v.voted } : v
+          v.playerId === user!.uid ? { ...v, voted: !v.voted } : v
         ),
       },
     });
@@ -71,17 +66,24 @@ export const StartVoteModal = ({ vote }: Props) => {
     }
   }, [vote]);
 
+  // Consts
+  const voted = vote.votes.find((v) => v.playerId === user!.uid)?.voted;
+  const className = cn(
+    "flex flex-col gap-1 items-center justify-center w-full h-full border-1 border rounded-sm p-2",
+    voted ? "border-green-600 bg-green-100" : "border-red-600 bg-red-100"
+  );
+
   // Render
   return (
-    <Dialog open>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Ready yourself!</DialogTitle>
-          <DialogDescription>{vote.description}</DialogDescription>
-        </DialogHeader>
-        <PlayerVotes votes={vote.votes} onChangeVote={handleChangeVote} />
-      </DialogContent>
-      <DialogFooter></DialogFooter>
-    </Dialog>
+    <div className={className}>
+      <div className="text-muted-foreground whitespace-nowrap w-full flex flex-row gap-2 justify-center text-sm">
+        I'm ready!
+      </div>
+      <Checkbox
+        className="bg-white"
+        checked={voted!!}
+        onCheckedChange={handleChangeVote}
+      />
+    </div>
   );
 };

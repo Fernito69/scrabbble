@@ -29,7 +29,7 @@ import { PlayerBadge } from "./PlayerBadge/PlayerBadge";
 import { PlayerHand } from "./PlayerHand/PlayerHand";
 import { ScoreBoard } from "./ScoreBoard/ScoreBoard";
 import { TileComponent } from "./TileComponent/TileComponent";
-import { StartVoteModal } from "./VoteModals/StartVoteModal/StartVoteModal";
+import { ReshuffleVoteModal } from "./VoteModals/ReshuffleVoteModal/ReshuffleVoteModal";
 
 export const PlayfieldContainer = () => {
   // Hooks
@@ -75,7 +75,8 @@ export const PlayfieldContainer = () => {
   };
 
   // Handlers
-  const handleBack = () => {
+  const handleLeave = () => {
+    // TODO: handle this properly
     // Remove the user from the game
     updateGame(db, gameId, {
       playerIds: state!.playerIds.map((v) =>
@@ -258,9 +259,14 @@ export const PlayfieldContainer = () => {
 
   // Consts
   const userName = userConfig?.displayName ?? user?.email;
-  const showStartVoteModal =
-    state.currentVote?.type === VoteType.START_VOTE &&
-    !state.currentVote?.voteFinished && !state.gameStarted;
+  // const showStartVoteModal =
+  //   state.currentVote?.type === VoteType.START_VOTE &&
+  //   !state.currentVote?.voteFinished &&
+  //   !state.gameStarted;
+  const showReshuffleModal =
+    state.currentVote?.type === VoteType.RESHUFFLE &&
+    !state.currentVote?.voteFinished &&
+    state.playerIds.filter(Boolean).length > 1;
 
   return (
     <DndContext
@@ -272,18 +278,24 @@ export const PlayfieldContainer = () => {
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-between items-center mb-8">
             <div>
-              <h1 className="text-3xl font-bold">Playfield</h1>
+              {/* <h1 className="text-3xl font-bold">Playfield</h1> */}
               <p className="text-muted-foreground mt-1">Welcome, {userName}</p>
             </div>
             <div className="flex gap-4">
               {!state.gameStarted && (
                 <button
-                  onClick={handleBack}
+                  onClick={handleLeave}
                   className="px-4 py-2 text-sm border border-input rounded-md hover:bg-accent"
                 >
                   Leave Game
                 </button>
               )}
+              <button
+                onClick={() => navigate("/")}
+                className="px-4 py-2 text-sm border border-input rounded-md hover:bg-accent"
+              >
+                Back to home
+              </button>
               <button
                 onClick={handleSignOut}
                 className="px-4 py-2 text-sm border border-input rounded-md hover:bg-accent"
@@ -321,7 +333,10 @@ export const PlayfieldContainer = () => {
             </div>
             <BoardComponent />
           </div>
-          {showStartVoteModal && <StartVoteModal vote={state!.currentVote!} />}
+          {/* {showStartVoteModal && <StartVoteModal vote={state!.currentVote!} />} */}
+          {showReshuffleModal && (
+            <ReshuffleVoteModal vote={state!.currentVote!} />
+          )}
         </div>
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col justify-between items-center mb-8 gap-4">
