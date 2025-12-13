@@ -305,7 +305,7 @@ export const PlayfieldContainer = () => {
             </div>
           </div>
 
-          <div className="border-2 border-border rounded-lg text-center p-2">
+          <div className=" rounded-lg text-center p-2">
             <div className="flex flex-row gap-2 mb-4">
               <Badge
                 label="Players:"
@@ -333,7 +333,6 @@ export const PlayfieldContainer = () => {
             </div>
             <BoardComponent />
           </div>
-          {/* {showStartVoteModal && <StartVoteModal vote={state!.currentVote!} />} */}
           {showReshuffleModal && (
             <ReshuffleVoteModal vote={state!.currentVote!} />
           )}
