@@ -16,7 +16,7 @@ import { useAuth } from "@/contexts/AuthContext";
 
 export const OngoingGames = () => {
   // Data
-  const [playerGames, gameIds] = useGetPlayerGames();
+  const playerGames = useGetPlayerGames();
   const { user } = useAuth();
 
   // Hooks
@@ -56,7 +56,7 @@ export const OngoingGames = () => {
                     <TableRow
                       key={i}
                       className="cursor-pointer"
-                      onClick={() => navigate(`/game/${gameIds[i]}`)}
+                      onClick={() => navigate(`/game/${game.id}`)}
                     >
                       <TableCell>
                         {new Date(

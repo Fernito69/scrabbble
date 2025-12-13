@@ -93,7 +93,7 @@ export const reshuffleInitialPlayerHands = async (
 export const getPlayerGamesSnapshot = (
   db: Firestore,
   userId: string,
-  callback: (data: DbGame[], ids: string[]) => void
+  callback: (data: (DbGame & { id: string })[]) => void
 ) => {
   const q = query(
     collection(db, GAME_COLLECTION),
@@ -104,9 +104,10 @@ export const getPlayerGamesSnapshot = (
 
   const unsubscribe = onSnapshot(q, {
     next: (collSnap) => {
-      const data = collSnap.docs.map((d) => d.data() as DbGame);
-      const ids = collSnap.docs.map((d) => d.id);
-      callback(data, ids);
+      const data = collSnap.docs.map(
+        (d) => ({ ...d.data(), id: d.id } as DbGame & { id: string })
+      );
+      callback(data);
     },
   });
 

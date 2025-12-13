@@ -67,19 +67,17 @@ export const useReshuffleGame = (gameId: string) => {
   };
 };
 
-export const useGetPlayerGames = (): [DbGame[], string[]] => {
+export const useGetPlayerGames = (): (DbGame & { id: string })[] => {
   const { user } = useAuth();
-  const [games, setGames] = useState<DbGame[]>([]);
-  const [gameIds, setGameIds] = useState<string[]>([]);
+  const [games, setGames] = useState<(DbGame & { id: string })[]>([]);
 
   useEffect(
     () =>
-      getPlayerGamesSnapshot(db, user!.uid, (data, ids) => {
+      getPlayerGamesSnapshot(db, user!.uid, (data) => {
         setGames(data);
-        setGameIds(ids);
       }),
     []
   );
 
-  return [games, gameIds];
+  return games;
 };
