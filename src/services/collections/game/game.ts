@@ -1,18 +1,20 @@
 import { GameState, Move, PlayerHand } from "@/model/core.model";
+import { User } from "firebase/auth";
 import {
   Firestore,
   addDoc,
   collection,
   doc,
   onSnapshot,
+  query,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import { LanguageTemplate } from "../letterValueMap/languageTemplate.model";
 import { GAME_COLLECTION } from "./game.defaults";
 import { mapDbGamePayloadToGameState } from "./game.mappers";
-import { DbGamePayload } from "./game.model";
+import { DbGame, DbGamePayload } from "./game.model";
 import { buildProposeMovePayload, getInitialGamePayload } from "./game.utils";
-import { User } from "firebase/auth";
 
 export const createGame = async (
   db: Firestore,
@@ -86,4 +88,27 @@ export const reshuffleInitialPlayerHands = async (
   } satisfies Partial<DbGamePayload>;
 
   await updateGame(db, gameId, payload);
+};
+
+export const getPlayerGamesSnapshot = (
+  db: Firestore,
+  userId: string,
+  callback: (data: DbGame[], ids: string[]) => void
+) => {
+  const q = query(
+    collection(db, GAME_COLLECTION),
+    where("playerIds", "array-contains", userId),
+    where("gameStarted", "==", true),
+    where("gameOver", "==", false)
+  );
+
+  const unsubscribe = onSnapshot(q, {
+    next: (collSnap) => {
+      const data = collSnap.docs.map((d) => d.data() as DbGame);
+      const ids = collSnap.docs.map((d) => d.id);
+      callback(data, ids);
+    },
+  });
+
+  return unsubscribe;
 };

@@ -7,6 +7,7 @@ import {
   Vote,
 } from "@/model/core.model";
 import { LanguageTemplate } from "../letterValueMap/languageTemplate.model";
+import { Timestamp } from "firebase/firestore";
 
 interface DbGameBase {
   createdByUserId: string;
@@ -24,12 +25,12 @@ interface DbGameBase {
 }
 
 export interface DbGame extends DbGameBase {
-  createdAt: Date;
+  createdAt: Date | Timestamp;
   board: Board;
 }
 
 export interface DbGamePayload extends DbGameBase {
-  createdAt: Date | { _seconds: number; _nanoseconds: number };
+  createdAt: Date | Timestamp;
   // Stringify the board because of firestore limitations
   board: string;
 }

@@ -4,7 +4,12 @@
     "welcome": "Bienvenido, {{userName}}",
     "createGame": "Crear Nueva Partida",
     "creatingGame": "Creando Partida...",
-    "signOut": "Cerrar Sesión"
+    "signOut": "Cerrar Sesión",
+    "yourGames": "Tus partidas en curso",
+    "createdAt": "Fecha de creación",
+    "players": "Jugadores",
+    "scores": "Puntuación",
+    "tilesLeft": "Fichas restantes"
   },
   "languageSelect": {
     "title": "Seleccionar idioma",

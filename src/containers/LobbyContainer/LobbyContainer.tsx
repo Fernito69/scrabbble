@@ -1,16 +1,22 @@
+import { LanguageSwitcher } from "@/components/LanguageSwitcher/LanguageSwitcher";
+
 import { useAuth } from "@/contexts/AuthContext";
 import { authService } from "@/services/auth";
-import { useGetUserConfig } from "@/services/collections/userConfig/userConfig.hooks";
+import {
+  useGetUserConfig
+} from "@/services/collections/userConfig/userConfig.hooks";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { LanguageSelectDialog } from "./LanguageSelectDialog/LanguageSelectDialog";
-import { LanguageSwitcher } from "@/components/LanguageSwitcher/LanguageSwitcher";
+import { OngoingGames } from "./OngoingGames/OngoingGames";
 
 export const LobbyContainer = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
+
+  // State
   const [isCreatingGame, setIsCreatingGame] = useState(false);
 
   // Handlers
@@ -34,7 +40,9 @@ export const LobbyContainer = () => {
       <div className="w-full max-w-2xl space-y-6">
         <div className="text-center space-y-2">
           <h1 className="text-4xl font-bold">{t("lobby.title")}</h1>
-          <p className="text-muted-foreground">{t("lobby.welcome", { userName })}</p>
+          <p className="text-muted-foreground">
+            {t("lobby.welcome", { userName })}
+          </p>
         </div>
 
         <div className="flex flex-col gap-4">
@@ -60,6 +68,7 @@ export const LobbyContainer = () => {
           <LanguageSelectDialog close={() => setIsCreatingGame(false)} />
         )}
       </div>
+      <OngoingGames />
     </div>
   );
 };

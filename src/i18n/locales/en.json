@@ -4,7 +4,12 @@
     "welcome": "Welcome, {{userName}}",
     "createGame": "Create New Game",
     "creatingGame": "Creating Game...",
-    "signOut": "Sign Out"
+    "signOut": "Sign Out",
+    "yourGames": "Your ongoing matches",
+    "createdAt": "Created at",
+    "players": "Players",
+    "scores": "Scores",
+    "tilesLeft": "Tiles left"
   },
   "languageSelect": {
     "title": "Select language",

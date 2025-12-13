@@ -4,11 +4,12 @@ import { useEffect, useState } from "react";
 import { LanguageTemplate } from "../letterValueMap/languageTemplate.model";
 import {
   getGameSnapshot,
+  getPlayerGamesSnapshot,
   proposeMove,
   reshuffleInitialPlayerHands,
   updateGame,
 } from "./game";
-import { DbGamePayload } from "./game.model";
+import { DbGame, DbGamePayload } from "./game.model";
 import { useAuth } from "@/contexts/AuthContext";
 
 type UseGetGameSnapshot = {
@@ -64,4 +65,19 @@ export const useReshuffleGame = (gameId: string) => {
       console.error("Failed to reshuffle game:", err);
     }
   };
+};
+
+export const useGetPlayerGames = (): [DbGame[], string[]] => {
+  const { user } = useAuth();
+  const [games, setGames] = useState<DbGame[]>([]);
+  const [gameIds, setGameIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    getPlayerGamesSnapshot(db, user!.uid, (data, ids) => {
+      setGames(data);
+      setGameIds(ids);
+    });
+  }, []);
+
+  return [games, gameIds];
 };
