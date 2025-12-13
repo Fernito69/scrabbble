@@ -22,7 +22,7 @@ export const PlayerBadge = ({ playerId, colorIndex }: Props) => {
 
   const playerIdx = state?.playerIds.indexOf(playerId) ?? -1;
   const className = cn(
-    "flex flex-row gap-2 py-0 px-2 rounded-full w-fit items-center",
+    "flex flex-row gap-2 py-[2px] px-2 rounded-full w-fit items-center",
     colorMap[colorIndex ?? playerIdx]
   );
   const isCurrentPlayer = user?.uid === playerId;

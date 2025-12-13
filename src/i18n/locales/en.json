@@ -9,7 +9,8 @@
     "createdAt": "Created at",
     "players": "Players",
     "scores": "Scores",
-    "tilesLeft": "Tiles left"
+    "tilesLeft": "Tiles left",
+    "currentMove": "Current move"
   },
   "languageSelect": {
     "title": "Select language",

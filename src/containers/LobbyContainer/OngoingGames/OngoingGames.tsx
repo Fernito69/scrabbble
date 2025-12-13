@@ -11,10 +11,13 @@ import { useGetPlayerGames } from "@/services/collections/game/game.hooks";
 import { useTranslation } from "react-i18next";
 import { Timestamp } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import { PlayerBadge } from "@/containers/PlayfieldContainer/PlayerBadge/PlayerBadge";
+import { useAuth } from "@/contexts/AuthContext";
 
 export const OngoingGames = () => {
   // Data
   const [playerGames, gameIds] = useGetPlayerGames();
+  const { user } = useAuth();
 
   // Hooks
   const { t } = useTranslation();
@@ -33,6 +36,7 @@ export const OngoingGames = () => {
                 <TableHead>{t("lobby.createdAt")}</TableHead>
                 <TableHead>{t("lobby.players")}</TableHead>
                 <TableHead>{t("lobby.scores")}</TableHead>
+                <TableHead>{t("lobby.currentMove")}</TableHead>
                 <TableHead className="whitespace-wrap">
                   {t("lobby.tilesLeft")}
                 </TableHead>
@@ -68,6 +72,18 @@ export const OngoingGames = () => {
                         {playerIds
                           .map((id) => game.score.total[id!] ?? 0)
                           .join(", ")}
+                      </TableCell>
+                      <TableCell>
+                        <span>
+                          {game.currentPlayerId != null && (
+                            <PlayerBadge
+                              playerId={game.currentPlayerId}
+                              colorIndex={
+                                game.currentPlayerId === user!.uid ? 0 : 1
+                              }
+                            />
+                          )}
+                        </span>
                       </TableCell>
                       <TableCell>{game.tilePouch.length}</TableCell>
                     </TableRow>

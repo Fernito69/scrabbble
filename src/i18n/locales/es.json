@@ -9,7 +9,8 @@
     "createdAt": "Fecha de creación",
     "players": "Jugadores",
     "scores": "Puntuación",
-    "tilesLeft": "Fichas restantes"
+    "tilesLeft": "Fichas restantes",
+    "currentMove": "Quién juega"
   },
   "languageSelect": {
     "title": "Seleccionar idioma",
