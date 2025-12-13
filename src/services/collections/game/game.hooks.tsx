@@ -72,12 +72,14 @@ export const useGetPlayerGames = (): [DbGame[], string[]] => {
   const [games, setGames] = useState<DbGame[]>([]);
   const [gameIds, setGameIds] = useState<string[]>([]);
 
-  useEffect(() => {
-    getPlayerGamesSnapshot(db, user!.uid, (data, ids) => {
-      setGames(data);
-      setGameIds(ids);
-    });
-  }, []);
+  useEffect(
+    () =>
+      getPlayerGamesSnapshot(db, user!.uid, (data, ids) => {
+        setGames(data);
+        setGameIds(ids);
+      }),
+    []
+  );
 
   return [games, gameIds];
 };

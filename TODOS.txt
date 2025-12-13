@@ -1,7 +1,1 @@
-- Add shuffle first move
-- Add english dict
-- Show my current games in the lobby
-
-- DONE Add skip turn
-- DONE Add useeffect para evitar que se quede pegado el modal de iniciar juego
-- DONE Add email to userConfig
+- Logic to End game 
