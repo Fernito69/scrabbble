@@ -1,6 +1,6 @@
 {
   "lobby": {
-    "title": "Scrabbble Lobby",
+    "title": "Scrabbble",
     "welcome": "Welcome, {{userName}}",
     "createGame": "Create New Game",
     "creatingGame": "Creating Game...",

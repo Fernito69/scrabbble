@@ -262,10 +262,6 @@ export const PlayfieldContainer = () => {
 
   // Consts
   const userName = userConfig?.displayName ?? user?.email;
-  // const showStartVoteModal =
-  //   state.currentVote?.type === VoteType.START_VOTE &&
-  //   !state.currentVote?.voteFinished &&
-  //   !state.gameStarted;
   const showReshuffleModal =
     state.currentVote?.type === VoteType.RESHUFFLE &&
     !state.currentVote?.voteFinished &&
@@ -309,8 +305,8 @@ export const PlayfieldContainer = () => {
             </div>
           </div>
 
-          <div className=" rounded-lg text-center p-2">
-            <div className="flex flex-row gap-2 mb-4">
+          <div id="badges" className="rounded-lg text-center p-2">
+            <div className="flex flex-row flex-wrap gap-2 mb-4">
               <Badge
                 label={t("playfield.players")}
                 value={

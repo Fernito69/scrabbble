@@ -1,6 +1,6 @@
 {
   "lobby": {
-    "title": "Sala de Scrabbble",
+    "title": "Scrabbble",
     "welcome": "Bienvenido, {{userName}}",
     "createGame": "Crear Nueva Partida",
     "creatingGame": "Creando Partida...",
