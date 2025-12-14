@@ -89,7 +89,7 @@ export const useGameStateEffects = ({
   // Initial vote
   /***************/
   useEffect(() => {
-    if (!state || !isGameOrganizer) return;
+    if (!state?.currentVote || !isGameOrganizer) return;
     if (numPlayers > 1 && !state.currentVote && !state.gameStarted) {
       const currentVote = {
         type: VoteType.START_VOTE,
@@ -101,7 +101,7 @@ export const useGameStateEffects = ({
 
       updateGame({ currentVote });
     }
-  }, [state]);
+  }, [state?.currentVote]);
 
   /***************/
   // Vote for proposed move
@@ -139,6 +139,25 @@ export const useGameStateEffects = ({
       updateGame({
         currentVote: null,
       });
+    }
+  }, [state?.currentVote]);
+
+  /***************/
+  // Vote failsafe (I've experienced some weird bugs with firebase, some kind of race condition)
+  useEffect(() => {
+    const failSafeEligibleTypes = [
+      VoteType.RESHUFFLE,
+      VoteType.ACCEPT_PROPOSED_MOVE,
+      VoteType.START_VOTE,
+    ] as const;
+
+    if (
+      isGameOrganizer &&
+      state?.currentVote &&
+      failSafeEligibleTypes.includes(state.currentVote.type) &&
+      state.currentVote.votes.every((v) => v.voted === false)
+    ) {
+      updateGame({ currentVote: null });
     }
   }, [state?.currentVote]);
 
