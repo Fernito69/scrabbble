@@ -229,7 +229,7 @@ export const buildProposeMovePayload = (
   return payload;
 };
 
-export const buildReshuffleVotePayload = (
+export const buildInitialReshuffleVotePayload = (
   state: GameState,
   user: User | null
 ): Partial<DbGamePayload> => {
@@ -246,6 +246,47 @@ export const buildReshuffleVotePayload = (
 
   const payload = {
     currentVote,
+  } satisfies Partial<DbGamePayload>;
+
+  return payload;
+};
+
+export const buildReshufflePayload = (
+  state: GameState,
+  user: User | null
+): Partial<DbGamePayload> => {
+  if (!user) throw new Error("User not found");
+
+  const currentHand = state.playerHands[user.uid].filter(
+    Boolean
+  ) as LetterLiteral[];
+
+  if (
+    currentHand.length < PLAYER_HAND_LENGTH ||
+    state.tilePouch.length < PLAYER_HAND_LENGTH
+  )
+    throw new Error("Not enough tiles to reshuffle");
+
+  const { nextPlayerId, nextTurn } = getNextPlayerAndTurn(user.uid, state);
+
+  const newTilePouch = [...state.tilePouch, ...currentHand].sort(
+    () => Math.random() - 0.5
+  );
+  const { hand, tilePouch } = drawCards(newTilePouch, [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ]);
+
+  const payload = {
+    playerHands: { ...state.playerHands, [user.uid]: hand },
+    currentPlayerId: nextPlayerId,
+    currentTurn: nextTurn,
+    tilePouch,
   } satisfies Partial<DbGamePayload>;
 
   return payload;

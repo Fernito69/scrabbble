@@ -49,9 +49,11 @@
     "skipTurn": "Saltar turno",
     "skipTurnConfirm": "¿Estás seguro de que quieres saltar tu turno?",
     "skip": "Saltar",
-    "reshuffleHands": "Barajar fichas",
+    "reshuffleInitialHands": "Barajar fichas",
+    "reshuffleHand": "Cambiar mano",
     "requestReshuffle": "Solicitar barajado",
-    "requestReshuffleConfirm": "¡Qué mano tan mala! ¿Quieres solicitar un barajado?"
+    "requestInitialReshuffleConfirm": "¡Qué mano tan mala! ¿Quieres solicitar un barajado?",
+    "requestReshuffleConfirm": "¿Estás seguro de que quieres cambiar tu mano? Vas a perder el turno"
   },
   "playfield": {
     "welcome": "Bienvenido, {{userName}}",

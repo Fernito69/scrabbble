@@ -49,9 +49,11 @@
     "skipTurn": "Skip turn",
     "skipTurnConfirm": "Are you sure you want to skip your turn?",
     "skip": "Skip",
-    "reshuffleHands": "Reshuffle hands",
+    "reshuffleInitialHands": "Reshuffle hands",
+    "reshuffleHand": "Shuffle hand",
     "requestReshuffle": "Request reshuffle",
-    "requestReshuffleConfirm": "What a shitty hand! Do you want to request a reshuffle?"
+    "requestReshuffleConfirm": "Are you sure you want to change your hand? You will lose the turn",
+    "requestInitialReshuffleConfirm": "What a shitty hand! Do you want to request a reshuffle?"
   },
   "playfield": {
     "welcome": "Welcome, {{userName}}",
