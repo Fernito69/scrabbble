@@ -12,7 +12,8 @@
     "tilesLeft": "Fichas restantes",
     "currentMove": "Quién juega",
     "currentTurn": "Turno",
-    "loadingGames": "Cargando partidas en curso..."
+    "loadingGames": "Cargando partidas en curso...",
+    "noGames": "No tienes partidas en curso 😢 ¡Crea una ahora!"
   },
   "languageSelect": {
     "title": "Seleccionar idioma",

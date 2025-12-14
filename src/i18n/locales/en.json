@@ -12,7 +12,8 @@
     "tilesLeft": "Tiles left",
     "currentMove": "Current move",
     "currentTurn": "Turn",
-    "loadingGames": "Loading ongoing games..."
+    "loadingGames": "Loading ongoing games...",
+    "noGames": "No ongoing games 😢 Create one now!"
   },
   "languageSelect": {
     "title": "Select language",
