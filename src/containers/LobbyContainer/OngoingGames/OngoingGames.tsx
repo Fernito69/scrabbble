@@ -36,7 +36,7 @@ export const OngoingGames = () => {
             <i>{t("lobby.loadingGames")}</i>
           </OverlayWithLoader>
         )}
-        {playerGames ? (
+        {playerGames && playerGames.length > 0 ? (
           <>
             <h2 className="text-lg font-bold">{t("lobby.yourGames")}</h2>
             <div className="flex flex-col gap-2 rounded-lg border border-input relative min-h-[200px]">
@@ -56,7 +56,7 @@ export const OngoingGames = () => {
                 </TableHeader>
                 <TableBody>
                   {playerGames
-                    ?.sort(
+                    .sort(
                       (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
                     )
                     .map((game, i) => {

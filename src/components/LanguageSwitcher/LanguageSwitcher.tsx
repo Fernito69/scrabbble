@@ -10,8 +10,8 @@ import { Language } from "@/services/collections/letterValueMap/languageTemplate
 import { useUpdateUserConfig } from "@/services/collections/userConfig/userConfig.hooks";
 
 const LANGUAGES = [
-  { code: Language.EN, label: "languageSwitcher.english" },
-  { code: Language.ES, label: "languageSwitcher.spanish" },
+  { code: Language.EN, label: "🇬🇧/🇺🇸" },
+  { code: Language.ES, label: "🇪🇸" },
 ] as const;
 
 export const LanguageSwitcher = () => {
@@ -24,12 +24,16 @@ export const LanguageSwitcher = () => {
     await updateUserConfig({ language: langCode });
   };
 
+  const selectedLanguageFLag = LANGUAGES.find(
+    (l) => i18n.language.toLowerCase() === l.code
+  )?.label;
+
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <button className="px-4 py-2 text-sm border border-input rounded-md hover:bg-accent flex items-center gap-2">
+        <button className="px-4 py-2 text-sm border border-input rounded-md hover:bg-accent flex items-center gap-2 text-xl">
           <Languages className="h-4 w-4" />
-          {i18n.language.toUpperCase()}
+          {selectedLanguageFLag}
         </button>
       </PopoverTrigger>
       <PopoverContent className="w-48">

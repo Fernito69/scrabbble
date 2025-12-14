@@ -44,7 +44,7 @@ export const Login = () => {
     <div className="min-h-screen flex items-center justify-center bg-background">
       <div className="w-full max-w-md p-8 space-y-6">
         <div className="text-center">
-          <h1 className="text-3xl font-bold">Scrabbble</h1>
+          <h1 className="text-3xl font-bold">scrabbbbbble</h1>
           {/* <p className="text-muted-foreground mt-2">Sign in to continue</p> */}
         </div>
 
