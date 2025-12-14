@@ -22,6 +22,7 @@ export const mapDbGamePayloadToGameState = (
     createdAt: ((dbGame.createdAt as Timestamp).seconds
       ? new Date((dbGame.createdAt as Timestamp).seconds * 1000)
       : dbGame.createdAt) as Date,
+    createdByUserId: dbGame.createdByUserId,
   } satisfies GameState;
 };
 
@@ -43,5 +44,6 @@ export const mapGameStateToDbGamePayload = (
     template,
     playerHands: gameState.playerHands,
     createdAt: gameState.createdAt,
+    createdByUserId: gameState.createdByUserId,
   } satisfies Partial<DbGamePayload>;
 };

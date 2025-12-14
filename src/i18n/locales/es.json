@@ -15,7 +15,9 @@
     "currentTurn": "Turno",
     "loadingGames": "Cargando partidas en curso...",
     "noGames": "No tienes partidas en curso 😢 ¡Crea una ahora!",
-    "missingGame": "Esta partida ya no existe 😢"
+    "missingGame": "Esta partida ya no existe 😢",
+    "deleteGame": "Eliminar partida",
+    "deleteGameConfirm": "¿Estás seguro de que quieres eliminar esta partida?"
   },
   "languageSelect": {
     "title": "Seleccionar idioma",

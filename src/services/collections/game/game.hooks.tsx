@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { LanguageTemplate } from "../letterValueMap/languageTemplate.model";
 import {
   createGame,
+  deleteGame,
   getGameSnapshot,
   getLastNPlayerGamesSnapshot,
   proposeMove,
@@ -79,6 +80,16 @@ export const useReshuffleGame = (gameId: string) => {
       await reshuffleInitialPlayerHands(db, gameId, currState, currTemplate);
     } catch (err) {
       console.error("Failed to reshuffle game:", err);
+    }
+  };
+};
+
+export const useDeleteGame = () => {
+  return async (gameId: string) => {
+    try {
+      await deleteGame(db, gameId);
+    } catch (err) {
+      console.error("Failed to delete game:", err);
     }
   };
 };

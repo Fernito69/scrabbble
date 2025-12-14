@@ -1,6 +1,8 @@
 import { BoardDiorama } from "@/components/BoardDiorama/BoardDiorama";
+import { ConfirmationDialog } from "@/components/Dialog/ConfirmationDialog";
 import { OverlayWithLoader } from "@/components/OverlayWithLoader/OverlayWithLoader";
 import { UserAvatar } from "@/components/UserAvatar";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
   Table,
@@ -11,7 +13,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useAuth } from "@/contexts/AuthContext";
-import { useGetLastNPlayerGames } from "@/services/collections/game/game.hooks";
+import {
+  useDeleteGame,
+  useGetLastNPlayerGames,
+} from "@/services/collections/game/game.hooks";
+import { Trash2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
@@ -19,6 +25,9 @@ export const OngoingGames = () => {
   // Data
   const { playerGames, error } = useGetLastNPlayerGames();
   const { user } = useAuth();
+
+  // Mutations
+  const deleteGame = useDeleteGame();
 
   // Hooks
   const { t } = useTranslation();
@@ -50,6 +59,7 @@ export const OngoingGames = () => {
                     <TableHead className="whitespace-wrap">
                       {t("lobby.tilesLeft")}
                     </TableHead>
+                    <TableHead />
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -61,11 +71,13 @@ export const OngoingGames = () => {
                       const playerIds = game.playerIds.filter(
                         Boolean
                       ) as string[];
+                      const playerIsCreator =
+                        user?.uid === game.createdByUserId;
 
                       return (
                         <TableRow
                           key={i}
-                          className="cursor-pointer"
+                          className="cursor-pointer animate-out"
                           onClick={() => navigate(`/game/${game.id}`)}
                         >
                           <TableCell>
@@ -109,6 +121,23 @@ export const OngoingGames = () => {
                           </TableCell>
                           <TableCell>{game.currentTurn || "-"}</TableCell>
                           <TableCell>{game.tilePouch.length}</TableCell>
+                          <TableCell onClick={(e) => e.stopPropagation()}>
+                            {playerIsCreator && (
+                              <ConfirmationDialog
+                                triggerElement={
+                                  <Button
+                                    variant={"ghost"}
+                                    className="text-red-600"
+                                  >
+                                    <Trash2 />
+                                  </Button>
+                                }
+                                title={t("lobby.deleteGame")}
+                                description={t("lobby.deleteGameConfirm")}
+                                onAccept={() => deleteGame(game.id)}
+                              />
+                            )}
+                          </TableCell>
                         </TableRow>
                       );
                     })}
