@@ -67,6 +67,12 @@ export const BoardComponent = ({
 
                 // Empty square
                 if (!letter) {
+                  const isEmptySquareSelected = clickToSelectHandlers.isSelected(
+                    "board",
+                    xIndex,
+                    yIndex
+                  );
+
                   return (
                     <DroppableBoardSquare
                       key={key}
@@ -79,6 +85,7 @@ export const BoardComponent = ({
                           yIndex
                         )
                       }
+                      isSelected={isEmptySquareSelected}
                     >
                       <div className="text-[10px] flex flex-col items-center justify-center h-full select-none">
                         {bonus &&

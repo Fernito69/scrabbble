@@ -7,7 +7,7 @@ import { arrayMove } from "@dnd-kit/sortable";
 import { useState } from "react";
 
 export interface SelectedTile {
-  letter: LetterLiteral;
+  letter?: LetterLiteral; // Optional - undefined means empty square/destination selected
   source: "hand" | "board";
   // For hand tiles
   index?: number;
@@ -34,6 +34,7 @@ export const useClickToSelect = () => {
     // If clicking the same tile, deselect it
     if (
       selectedTile &&
+      selectedTile.letter && // Only if we had a tile selected (not an empty destination)
       selectedTile.source === tile.source &&
       ((tile.source === "hand" && selectedTile.index === tile.index) ||
         (tile.source === "board" &&
@@ -44,6 +45,37 @@ export const useClickToSelect = () => {
       return;
     }
 
+    // If we have an empty destination selected, move this tile there
+    if (selectedTile && !selectedTile.letter && tile.letter) {
+      if (selectedTile.source === "board" && selectedTile.x !== undefined && selectedTile.y !== undefined) {
+        // Move tile to the selected empty board square
+        if (tile.source === "hand" && tile.index !== undefined) {
+          // Move from hand to selected board square
+          const newHand = [...localPlayerHand];
+          newHand[tile.index] = null;
+          const newProposedMove = [
+            ...localProposedMove,
+            { x: selectedTile.x, y: selectedTile.y, letter: tile.letter },
+          ];
+
+          setLocalPlayerHand(newHand as PlayerHandType);
+          setLocalProposedMove(newProposedMove);
+          setSelectedTile(null);
+          return;
+        } else if (tile.source === "board" && tile.x !== undefined && tile.y !== undefined) {
+          // Move from board to selected board square
+          const newProposedMove = localProposedMove.filter(
+            (m) => !(m.x === tile.x && m.y === tile.y)
+          );
+          newProposedMove.push({ x: selectedTile.x, y: selectedTile.y, letter: tile.letter });
+
+          setLocalProposedMove(newProposedMove);
+          setSelectedTile(null);
+          return;
+        }
+      }
+    }
+
     // If no tile is selected, select this one
     if (!selectedTile) {
       setSelectedTile(tile);
@@ -51,12 +83,14 @@ export const useClickToSelect = () => {
     }
 
     // If a tile is selected, perform the move/swap
-    performMove(selectedTile, tile);
-    setSelectedTile(null);
+    if (selectedTile.letter && tile.letter) {
+      performMove(selectedTile, tile);
+      setSelectedTile(null);
+    }
   };
 
   const handleBoardSquareClick = (x: number, y: number) => {
-    if (!state || !selectedTile || !isMyTurn || state.currentVote) return;
+    if (!state || !isMyTurn || state.currentVote) return;
 
     // If there's a tile already at this position, don't handle it here
     // (it should be handled by handleTileClick)
@@ -67,32 +101,67 @@ export const useClickToSelect = () => {
     );
     if (proposedTileAtPosition) return; // Will be handled by handleTileClick
 
-    // Place the selected tile at this empty board square
-    if (selectedTile.source === "hand" && selectedTile.index !== undefined) {
-      // Move from hand to board
-      const newHand = [...localPlayerHand];
-      newHand[selectedTile.index] = null;
-      const newProposedMove = [
-        ...localProposedMove,
-        { x, y, letter: selectedTile.letter },
-      ];
+    // If no tile is selected, select this empty square as a destination
+    if (!selectedTile) {
+      setSelectedTile({
+        source: "board",
+        x,
+        y,
+        letter: undefined, // Empty destination
+      });
+      return;
+    }
 
-      setLocalPlayerHand(newHand as PlayerHandType);
-      setLocalProposedMove(newProposedMove);
-      setSelectedTile(null);
-    } else if (
+    // If clicking the same empty square, deselect it
+    if (
+      !selectedTile.letter &&
       selectedTile.source === "board" &&
-      selectedTile.x !== undefined &&
-      selectedTile.y !== undefined
+      selectedTile.x === x &&
+      selectedTile.y === y
     ) {
-      // Move from board to board
-      const newProposedMove = localProposedMove.filter(
-        (m) => !(m.x === selectedTile.x && m.y === selectedTile.y)
-      );
-      newProposedMove.push({ x, y, letter: selectedTile.letter });
-
-      setLocalProposedMove(newProposedMove);
       setSelectedTile(null);
+      return;
+    }
+
+    // If we have an empty square selected and click a different empty square, switch to it
+    if (!selectedTile.letter && selectedTile.source === "board") {
+      setSelectedTile({
+        source: "board",
+        x,
+        y,
+        letter: undefined,
+      });
+      return;
+    }
+
+    // If we have a tile selected, place it at this empty board square
+    if (selectedTile.letter) {
+      if (selectedTile.source === "hand" && selectedTile.index !== undefined) {
+        // Move from hand to board
+        const newHand = [...localPlayerHand];
+        newHand[selectedTile.index] = null;
+        const newProposedMove = [
+          ...localProposedMove,
+          { x, y, letter: selectedTile.letter },
+        ];
+
+        setLocalPlayerHand(newHand as PlayerHandType);
+        setLocalProposedMove(newProposedMove);
+        setSelectedTile(null);
+      } else if (
+        selectedTile.source === "board" &&
+        selectedTile.x !== undefined &&
+        selectedTile.y !== undefined
+      ) {
+        // Move from board to board
+        const newProposedMove = localProposedMove.filter(
+          (m) => !(m.x === selectedTile.x && m.y === selectedTile.y)
+        );
+        newProposedMove.push({ x, y, letter: selectedTile.letter });
+
+        setLocalProposedMove(newProposedMove);
+        setSelectedTile(null);
+      }
     }
   };
 
@@ -102,6 +171,7 @@ export const useClickToSelect = () => {
     // Only handle board tiles being moved to empty hand slots
     if (
       selectedTile.source === "board" &&
+      selectedTile.letter && // Must have a letter
       selectedTile.x !== undefined &&
       selectedTile.y !== undefined
     ) {
@@ -122,6 +192,7 @@ export const useClickToSelect = () => {
 
   const performMove = (from: SelectedTile, to: SelectedTile) => {
     if (!state) return;
+    if (!from.letter || !to.letter) return; // Both must have letters for swapping
 
     // If vote is in progress, ignore
     if (state.currentVote) return;
@@ -179,20 +250,12 @@ export const useClickToSelect = () => {
       let newHand = [...localPlayerHand];
       let newProposedMove = [...localProposedMove];
 
-      // If there's a tile in the hand slot, put it on the board
-      if (to.letter) {
-        newProposedMove = newProposedMove.filter(
-          (m) => !(m.x === from.x && m.y === from.y)
-        );
-        newProposedMove.push({ x: from.x, y: from.y, letter: to.letter });
-        newHand[to.index] = from.letter;
-      } else {
-        // Just move the tile back to hand
-        newProposedMove = newProposedMove.filter(
-          (m) => !(m.x === from.x && m.y === from.y)
-        );
-        newHand[to.index] = from.letter;
-      }
+      // Swap tiles
+      newProposedMove = newProposedMove.filter(
+        (m) => !(m.x === from.x && m.y === from.y)
+      );
+      newProposedMove.push({ x: from.x, y: from.y, letter: to.letter });
+      newHand[to.index] = from.letter;
 
       setLocalPlayerHand(newHand as PlayerHandType);
       setLocalProposedMove(newProposedMove);
