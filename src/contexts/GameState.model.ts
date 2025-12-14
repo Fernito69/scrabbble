@@ -13,7 +13,7 @@ export interface GameInterface {
   localProposedMove: Move[];
   localPlayerHand: PlayerHand;
   setLocalProposedMove: (move: Move[]) => void;
-  setLocalPlayerHand: (hand: PlayerHand) => void;
+  setLocalPlayerHand: React.Dispatch<React.SetStateAction<PlayerHand>>;
   isMyTurn: boolean;
 }
 

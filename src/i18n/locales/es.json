@@ -53,7 +53,8 @@
     "reshuffleHand": "Cambiar mano",
     "requestReshuffle": "Solicitar barajado",
     "requestInitialReshuffleConfirm": "¡Qué mano tan mala! ¿Quieres solicitar un barajado?",
-    "requestReshuffleConfirm": "¿Estás seguro de que quieres cambiar tu mano? Vas a perder el turno"
+    "requestReshuffleConfirm": "¿Estás seguro de que quieres cambiar tu mano? Vas a perder el turno",
+    "recallTiles": "Recoger fichas"
   },
   "playfield": {
     "welcome": "Bienvenido, {{userName}}",

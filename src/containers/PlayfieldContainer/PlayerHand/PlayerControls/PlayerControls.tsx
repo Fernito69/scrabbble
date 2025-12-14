@@ -2,20 +2,20 @@ import { ConfirmationDialog } from "@/components/Dialog/ConfirmationDialog";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useGameContext } from "@/contexts/GameState.context";
-import { VoteType } from "@/model/core.model";
+import { PLAYER_HAND_LENGTH } from "@/model/core.defaults";
+import { PlayerHand, VoteType } from "@/model/core.model";
 import { useUpdateGame } from "@/services/collections/game/game.hooks";
 import {
-  buildProposeMovePayload,
   buildInitialReshuffleVotePayload,
+  buildProposeMovePayload,
+  buildReshufflePayload,
   buildSkipTurnPayload,
   isMoveValid,
-  buildReshufflePayload,
 } from "@/services/collections/game/game.utils";
-import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
-import { ReadyCheckbox } from "./ReadyCheckbox/ReadyCheckbox";
+import { toast } from "sonner";
 import { AcceptProposedMoveCheckbox } from "./AcceptProposedMoveCheckbox/AcceptProposedMoveCheckbox";
-import { PLAYER_HAND_LENGTH } from "@/model/core.defaults";
+import { ReadyCheckbox } from "./ReadyCheckbox/ReadyCheckbox";
 
 export const PlayerControls = () => {
   // Hooks
@@ -29,6 +29,7 @@ export const PlayerControls = () => {
     isMyTurn,
     gameId,
     setLocalProposedMove,
+    setLocalPlayerHand,
     state,
   } = useGameContext();
 
@@ -65,6 +66,23 @@ export const PlayerControls = () => {
     updateGame(buildReshufflePayload(state, user));
   };
 
+  const handleRecallTiles = () => {
+    if (!state) return;
+    setLocalPlayerHand((prev) => {
+      const newHand = [
+        ...prev.filter(Boolean),
+        ...localProposedMove.map((m) => m.letter),
+      ] as PlayerHand;
+
+      if (newHand.length < PLAYER_HAND_LENGTH) {
+        newHand.push(...Array(PLAYER_HAND_LENGTH - newHand.length).fill(null));
+      }
+
+      return newHand;
+    });
+    setLocalProposedMove([]);
+  };
+
   // Consts
   const { valid, error } = isMoveValid(localProposedMove);
 
@@ -83,13 +101,16 @@ export const PlayerControls = () => {
     !state.gameStarted && state.playerIds.filter(Boolean).length > 1;
   const showProposedMoveCheckbox =
     state.currentVote?.type === VoteType.ACCEPT_PROPOSED_MOVE;
+  const showRecallTilesButton =
+    isMyTurn && !state.currentVote && localProposedMove.length > 0;
 
   const showControls =
     !proposeMoveButtonDisabled ||
     showSkipTurnButton ||
     showInitialReshuffleButton ||
     showReshuffleButton ||
-    showProposedMoveCheckbox;
+    showProposedMoveCheckbox ||
+    showRecallTilesButton;
 
   // Render
   return (
@@ -105,7 +126,7 @@ export const PlayerControls = () => {
                 onAccept={handleProposeMove}
                 triggerElement={
                   <Button
-                    className="text-sm"
+                    className="text-xs"
                     disabled={proposeMoveButtonDisabled}
                   >
                     {t("playerControls.proposeMove")}
@@ -119,7 +140,7 @@ export const PlayerControls = () => {
                 description={t("playerControls.skipTurnConfirm")}
                 onAccept={handleSkipTurn}
                 triggerElement={
-                  <Button className="text-sm" variant={"destructive"}>
+                  <Button className="text-xs" variant={"destructive"}>
                     {t("playerControls.skipTurn")}
                   </Button>
                 }
@@ -134,7 +155,7 @@ export const PlayerControls = () => {
             description={t("playerControls.requestReshuffleConfirm")}
             onAccept={handleInitialReshuffle}
             triggerElement={
-              <Button className="text-sm" variant={"destructive"}>
+              <Button className="text-xs" variant={"destructive"}>
                 {t("playerControls.reshuffleHands")}
               </Button>
             }
@@ -146,11 +167,16 @@ export const PlayerControls = () => {
             description={t("playerControls.requestReshuffleConfirm")}
             onAccept={handleReshuffle}
             triggerElement={
-              <Button className="text-sm">
+              <Button className="text-xs">
                 {t("playerControls.reshuffleHand")}
               </Button>
             }
           />
+        )}
+        {showRecallTilesButton && (
+          <Button onClick={handleRecallTiles} className="text-xs bg-green-600 hover:bg-green-700">
+            {t("playerControls.recallTiles")}
+          </Button>
         )}
         {showProposedMoveCheckbox && <AcceptProposedMoveCheckbox />}
       </div>
