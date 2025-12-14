@@ -456,6 +456,7 @@ export const EMPTY_BOARD: Board = [
 ];
 
 export const DEFAULT_GAME_STATE: GameState = {
+  createdAt: new Date(),
   board: EMPTY_BOARD,
   tilePouch: [],
   playerIds: [null, null, null, null],

@@ -163,6 +163,7 @@ export type GameState = {
   gameOver: boolean;
   currentProposedMove: PlayerMove | undefined;
   currentVote: Vote | undefined;
+  createdAt: Date;
 };
 
 // For now just boolean votes

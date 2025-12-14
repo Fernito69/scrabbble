@@ -44,9 +44,7 @@ export const BoardComponent = () => {
 
               const letter = proposedMove?.letter ?? tile?.letter;
 
-              const squareColor = bonus
-                ? bonusColorMap[bonus ?? Bonus.DOUBLE_LETTER]
-                : "bg-green-600";
+              const squareColor = bonus ? bonusColorMap[bonus] : "bg-green-600";
 
               // Empty square
               if (!letter) {

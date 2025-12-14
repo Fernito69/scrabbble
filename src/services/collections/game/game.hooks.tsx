@@ -1,4 +1,5 @@
 import { db } from "@/config/firebase";
+import { useAuth } from "@/contexts/AuthContext";
 import { GameState, Move, PlayerHand } from "@/model/core.model";
 import { useEffect, useState } from "react";
 import { LanguageTemplate } from "../letterValueMap/languageTemplate.model";
@@ -9,8 +10,7 @@ import {
   reshuffleInitialPlayerHands,
   updateGame,
 } from "./game";
-import { DbGame, DbGamePayload } from "./game.model";
-import { useAuth } from "@/contexts/AuthContext";
+import { DbGamePayload } from "./game.model";
 
 type UseGetGameSnapshot = {
   state: GameState | undefined;
@@ -67,9 +67,9 @@ export const useReshuffleGame = (gameId: string) => {
   };
 };
 
-export const useGetPlayerGames = (): (DbGame & { id: string })[] => {
+export const useGetPlayerGames = (): (GameState & { id: string })[] => {
   const { user } = useAuth();
-  const [games, setGames] = useState<(DbGame & { id: string })[]>([]);
+  const [games, setGames] = useState<(GameState & { id: string })[]>([]);
 
   useEffect(
     () =>

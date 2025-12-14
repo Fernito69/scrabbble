@@ -13,7 +13,7 @@ import {
 import { LanguageTemplate } from "../letterValueMap/languageTemplate.model";
 import { GAME_COLLECTION } from "./game.defaults";
 import { mapDbGamePayloadToGameState } from "./game.mappers";
-import { DbGame, DbGamePayload } from "./game.model";
+import { DbGamePayload } from "./game.model";
 import { buildProposeMovePayload, getInitialGamePayload } from "./game.utils";
 
 export const createGame = async (
@@ -93,7 +93,7 @@ export const reshuffleInitialPlayerHands = async (
 export const getPlayerGamesSnapshot = (
   db: Firestore,
   userId: string,
-  callback: (data: (DbGame & { id: string })[]) => void
+  callback: (data: (GameState & { id: string })[]) => void
 ) => {
   const q = query(
     collection(db, GAME_COLLECTION),
@@ -104,9 +104,10 @@ export const getPlayerGamesSnapshot = (
 
   const unsubscribe = onSnapshot(q, {
     next: (collSnap) => {
-      const data = collSnap.docs.map(
-        (d) => ({ ...d.data(), id: d.id } as DbGame & { id: string })
-      );
+      const data = collSnap.docs.map((d) => ({
+        ...mapDbGamePayloadToGameState(d.data() as DbGamePayload),
+        id: d.id,
+      }));
       callback(data);
     },
   });

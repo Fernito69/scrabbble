@@ -2,8 +2,11 @@ import { Board, GameState } from "@/model/core.model";
 import { DbGamePayload } from "./game.model";
 import { LanguageTemplate } from "../letterValueMap/languageTemplate.model";
 import { EMPTY_BOARD } from "@/model/core.defaults";
+import { Timestamp } from "firebase/firestore";
 
-export const mapDbGamePayloadToGameState = (dbGame: DbGamePayload) => {
+export const mapDbGamePayloadToGameState = (
+  dbGame: DbGamePayload
+): GameState => {
   return {
     board: dbGame.board ? (JSON.parse(dbGame.board) as Board) : EMPTY_BOARD,
     playerIds: dbGame.playerIds,
@@ -16,13 +19,16 @@ export const mapDbGamePayloadToGameState = (dbGame: DbGamePayload) => {
     currentVote: dbGame.currentVote ?? undefined,
     tilePouch: dbGame.tilePouch,
     playerHands: dbGame.playerHands,
+    createdAt: ((dbGame.createdAt as Timestamp).seconds
+      ? new Date((dbGame.createdAt as Timestamp).seconds * 1000)
+      : dbGame.createdAt) as Date,
   } satisfies GameState;
 };
 
 export const mapGameStateToDbGamePayload = (
   gameState: GameState,
   template?: LanguageTemplate
-) => {
+): Partial<DbGamePayload> => {
   return {
     board: JSON.stringify(gameState.board),
     playerIds: gameState.playerIds,
@@ -36,5 +42,6 @@ export const mapGameStateToDbGamePayload = (
     tilePouch: gameState.tilePouch,
     template,
     playerHands: gameState.playerHands,
+    createdAt: gameState.createdAt,
   } satisfies Partial<DbGamePayload>;
 };

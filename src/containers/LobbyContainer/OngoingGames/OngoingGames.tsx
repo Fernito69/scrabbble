@@ -1,4 +1,5 @@
-import { useGetPlayerName } from "@/services/collections/userConfig/userConfig.hooks";
+import { BoardDiorama } from "@/components/BoardDiorama/BoardDiorama";
+import { Separator } from "@/components/ui/separator";
 import {
   Table,
   TableBody,
@@ -7,12 +8,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useGetPlayerGames } from "@/services/collections/game/game.hooks";
-import { useTranslation } from "react-i18next";
-import { Timestamp } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
 import { PlayerBadge } from "@/containers/PlayfieldContainer/PlayerBadge/PlayerBadge";
 import { useAuth } from "@/contexts/AuthContext";
+import { useGetPlayerGames } from "@/services/collections/game/game.hooks";
+import { useGetPlayerName } from "@/services/collections/userConfig/userConfig.hooks";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 export const OngoingGames = () => {
   // Data
@@ -27,12 +28,14 @@ export const OngoingGames = () => {
   // Render
   return (
     playerGames.length > 0 && (
-      <div className="flex flex-col gap-4 mt-4">
+      <div className="flex flex-col gap-4 mt-6">
+        <Separator />
         <h2 className="text-lg font-bold">{t("lobby.yourGames")}</h2>
         <div className="flex flex-col gap-2 rounded-lg border border-input">
           <Table className="text-xs">
             <TableHeader className="bg-muted text-xs">
               <TableRow>
+                <TableHead />
                 <TableHead>{t("lobby.createdAt")}</TableHead>
                 <TableHead>{t("lobby.players")}</TableHead>
                 <TableHead>{t("lobby.scores")}</TableHead>
@@ -44,11 +47,7 @@ export const OngoingGames = () => {
             </TableHeader>
             <TableBody>
               {playerGames
-                .sort(
-                  (a, b) =>
-                    (b.createdAt as Timestamp).seconds -
-                    (a.createdAt as Timestamp).seconds
-                )
+                .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
                 .map((game, i) => {
                   const playerIds = game.playerIds.filter(Boolean);
 
@@ -59,9 +58,10 @@ export const OngoingGames = () => {
                       onClick={() => navigate(`/game/${game.id}`)}
                     >
                       <TableCell>
-                        {new Date(
-                          (game.createdAt as Timestamp).seconds * 1000
-                        ).toLocaleString()}
+                        <BoardDiorama game={game} />
+                      </TableCell>
+                      <TableCell>
+                        {new Date(game.createdAt).toLocaleString()}
                       </TableCell>
                       <TableCell>
                         <div className="flex flex-row gap-2 whitespace-nowrap tracking-tight">
