@@ -4,6 +4,7 @@ import { GameState, Move, PlayerHand } from "@/model/core.model";
 import { useEffect, useState } from "react";
 import { LanguageTemplate } from "../letterValueMap/languageTemplate.model";
 import {
+  createGame,
   getGameSnapshot,
   getLastNPlayerGamesSnapshot,
   proposeMove,
@@ -11,6 +12,13 @@ import {
   updateGame,
 } from "./game";
 import { DbGamePayload } from "./game.model";
+
+export const useCreateGame = () => {
+  const { user } = useAuth();
+  if (!user) throw new Error("User not found");
+  return (template: LanguageTemplate, callback?: (gameId: string) => void) =>
+    createGame(db, user.uid, template).then(callback);
+};
 
 type UseGetGameSnapshot = {
   state: GameState | undefined;
@@ -69,17 +77,31 @@ export const useReshuffleGame = (gameId: string) => {
 
 export const useGetLastNPlayerGames = (
   n: number = 10
-): (GameState & { id: string })[] => {
+): {
+  playerGames: (GameState & { id: string })[] | undefined;
+  error: string | undefined;
+} => {
   const { user } = useAuth();
-  const [games, setGames] = useState<(GameState & { id: string })[]>([]);
+  const [playerGames, setGames] = useState<
+    (GameState & { id: string })[] | undefined
+  >();
+  const [error, setError] = useState<string | undefined>();
 
   useEffect(
     () =>
-      getLastNPlayerGamesSnapshot(db, user!.uid, n, (data) => {
-        setGames(data);
-      }),
+      getLastNPlayerGamesSnapshot(
+        db,
+        user!.uid,
+        n,
+        (data) => {
+          setGames(data);
+        },
+        (err) => {
+          setError(err);
+        }
+      ),
     []
   );
 
-  return games;
+  return { playerGames, error };
 };

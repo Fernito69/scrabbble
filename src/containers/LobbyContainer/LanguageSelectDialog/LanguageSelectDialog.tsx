@@ -1,3 +1,4 @@
+import { OverlayWithLoader } from "@/components/OverlayWithLoader/OverlayWithLoader";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -7,14 +8,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { db } from "@/config/firebase";
 import { useAuth } from "@/contexts/AuthContext";
-import { createGame } from "@/services/collections/game/game";
+import { useCreateGame } from "@/services/collections/game/game.hooks";
 import { useGetLanguageTemplates } from "@/services/collections/letterValueMap/languageTemplate.hooks";
 import { LanguageTemplate } from "@/services/collections/letterValueMap/languageTemplate.model";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 
 interface Props {
@@ -28,11 +28,13 @@ export const LanguageSelectDialog = ({ close }: Props) => {
   // Data
   const { user } = useAuth();
   const templates = useGetLanguageTemplates();
+  const createGame = useCreateGame();
 
   // State
   const [selectedTemplate, setSelectedTemplate] = useState<
     LanguageTemplate | undefined
   >();
+  const [isCreating, setIsCreating] = useState(false);
 
   if (!templates) return null;
 
@@ -40,11 +42,14 @@ export const LanguageSelectDialog = ({ close }: Props) => {
   const handleCreateGame = async () => {
     if (!user || !selectedTemplate) return;
 
+    setIsCreating(true);
     try {
-      const gameId = await createGame(db, user.uid, selectedTemplate);
-      navigate(`/game/${gameId}`);
+      await createGame(selectedTemplate, (gameId) =>
+        navigate(`/game/${gameId}`)
+      );
     } catch (error) {
       console.error("Failed to create game:", error);
+      setIsCreating(false);
     } finally {
       close();
     }
@@ -64,9 +69,18 @@ export const LanguageSelectDialog = ({ close }: Props) => {
   return (
     <Dialog open onOpenChange={close}>
       <DialogContent>
+        {isCreating && (
+          <OverlayWithLoader>
+            <p className="text-sm text-muted-foreground">
+              {t("languageSelect.creatingGame")}
+            </p>
+          </OverlayWithLoader>
+        )}
         <DialogHeader>
           <DialogTitle>{t("languageSelect.title")}</DialogTitle>
-          <DialogDescription>{t("languageSelect.description")}</DialogDescription>
+          <DialogDescription>
+            {t("languageSelect.description")}
+          </DialogDescription>
         </DialogHeader>
         <Select
           options={options}
@@ -74,12 +88,16 @@ export const LanguageSelectDialog = ({ close }: Props) => {
           onChange={(option) =>
             setSelectedTemplate(option?.template ?? undefined)
           }
+          isDisabled={isCreating}
         />
         <DialogFooter>
-          <Button disabled={!selectedTemplate} onClick={handleCreateGame}>
+          <Button
+            disabled={!selectedTemplate || isCreating}
+            onClick={handleCreateGame}
+          >
             {t("languageSelect.accept")}
           </Button>
-          <Button variant="secondary" onClick={close}>
+          <Button variant="secondary" onClick={close} disabled={isCreating}>
             {t("languageSelect.cancel")}
           </Button>
         </DialogFooter>

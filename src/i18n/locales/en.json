@@ -11,13 +11,15 @@
     "scores": "Scores",
     "tilesLeft": "Tiles left",
     "currentMove": "Current move",
-    "currentTurn": "Turn"
+    "currentTurn": "Turn",
+    "loadingGames": "Loading ongoing games..."
   },
   "languageSelect": {
     "title": "Select language",
     "description": "Select a language from the list",
     "accept": "Accept",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "creatingGame": "Creating game..."
   },
   "scoreBoard": {
     "turn": "Turn",

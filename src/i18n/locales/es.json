@@ -11,13 +11,15 @@
     "scores": "Puntuación",
     "tilesLeft": "Fichas restantes",
     "currentMove": "Quién juega",
-    "currentTurn": "Turno"
+    "currentTurn": "Turno",
+    "loadingGames": "Cargando partidas en curso..."
   },
   "languageSelect": {
     "title": "Seleccionar idioma",
     "description": "Selecciona un idioma de la lista",
     "accept": "Aceptar",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "creatingGame": "Creando partida..."
   },
   "scoreBoard": {
     "turn": "Turno",

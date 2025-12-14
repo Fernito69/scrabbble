@@ -1,5 +1,6 @@
-import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
+import { Navigate, useLocation } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { OverlayWithLoader } from "../OverlayWithLoader/OverlayWithLoader";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -12,9 +13,9 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
+        <OverlayWithLoader>
           <p className="text-muted-foreground">Loading...</p>
-        </div>
+        </OverlayWithLoader>
       </div>
     );
   }
@@ -22,7 +23,12 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   if (!user) {
     // Save the current location they were trying to access
     const returnUrl = location.pathname + location.search;
-    return <Navigate to={`/login?returnUrl=${encodeURIComponent(returnUrl)}`} replace />;
+    return (
+      <Navigate
+        to={`/login?returnUrl=${encodeURIComponent(returnUrl)}`}
+        replace
+      />
+    );
   }
 
   return <>{children}</>;

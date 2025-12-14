@@ -95,7 +95,8 @@ export const getLastNPlayerGamesSnapshot = (
   db: Firestore,
   userId: string,
   n: number,
-  callback: (data: (GameState & { id: string })[]) => void
+  callback: (data: (GameState & { id: string })[]) => void,
+  errorCallback: (err: string) => void
 ) => {
   const q = query(
     collection(db, GAME_COLLECTION),
@@ -112,6 +113,7 @@ export const getLastNPlayerGamesSnapshot = (
       }));
       callback(data);
     },
+    error: (err) => errorCallback(err.message),
   });
 
   return unsubscribe;

@@ -1,20 +1,19 @@
-import { db } from "@/config/firebase";
 import { useAuth } from "@/contexts/AuthContext";
 import { useGameContext } from "@/contexts/GameState.context";
 import {
-    LetterLiteral,
-    PlayerHand as PlayerHandType,
+  LetterLiteral,
+  PlayerHand as PlayerHandType,
 } from "@/model/core.model";
 import { authService } from "@/services/auth";
-import { updateGame } from "@/services/collections/game/game";
+import { useUpdateGame } from "@/services/collections/game/game.hooks";
 import { DbGamePayload } from "@/services/collections/game/game.model";
 import {
-    DragEndEvent,
-    DragStartEvent,
-    MouseSensor,
-    TouchSensor,
-    useSensor,
-    useSensors,
+  DragEndEvent,
+  DragStartEvent,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
 } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import { useState } from "react";
@@ -36,6 +35,9 @@ export const usePlayfieldHandlers = () => {
     setLocalProposedMove,
     isMyTurn,
   } = useGameContext();
+
+  // Data
+  const updateGame = useUpdateGame(gameId);
 
   // Drag and drop state
   const [activeLetter, setActiveLetter] = useState<LetterLiteral | null>(null);
@@ -69,7 +71,7 @@ export const usePlayfieldHandlers = () => {
   const handleLeave = () => {
     // TODO: handle this properly
     // Remove the user from the game
-    updateGame(db, gameId, {
+    updateGame({
       playerIds: state!.playerIds.map((v) =>
         v === user!.uid ? null : v
       ) as DbGamePayload["playerIds"],
