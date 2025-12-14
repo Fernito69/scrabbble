@@ -7,6 +7,7 @@ import {
 import { DbGamePayload } from "@/services/collections/game/game.model";
 import {
   buildMovePayload,
+  computeRemainingTilesScore,
   drawCards,
 } from "@/services/collections/game/game.utils";
 import { useEffect } from "react";
@@ -14,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useAuth } from "./AuthContext";
 import { DefaultGame, UseGameStateEffects } from "./GameState.model";
+import { cloneDeep } from "lodash";
 
 export const useGameStateEffects = ({
   gameId,
@@ -146,4 +148,37 @@ export const useGameStateEffects = ({
   useEffect(() => {
     setLocalPlayerHand(initialPlayerHand ?? DefaultGame.localPlayerHand);
   }, [initialPlayerHand]);
+
+  /***************/
+  // End of the game
+  /***************/
+  useEffect(() => {
+    if (!state || state.gameOver || !template || !state.gameStarted) return;
+
+    // Game is over if the pouch is empty and one player has no tiles
+    const [winningPlayerId] =
+      Object.entries(state.playerHands).find(
+        ([_, hand]) => hand.filter(Boolean).length === 0
+      ) ?? [];
+
+    if (state.tilePouch.length === 0 && winningPlayerId) {
+      // Winning player gets the points of the remaining tiles
+      const score = cloneDeep(state.score);
+      const points = computeRemainingTilesScore(state, template);
+
+      score.total[winningPlayerId] += points;
+      score.perTurn.push({
+        playerId: winningPlayerId,
+        turn: state.currentTurn + 1,
+        score: points,
+      });
+
+      const payload = {
+        gameOver: true,
+        score,
+      } satisfies Partial<DbGamePayload>;
+
+      updateGame(payload);
+    }
+  }, [state?.tilePouch]);
 };

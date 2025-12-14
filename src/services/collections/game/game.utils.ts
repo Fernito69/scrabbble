@@ -306,6 +306,25 @@ export const getInitialGamePayload = (
   return payload;
 };
 
+export const computeRemainingTilesScore = (
+  state: GameState,
+  template: LanguageTemplate
+) => {
+  const points: number = Object.values(state.playerHands).reduce(
+    (acc, playerHand) => {
+      return (
+        acc +
+        playerHand
+          .filter(Boolean)
+          .map((t) => template.scoreMap[t!] ?? 0)
+          .reduce((accc, score) => accc + score, 0)
+      );
+    },
+    0
+  );
+  return points;
+};
+
 // TODO: MOVE THIS?
 export const bonusColorMap: Record<Bonus, string> = {
   [Bonus.DOUBLE_LETTER]: "bg-blue-200",
