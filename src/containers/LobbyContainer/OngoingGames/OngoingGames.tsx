@@ -10,14 +10,14 @@ import {
 } from "@/components/ui/table";
 import { PlayerBadge } from "@/containers/PlayfieldContainer/PlayerBadge/PlayerBadge";
 import { useAuth } from "@/contexts/AuthContext";
-import { useGetPlayerGames } from "@/services/collections/game/game.hooks";
+import { useGetLastNPlayerGames } from "@/services/collections/game/game.hooks";
 import { useGetPlayerName } from "@/services/collections/userConfig/userConfig.hooks";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 export const OngoingGames = () => {
   // Data
-  const playerGames = useGetPlayerGames();
+  const playerGames = useGetLastNPlayerGames();
   const { user } = useAuth();
 
   // Hooks

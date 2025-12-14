@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { LanguageTemplate } from "../letterValueMap/languageTemplate.model";
 import {
   getGameSnapshot,
-  getPlayerGamesSnapshot,
+  getLastNPlayerGamesSnapshot,
   proposeMove,
   reshuffleInitialPlayerHands,
   updateGame,
@@ -67,13 +67,15 @@ export const useReshuffleGame = (gameId: string) => {
   };
 };
 
-export const useGetPlayerGames = (): (GameState & { id: string })[] => {
+export const useGetLastNPlayerGames = (
+  n: number = 10
+): (GameState & { id: string })[] => {
   const { user } = useAuth();
   const [games, setGames] = useState<(GameState & { id: string })[]>([]);
 
   useEffect(
     () =>
-      getPlayerGamesSnapshot(db, user!.uid, (data) => {
+      getLastNPlayerGamesSnapshot(db, user!.uid, n, (data) => {
         setGames(data);
       }),
     []

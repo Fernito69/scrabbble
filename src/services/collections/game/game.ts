@@ -5,6 +5,7 @@ import {
   addDoc,
   collection,
   doc,
+  limit,
   onSnapshot,
   query,
   updateDoc,
@@ -90,15 +91,17 @@ export const reshuffleInitialPlayerHands = async (
   await updateGame(db, gameId, payload);
 };
 
-export const getPlayerGamesSnapshot = (
+export const getLastNPlayerGamesSnapshot = (
   db: Firestore,
   userId: string,
+  n: number,
   callback: (data: (GameState & { id: string })[]) => void
 ) => {
   const q = query(
     collection(db, GAME_COLLECTION),
     where("playerIds", "array-contains", userId),
-    where("gameOver", "==", false)
+    where("gameOver", "==", false),
+    limit(n)
   );
 
   const unsubscribe = onSnapshot(q, {

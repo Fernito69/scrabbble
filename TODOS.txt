@@ -1,3 +1,2 @@
-- Logic to End game 
-- Share game link
+- Chat
 - EMail auth?
