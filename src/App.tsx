@@ -1,4 +1,10 @@
-import { BrowserRouter, Routes, Route, Navigate, useSearchParams } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useSearchParams,
+} from "react-router-dom";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { Login } from "@/pages/Login";
 import { Lobby } from "@/pages/Lobby";
@@ -7,34 +13,37 @@ import { VerifyEmail } from "@/pages/VerifyEmail";
 import { ForgotPassword } from "@/pages/ForgotPassword";
 import { useAuth } from "@/contexts/AuthContext";
 import { LanguageInitializer } from "@/components/LanguageInitializer/LanguageInitializer";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 function App() {
   return (
-    <LanguageInitializer>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<LoginRoute />} />
-          <Route path="/verify-email" element={<VerifyEmail />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <Lobby />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/game/:gameId"
-            element={
-              <ProtectedRoute>
-                <Playfield />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-      </BrowserRouter>
-    </LanguageInitializer>
+    <TooltipProvider>
+      <LanguageInitializer>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login" element={<LoginRoute />} />
+            <Route path="/verify-email" element={<VerifyEmail />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <Lobby />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/game/:gameId"
+              element={
+                <ProtectedRoute>
+                  <Playfield />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </BrowserRouter>
+      </LanguageInitializer>
+    </TooltipProvider>
   );
 }
 

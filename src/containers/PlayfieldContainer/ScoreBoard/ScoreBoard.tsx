@@ -1,3 +1,4 @@
+import { UserAvatar } from "@/components/UserAvatar";
 import {
   Table,
   TableBody,
@@ -6,9 +7,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useAuth } from "@/contexts/AuthContext";
 import { useGameContext } from "@/contexts/GameState.context";
 import { useTranslation } from "react-i18next";
-import { PlayerBadge } from "../PlayerBadge/PlayerBadge";
 
 interface ScoreRow {
   turn: number;
@@ -18,6 +19,7 @@ interface ScoreRow {
 export const ScoreBoard = () => {
   const { t } = useTranslation();
   const { state } = useGameContext();
+  const { user } = useAuth();
 
   if (!state?.score) return null;
 
@@ -49,7 +51,12 @@ export const ScoreBoard = () => {
             <TableHead>{t("scoreBoard.turn")}</TableHead>
             {presentPlayerIds.map((id, i) => (
               <TableHead key={i}>
-                <PlayerBadge playerId={id!} />
+                <UserAvatar
+                  userId={id!}
+                  diameter={24}
+                  glow={state.currentPlayerId === id && user?.uid === id}
+                  shadingIndex={i}
+                />
               </TableHead>
             ))}
           </TableRow>

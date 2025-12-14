@@ -4,6 +4,7 @@ export type UserConfigBase = {
   displayName?: string;
   email?: string;
   language?: Language;
+  photoURL?: string;
 };
 
 export type UserConfig = UserConfigBase & {

@@ -81,10 +81,10 @@ export const PlayerControls = () => {
   // Render
   return (
     showControls && (
-      <div className="flex h-16 w-fit flex-row gap-2 p-2 border border-black rounded-md bg-gray-100 items-center">
+      <div className="flex h-24 w-fit flex-row gap-2 p-2 border border-gray-400 shadow rounded-md bg-gray-50 items-center">
         {isMyTurn && (
           <>
-            <ConfirmationDialog
+            {!state.currentVote && <ConfirmationDialog
               isDisabled={proposeMoveButtonDisabled}
               title={t("playerControls.proposeMove")}
               description={t("playerControls.proposeMoveConfirm")}
@@ -97,7 +97,7 @@ export const PlayerControls = () => {
                   {t("playerControls.proposeMove")}
                 </Button>
               }
-            />
+            />}
             {showSkipTurnButton && (
               <ConfirmationDialog
                 title={t("playerControls.skip")}

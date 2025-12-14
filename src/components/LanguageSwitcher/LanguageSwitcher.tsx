@@ -31,7 +31,7 @@ export const LanguageSwitcher = () => {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <button className="px-4 py-2 text-sm border border-input rounded-md hover:bg-accent flex items-center gap-2 text-xl">
+        <button className="px-4 py-1 text-sm border border-input rounded-md hover:bg-accent flex items-center gap-2 text-xl">
           <Languages className="h-4 w-4" />
           {selectedLanguageFLag}
         </button>

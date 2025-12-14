@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { LanguageSelectDialog } from "./LanguageSelectDialog/LanguageSelectDialog";
 import { OngoingGames } from "./OngoingGames/OngoingGames";
 import { ScrabbbbbbleLogo } from "@/components/ScrabbbbbbleLogo/ScrabbbbbbleLogo";
+import { UserAvatar } from "@/components/UserAvatar";
 
 export const LobbyContainer = () => {
   const { t } = useTranslation();
@@ -39,9 +40,9 @@ export const LobbyContainer = () => {
       <div className="w-full max-w-2xl space-y-6">
         <div className="text-center space-y-2">
           <ScrabbbbbbleLogo size="text-4xl" />
-          <p className="text-muted-foreground">
-            {t("lobby.welcome", { userName })}
-          </p>
+          <div className="text-muted-foreground items-center justify-center flex flex-row gap-2">
+            {t("lobby.welcome", { userName })} <UserAvatar userId={user!.uid} />
+          </div>
         </div>
 
         <div className="flex flex-col gap-4">

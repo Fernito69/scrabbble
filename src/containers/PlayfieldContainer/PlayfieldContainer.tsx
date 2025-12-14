@@ -9,12 +9,13 @@ import { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { BoardComponent } from "./BoardComponent/BoardComponent";
-import { PlayerBadge } from "./PlayerBadge/PlayerBadge";
 import { PlayerHand } from "./PlayerHand/PlayerHand";
 import { usePlayfieldHandlers } from "./PlayfieldContainer.hooks";
 import { ScoreBoard } from "./ScoreBoard/ScoreBoard";
 import { TileComponent } from "./TileComponent/TileComponent";
 import { ReshuffleVoteModal } from "./VoteModals/ReshuffleVoteModal/ReshuffleVoteModal";
+import { UserAvatar } from "@/components/UserAvatar";
+import { ScrabbbbbbleLogo } from "@/components/ScrabbbbbbleLogo/ScrabbbbbbleLogo";
 
 export const PlayfieldContainer = () => {
   // Hooks
@@ -53,14 +54,14 @@ export const PlayfieldContainer = () => {
     >
       <div className="min-h-screen bg-background p-8">
         <div className="max-w-7xl mx-auto">
-          <div className="flex justify-between items-center mb-8">
-            <div>
-              
+          <div className="flex justify-between items-center mb-2">
+            <div className="flex flex-col">
+              <ScrabbbbbbleLogo />
               <p className="text-muted-foreground mt-1">
                 {t("playfield.welcome", { userName })}
               </p>
             </div>
-            <div className="flex gap-4">
+            <div className="flex gap-4 items-center">
               {!state.gameStarted && (
                 <button
                   onClick={handleLeave}
@@ -90,17 +91,23 @@ export const PlayfieldContainer = () => {
               >
                 {t("playfield.signOut")}
               </button>
+              <UserAvatar userId={user!.uid} diameter={24} />
             </div>
           </div>
 
           <div id="badges" className="rounded-lg text-center p-2">
-            <div className="flex flex-row flex-wrap gap-2 mb-4">
+            <div className="flex flex-row flex-wrap gap-2 mb-4 items-center">
               <Badge
                 label={t("playfield.players")}
                 value={
-                  <div className="flex flex-row gap-2">
-                    {(state.playerIds ?? []).filter(Boolean).map((v) => (
-                      <PlayerBadge key={v} playerId={v!} />
+                  <div className="flex flex-row gap-2 ">
+                    {(state.playerIds ?? []).filter(Boolean).map((v, i) => (
+                      <UserAvatar
+                        key={v}
+                        userId={v!}
+                        diameter={24}
+                        shadingIndex={i}
+                      />
                     ))}
                   </div>
                 }
@@ -117,7 +124,13 @@ export const PlayfieldContainer = () => {
                   {state.currentPlayerId != null && (
                     <Badge
                       label={t("playfield.currentMove")}
-                      value={<PlayerBadge playerId={state.currentPlayerId} />}
+                      value={
+                        <UserAvatar
+                          userId={state.currentPlayerId}
+                          glow={state.currentPlayerId === user!.uid}
+                          diameter={24}
+                        />
+                      }
                     />
                   )}
                   <Badge
@@ -159,7 +172,7 @@ export const Badge = ({
   color = "border-green-300",
 }: BadgeProps) => {
   const className = cn(
-    "flex flex-row gap-2 border-2 rounded-md p-2 shadow text-muted-foreground text-sm w-fit",
+    "flex flex-row gap-2 border-2 rounded-md p-2 shadow text-muted-foreground text-sm w-fit items-center",
     color
   );
 

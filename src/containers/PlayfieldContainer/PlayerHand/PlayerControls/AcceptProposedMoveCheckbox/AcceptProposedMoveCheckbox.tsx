@@ -1,10 +1,10 @@
-import { Checkbox } from "@/components/ui/checkbox";
+import { UserAvatar } from "@/components/UserAvatar";
 import { useAuth } from "@/contexts/AuthContext";
 import { useGameContext } from "@/contexts/GameState.context";
-import { useUpdateGame } from "@/services/collections/game/game.hooks";
-import { PlayerBadge } from "../../../PlayerBadge/PlayerBadge";
 import { cn } from "@/lib/utils";
+import { useUpdateGame } from "@/services/collections/game/game.hooks";
 import { useTranslation } from "react-i18next";
+import { VoteCheckboxes } from "../VoteCheckboxes/VoteCheckboxes";
 
 export const AcceptProposedMoveCheckbox = () => {
   // Hooks
@@ -22,6 +22,12 @@ export const AcceptProposedMoveCheckbox = () => {
   // Handlers
   const handleChangeVote = () => {
     if (!state.currentVote) return;
+    if (
+      state.currentPlayerId === user!.uid &&
+      !window.confirm(t("acceptMove.rejectOwnMove"))
+    )
+      return;
+
     updateGame({
       currentVote: {
         ...state.currentVote,
@@ -33,30 +39,24 @@ export const AcceptProposedMoveCheckbox = () => {
   };
 
   // Consts
-  const isChecked = !!state.currentVote.votes.find(
-    (v) => v.playerId === user!.uid
-  )?.voted;
+
   const className = cn(
-    "flex flex-col gap-1 items-center justify-center w-full h-full border-1 border rounded-sm p-2",
-    isChecked ? "border-green-600 bg-green-100" : "border-red-600 bg-red-100"
+    "flex flex-col gap-1 items-center justify-center w-full h-100 p-2"
   );
 
   // Render
   return (
     <div className={className}>
-      <div className="text-muted-foreground whitespace-nowrap w-full flex flex-row gap-2 justify-center text-sm">
-        {t("acceptMove.acceptFrom")}{" "}
-        {state.currentPlayerId === user!.uid ? (
-          t("acceptMove.myself")
-        ) : (
-          <PlayerBadge playerId={state.currentPlayerId!} />
-        )}
+      <div className="text-xs flex flex-row gap-2 items-center">
+        {t("acceptMove.acceptFrom")}
+        <UserAvatar
+          userId={state.currentPlayerId!}
+          glow={state.currentPlayerId === user!.uid}
+          shadingIndex={state.playerIds.indexOf(state.currentPlayerId!)}
+          diameter={24}
+        />
       </div>
-      <Checkbox
-        className="bg-white"
-        checked={isChecked}
-        onCheckedChange={handleChangeVote}
-      />
+      <VoteCheckboxes handleChangeVote={handleChangeVote} />
     </div>
   );
 };

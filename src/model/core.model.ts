@@ -164,6 +164,7 @@ export type GameState = {
   currentProposedMove: PlayerMove | undefined;
   currentVote: Vote | undefined;
   createdAt: Date;
+  createdByUserId: string;
 };
 
 // For now just boolean votes

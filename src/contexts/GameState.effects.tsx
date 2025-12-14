@@ -102,19 +102,20 @@ export const useGameStateEffects = ({
   // Initial vote
   /***************/
   useEffect(() => {
-    if (!state?.currentVote || !isGameOrganizer) return;
+    if (!state || !isGameOrganizer) return;
+
     if (numPlayers > 1 && !state.currentVote && !state.gameStarted) {
       const currentVote = {
         type: VoteType.START_VOTE,
         voteFinished: false,
         votes: state.playerIds
           .filter(Boolean)
-          .map((id) => ({ playerId: id!, voted: false })),
+          .map((id) => ({ playerId: id!, voted: null })),
       } satisfies Vote;
 
       updateGame({ currentVote });
     }
-  }, [state?.currentVote]);
+  }, [state?.currentVote, isGameOrganizer, numPlayers]);
 
   /***************/
   // Vote for proposed move
@@ -170,6 +171,7 @@ export const useGameStateEffects = ({
       failSafeEligibleTypes.includes(state.currentVote.type) &&
       state.currentVote.votes.every((v) => v.voted === false)
     ) {
+      console.log("Failsafe: resetting currentVote");
       updateGame({ currentVote: null });
     }
   }, [state?.currentVote]);

@@ -1,5 +1,8 @@
 import { BoardDiorama } from "@/components/BoardDiorama/BoardDiorama";
+import { ConfirmationDialog } from "@/components/Dialog/ConfirmationDialog";
 import { OverlayWithLoader } from "@/components/OverlayWithLoader/OverlayWithLoader";
+import { UserAvatar } from "@/components/UserAvatar";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
   Table,
@@ -9,10 +12,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { PlayerBadge } from "@/containers/PlayfieldContainer/PlayerBadge/PlayerBadge";
 import { useAuth } from "@/contexts/AuthContext";
-import { useGetLastNPlayerGames } from "@/services/collections/game/game.hooks";
-import { useGetPlayerName } from "@/services/collections/userConfig/userConfig.hooks";
+import {
+  useDeleteGame,
+  useGetLastNPlayerGames,
+} from "@/services/collections/game/game.hooks";
+import { Trash2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
@@ -21,9 +26,11 @@ export const OngoingGames = () => {
   const { playerGames, error } = useGetLastNPlayerGames();
   const { user } = useAuth();
 
+  // Mutations
+  const deleteGame = useDeleteGame();
+
   // Hooks
   const { t } = useTranslation();
-  const getPlayerName = useGetPlayerName();
   const navigate = useNavigate();
 
   // Render
@@ -52,6 +59,7 @@ export const OngoingGames = () => {
                     <TableHead className="whitespace-wrap">
                       {t("lobby.tilesLeft")}
                     </TableHead>
+                    <TableHead />
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -60,12 +68,16 @@ export const OngoingGames = () => {
                       (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
                     )
                     .map((game, i) => {
-                      const playerIds = game.playerIds.filter(Boolean);
+                      const playerIds = game.playerIds.filter(
+                        Boolean
+                      ) as string[];
+                      const playerIsCreator =
+                        user?.uid === game.createdByUserId;
 
                       return (
                         <TableRow
                           key={i}
-                          className="cursor-pointer"
+                          className="cursor-pointer animate-out"
                           onClick={() => navigate(`/game/${game.id}`)}
                         >
                           <TableCell>
@@ -76,24 +88,31 @@ export const OngoingGames = () => {
                           </TableCell>
                           <TableCell>
                             <div className="flex flex-row gap-2 whitespace-nowrap tracking-tight">
-                              {playerIds
-                                .map((id) => getPlayerName(id))
-                                .join(", ")}
+                              {playerIds.map((id, idx) => (
+                                <UserAvatar
+                                  key={id}
+                                  userId={id}
+                                  diameter={28}
+                                  shadingIndex={idx}
+                                />
+                              ))}
                             </div>
                           </TableCell>
                           <TableCell>
                             {playerIds
-                              .map((id) => game.score.total[id!] ?? 0)
+                              .map((id) => game.score.total[id] ?? 0)
                               .join(", ")}
                           </TableCell>
                           <TableCell>
                             <span>
                               {game.currentPlayerId != null ? (
-                                <PlayerBadge
-                                  playerId={game.currentPlayerId}
-                                  colorIndex={
-                                    game.currentPlayerId === user!.uid ? 0 : 1
-                                  }
+                                <UserAvatar
+                                  userId={game.currentPlayerId}
+                                  glow={game.currentPlayerId === user!.uid}
+                                  shadingIndex={game.playerIds.indexOf(
+                                    game.currentPlayerId
+                                  )}
+                                  diameter={28}
                                 />
                               ) : (
                                 "-"
@@ -102,6 +121,23 @@ export const OngoingGames = () => {
                           </TableCell>
                           <TableCell>{game.currentTurn || "-"}</TableCell>
                           <TableCell>{game.tilePouch.length}</TableCell>
+                          <TableCell onClick={(e) => e.stopPropagation()}>
+                            {playerIsCreator && (
+                              <ConfirmationDialog
+                                triggerElement={
+                                  <Button
+                                    variant={"ghost"}
+                                    className="text-red-600"
+                                  >
+                                    <Trash2 />
+                                  </Button>
+                                }
+                                title={t("lobby.deleteGame")}
+                                description={t("lobby.deleteGameConfirm")}
+                                onAccept={() => deleteGame(game.id)}
+                              />
+                            )}
+                          </TableCell>
                         </TableRow>
                       );
                     })}

@@ -6,6 +6,7 @@ import {
   onSnapshot,
   query,
   setDoc,
+  updateDoc,
 } from "firebase/firestore";
 import {
   DEFAULT_USER_CONFIG,
@@ -83,9 +84,16 @@ export const initUserConfig = async (
   if (!user) return;
 
   const docRef = doc(db, USER_CONFIG_COLLECTION, user.uid);
+  const docSnap = await getDoc(docRef);
 
-  if ((await getDoc(docRef)).exists()) {
-    return;
+  if (docSnap.exists()) {
+    const doc = docSnap.data() as UserConfig;
+    // Update possible new data
+    console.log("Updating user config for user", user.uid);
+    return updateDoc(docRef, {
+      displayName: doc.displayName ?? user.displayName ?? undefined,
+      photoURL: doc.photoURL ?? user.photoURL ?? undefined,
+    } satisfies Partial<UserConfig>);
   }
 
   await setDoc(docRef, {
@@ -95,5 +103,5 @@ export const initUserConfig = async (
     email: user.email ?? undefined,
   } satisfies UserConfig);
 
-  console.log("Initialized user config for user", user.uid);
+  console.log("Initialized user config for user for the first time", user.uid);
 };

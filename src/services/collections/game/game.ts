@@ -4,6 +4,7 @@ import {
   Firestore,
   addDoc,
   collection,
+  deleteDoc,
   doc,
   limit,
   onSnapshot,
@@ -67,7 +68,10 @@ export const updateGame = (
   return updateDoc(docRef, game);
 };
 
-// TODO: move skip turn and propose move handlers to here
+export const deleteGame = async (db: Firestore, id: string) => {
+  const docRef = doc(db, GAME_COLLECTION, id);
+  return deleteDoc(docRef);
+};
 
 export const proposeMove = async (
   db: Firestore,
