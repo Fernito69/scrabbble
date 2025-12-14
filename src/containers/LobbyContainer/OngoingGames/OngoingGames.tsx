@@ -40,6 +40,7 @@ export const OngoingGames = () => {
                 <TableHead>{t("lobby.players")}</TableHead>
                 <TableHead>{t("lobby.scores")}</TableHead>
                 <TableHead>{t("lobby.currentMove")}</TableHead>
+                <TableHead>{t("lobby.currentTurn")}</TableHead>
                 <TableHead className="whitespace-wrap">
                   {t("lobby.tilesLeft")}
                 </TableHead>
@@ -75,16 +76,19 @@ export const OngoingGames = () => {
                       </TableCell>
                       <TableCell>
                         <span>
-                          {game.currentPlayerId != null && (
+                          {game.currentPlayerId != null ? (
                             <PlayerBadge
                               playerId={game.currentPlayerId}
                               colorIndex={
                                 game.currentPlayerId === user!.uid ? 0 : 1
                               }
                             />
+                          ) : (
+                            "-"
                           )}
                         </span>
                       </TableCell>
+                      <TableCell>{game.currentTurn || "-"}</TableCell>
                       <TableCell>{game.tilePouch.length}</TableCell>
                     </TableRow>
                   );

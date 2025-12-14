@@ -26,7 +26,9 @@ export const BoardDiorama = ({ game }: Props) => {
             const letter = proposedMove?.letter ?? tile?.letter;
 
             const squareColor = letter
-              ? proposedMove ? "bg-yellow-300" : "bg-white"
+              ? proposedMove
+                ? "bg-yellow-300"
+                : "bg-white"
               : bonus
               ? bonusColorMap[bonus]
               : "bg-green-600";
@@ -34,7 +36,11 @@ export const BoardDiorama = ({ game }: Props) => {
             const className = cn(
               squareColor,
               "w-[4px] h-[4px]",
-              letter ? "border border-black" : ""
+              letter
+                ? proposedMove
+                  ? "border border-red-500"
+                  : "border border-gray-600"
+                : ""
             );
 
             return <div key={key} className={className} />;

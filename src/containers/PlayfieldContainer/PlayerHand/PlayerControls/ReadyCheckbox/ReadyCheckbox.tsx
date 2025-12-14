@@ -74,7 +74,7 @@ export const ReadyCheckbox = ({ vote }: Props) => {
   const voted = vote.votes.find((v) => v.playerId === user!.uid)?.voted;
   const className = cn(
     "flex flex-col gap-1 items-center justify-center w-full h-full border-1 border rounded-sm p-2",
-    voted ? "border-green-600 bg-green-100" : "border-red-600 bg-red-100"
+    voted ? "border-green-600 bg-green-100" : "border-gray-400 bg-gray-200"
   );
 
   // Render

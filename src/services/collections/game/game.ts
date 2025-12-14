@@ -98,7 +98,6 @@ export const getPlayerGamesSnapshot = (
   const q = query(
     collection(db, GAME_COLLECTION),
     where("playerIds", "array-contains", userId),
-    where("gameStarted", "==", true),
     where("gameOver", "==", false)
   );
 

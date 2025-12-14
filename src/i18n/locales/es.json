@@ -10,7 +10,8 @@
     "players": "Jugadores",
     "scores": "Puntuación",
     "tilesLeft": "Fichas restantes",
-    "currentMove": "Quién juega"
+    "currentMove": "Quién juega",
+    "currentTurn": "Turno"
   },
   "languageSelect": {
     "title": "Seleccionar idioma",

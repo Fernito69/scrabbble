@@ -10,7 +10,8 @@
     "players": "Players",
     "scores": "Scores",
     "tilesLeft": "Tiles left",
-    "currentMove": "Current move"
+    "currentMove": "Current move",
+    "currentTurn": "Turn"
   },
   "languageSelect": {
     "title": "Select language",
