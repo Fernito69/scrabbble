@@ -1,4 +1,3 @@
-import { Checkbox } from "@/components/ui/checkbox";
 import { useAuth } from "@/contexts/AuthContext";
 import { useGameContext } from "@/contexts/GameState.context";
 import { cn } from "@/lib/utils";
@@ -7,6 +6,7 @@ import { useUpdateGame } from "@/services/collections/game/game.hooks";
 import { getInitGamePayload } from "@/services/collections/game/game.utils";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { VoteCheckboxes } from "../VoteCheckboxes/VoteCheckboxes";
 
 interface Props {
   vote: Vote;
@@ -74,7 +74,7 @@ export const ReadyCheckbox = ({ vote }: Props) => {
   const voted = vote.votes.find((v) => v.playerId === user!.uid)?.voted;
   const className = cn(
     "flex flex-col gap-1 items-center justify-center w-full h-full border-1 border rounded-sm p-2",
-    voted ? "border-green-600 bg-green-100" : "border-gray-400 bg-gray-200"
+    voted ? "border-green-500 bg-green-50" : "border-gray-400 bg-gray-200"
   );
 
   // Render
@@ -83,11 +83,7 @@ export const ReadyCheckbox = ({ vote }: Props) => {
       <div className="text-muted-foreground whitespace-nowrap w-full flex flex-row gap-2 justify-center text-sm">
         {t("readyCheckbox.ready")}
       </div>
-      <Checkbox
-        className="bg-white"
-        checked={voted!!}
-        onCheckedChange={handleChangeVote}
-      />
+      <VoteCheckboxes handleChangeVote={handleChangeVote} />
     </div>
   );
 };
