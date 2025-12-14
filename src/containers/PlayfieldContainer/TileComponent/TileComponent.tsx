@@ -15,7 +15,7 @@ export const TileComponent = ({ letter, proposedMove = false }: Props) => {
   if (letterScore == null) return null;
 
   const tileClassName = cn(
-    "h-12 w-12 flex items-center justify-center text-2xl border-2 rounded-md h-full shadow",
+    "h-12 w-12 flex items-center justify-center text-2xl border-2 rounded-md h-full shadow select-none",
     proposedMove
       ? "border-red-500 bg-yellow-300 text-red-800 animate-pulse-scale"
       : "border-gray-300 bg-gray-50 text-gray-400"

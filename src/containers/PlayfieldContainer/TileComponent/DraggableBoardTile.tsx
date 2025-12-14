@@ -7,9 +7,17 @@ interface Props {
   letter: LetterLiteral;
   x: number;
   y: number;
+  isSelected?: boolean;
+  onClick?: () => void;
 }
 
-export const DraggableBoardTile = ({ letter, x, y }: Props) => {
+export const DraggableBoardTile = ({
+  letter,
+  x,
+  y,
+  isSelected,
+  onClick,
+}: Props) => {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
       id: `board-tile-${x}-${y}`,
@@ -28,8 +36,24 @@ export const DraggableBoardTile = ({ letter, x, y }: Props) => {
     cursor: "grab",
   };
 
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onClick?.();
+  };
+
   return (
-    <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...listeners}
+      {...attributes}
+      onClick={handleClick}
+      className={
+        isSelected
+          ? "ring-4 ring-yellow-400 rounded select-none"
+          : "select-none"
+      }
+    >
       <TileComponent letter={letter} proposedMove />
     </div>
   );

@@ -5,6 +5,7 @@ import { DroppableBoardSquare } from "./DroppableBoardSquare";
 import { DraggableBoardTile } from "../TileComponent/DraggableBoardTile";
 import { ProposedMoveScoreIndicator } from "./ProposedMoveScoreIndicator";
 import { useAuth } from "@/contexts/AuthContext";
+import { useClickToSelect } from "../useClickToSelect.hook";
 
 const bonusColorMap: Record<Bonus, string> = {
   [Bonus.DOUBLE_LETTER]: "bg-blue-200",
@@ -20,7 +21,13 @@ const bonusMessageMap: Record<Bonus, string[]> = {
   [Bonus.TRIPLE_WORD]: ["Triple", "Word"],
 };
 
-export const BoardComponent = () => {
+interface BoardComponentProps {
+  clickToSelectHandlers: ReturnType<typeof useClickToSelect>;
+}
+
+export const BoardComponent = ({
+  clickToSelectHandlers,
+}: BoardComponentProps) => {
   // Context
   const { state, template, localProposedMove } = useGameContext();
   const { user } = useAuth();
@@ -66,8 +73,14 @@ export const BoardComponent = () => {
                       x={xIndex}
                       y={yIndex}
                       squareColor={squareColor}
+                      onClick={() =>
+                        clickToSelectHandlers.handleBoardSquareClick(
+                          xIndex,
+                          yIndex
+                        )
+                      }
                     >
-                      <div className="text-[10px] flex flex-col items-center justify-center h-full">
+                      <div className="text-[10px] flex flex-col items-center justify-center h-full select-none">
                         {bonus &&
                           bonusMessageMap[bonus].map((v, i) => (
                             <p key={i}>{v}</p>
@@ -78,18 +91,34 @@ export const BoardComponent = () => {
                 }
 
                 // Tile
+                const isSelected = clickToSelectHandlers.isSelected(
+                  "board",
+                  xIndex,
+                  yIndex
+                );
+
                 return (
                   <DroppableBoardSquare
                     key={key}
                     x={xIndex}
                     y={yIndex}
                     squareColor={squareColor}
+                    onClick={() => {}}
                   >
                     {proposedMove ? (
                       <DraggableBoardTile
                         letter={letter}
                         x={xIndex}
                         y={yIndex}
+                        isSelected={isSelected}
+                        onClick={() =>
+                          clickToSelectHandlers.handleTileClick({
+                            letter,
+                            source: "board",
+                            x: xIndex,
+                            y: yIndex,
+                          })
+                        }
                       />
                     ) : (
                       <TileComponent letter={letter} proposedMove={false} />

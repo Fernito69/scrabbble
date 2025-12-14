@@ -7,6 +7,7 @@ interface Props {
   y: number;
   children: ReactNode;
   squareColor: string;
+  onClick?: () => void;
 }
 
 export const DroppableBoardSquare = ({
@@ -14,6 +15,7 @@ export const DroppableBoardSquare = ({
   y,
   children,
   squareColor,
+  onClick,
 }: Props) => {
   const { setNodeRef, isOver } = useDroppable({
     id: `board-${x}-${y}`,
@@ -31,7 +33,7 @@ export const DroppableBoardSquare = ({
   );
 
   return (
-    <div ref={setNodeRef} className={squareClassName}>
+    <div ref={setNodeRef} className={squareClassName} onClick={onClick}>
       {children}
     </div>
   );

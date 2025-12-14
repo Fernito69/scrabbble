@@ -64,7 +64,7 @@ export const ProposedMoveScoreIndicator = ({
       style={{
         left: `${pixelX}px`,
         top: `${pixelY}px`,
-        transform: 'translate(-50%, -50%)',
+        transform: "translate(-50%, -50%)",
       }}
     >
       <div className="relative">
@@ -72,8 +72,9 @@ export const ProposedMoveScoreIndicator = ({
         <div
           className="absolute inset-0 rounded-full blur-md animate-pulse"
           style={{
-            background: 'radial-gradient(circle, rgba(251, 191, 36, 0.6) 0%, rgba(251, 191, 36, 0) 70%)',
-            animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            background:
+              "radial-gradient(circle, rgba(251, 191, 36, 0.6) 0%, rgba(251, 191, 36, 0) 70%)",
+            animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
           }}
         />
 
@@ -81,8 +82,8 @@ export const ProposedMoveScoreIndicator = ({
         <div
           className="relative bg-gradient-to-br from-amber-400 to-yellow-500 text-white font-bold text-lg px-2 py-1 rounded-full shadow-lg border-2 border-amber-300"
           style={{
-            animation: 'float 3s ease-in-out infinite',
-            textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)',
+            animation: "float 3s ease-in-out infinite",
+            textShadow: "2px 2px 4px rgba(0, 0, 0, 0.3)",
           }}
         >
           +{score}

@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { BoardComponent } from "./BoardComponent/BoardComponent";
 import { PlayerHand } from "./PlayerHand/PlayerHand";
 import { usePlayfieldHandlers } from "./PlayfieldContainer.hooks";
+import { useClickToSelect } from "./useClickToSelect.hook";
 import { ScoreBoard } from "./ScoreBoard/ScoreBoard";
 import { TileComponent } from "./TileComponent/TileComponent";
 import { ReshuffleVoteModal } from "./VoteModals/ReshuffleVoteModal/ReshuffleVoteModal";
@@ -33,6 +34,8 @@ export const PlayfieldContainer = () => {
     handleInvitePlayers,
     activeLetter,
   } = usePlayfieldHandlers();
+
+  const clickToSelectHandlers = useClickToSelect();
 
   // Data
   const userConfig = useGetUserConfig();
@@ -140,7 +143,7 @@ export const PlayfieldContainer = () => {
                 </>
               )}
             </div>
-            <BoardComponent />
+            <BoardComponent clickToSelectHandlers={clickToSelectHandlers} />
           </div>
           {showReshuffleModal && (
             <ReshuffleVoteModal vote={state!.currentVote!} />
@@ -148,7 +151,7 @@ export const PlayfieldContainer = () => {
         </div>
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col justify-between items-center mb-8 gap-4">
-            <PlayerHand />
+            <PlayerHand clickToSelectHandlers={clickToSelectHandlers} />
             <ScoreBoard />
           </div>
         </div>

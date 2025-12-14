@@ -7,9 +7,11 @@ interface Props {
   id: string;
   letter: LetterLiteral | null;
   index: number;
+  isSelected?: boolean;
+  onClick?: () => void;
 }
 
-export const SortableTile = ({ id, letter, index }: Props) => {
+export const SortableTile = ({ id, letter, index, isSelected, onClick }: Props) => {
   const {
     attributes,
     listeners,
@@ -34,13 +36,21 @@ export const SortableTile = ({ id, letter, index }: Props) => {
     cursor: "grab",
   };
 
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onClick?.();
+  };
+
   return (
     <div
       ref={setNodeRef}
       style={style}
       {...listeners}
       {...attributes}
-      className="flex w-16 h-16 bg-gray-500 border border-black rounded-md items-center justify-center"
+      onClick={handleClick}
+      className={`flex w-16 h-16 bg-gray-500 border border-black rounded-md items-center justify-center ${
+        isSelected ? "ring-4 ring-yellow-400" : ""
+      }`}
     >
       {letter != null ? <TileComponent letter={letter} /> : null}
     </div>

@@ -6,10 +6,13 @@ import {
 } from "@dnd-kit/sortable";
 import { SortableTile } from "../TileComponent/SortableTile";
 import { PlayerControls } from "./PlayerControls/PlayerControls";
+import { useClickToSelect } from "../useClickToSelect.hook";
 
-interface Props {}
+interface Props {
+  clickToSelectHandlers: ReturnType<typeof useClickToSelect>;
+}
 
-export const PlayerHand = ({}: Props) => {
+export const PlayerHand = ({ clickToSelectHandlers }: Props) => {
   // Context
   const { localPlayerHand, state } = useGameContext();
   const { setNodeRef, isOver } = useDroppable({
@@ -42,6 +45,20 @@ export const PlayerHand = ({}: Props) => {
                 id={tileIds[i]}
                 letter={letter}
                 index={i}
+                isSelected={clickToSelectHandlers.isSelected("hand", i)}
+                onClick={() => {
+                  if (letter) {
+                    // Clicking a tile with a letter
+                    clickToSelectHandlers.handleTileClick({
+                      letter,
+                      source: "hand",
+                      index: i,
+                    });
+                  } else {
+                    // Clicking an empty slot
+                    clickToSelectHandlers.handleEmptyHandSlotClick(i);
+                  }
+                }}
               />
             ))}
           </SortableContext>
