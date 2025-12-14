@@ -1,29 +1,92 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { authService } from "@/services/auth";
+import { FirebaseError } from "firebase/app";
+import { ScrabbbbbbleLogo } from "@/components/ScrabbbbbbleLogo/ScrabbbbbbleLogo";
 
 export const Login = () => {
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const returnUrl = searchParams.get("returnUrl") || "/";
 
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   setError('');
-  //   setLoading(true);
+  const getErrorMessage = (error: unknown): string => {
+    if (error instanceof FirebaseError) {
+      switch (error.code) {
+        case "auth/email-already-in-use":
+          return "This email is already registered. Please sign in instead.";
+        case "auth/invalid-email":
+          return "Invalid email address.";
+        case "auth/weak-password":
+          return "Password should be at least 6 characters.";
+        case "auth/user-not-found":
+        case "auth/wrong-password":
+          return "Invalid email or password.";
+        case "auth/invalid-credential":
+          return "Invalid email or password.";
+        case "auth/too-many-requests":
+          return "Too many failed attempts. Please try again later.";
+        default:
+          return "An error occurred. Please try again.";
+      }
+    }
+    return "An error occurred. Please try again.";
+  };
 
-  //   try {
-  //     await authService.signIn(email, password);
-  //     navigate('/');
-  //   } catch (err) {
-  //     setError('Failed to sign in. Please check your credentials.');
-  //     console.error(err);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+  const handleEmailSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      if (isSignUp) {
+        if (password !== confirmPassword) {
+          setError("Passwords do not match.");
+          setLoading(false);
+          return;
+        }
+        if (password.length < 6) {
+          setError("Password should be at least 6 characters.");
+          setLoading(false);
+          return;
+        }
+
+        // Check if email is already registered with a different provider
+        const signInMethods = await authService.checkEmailExists(email);
+        if (signInMethods.length > 0) {
+          if (signInMethods.includes("google.com")) {
+            setError(
+              "This email is already registered with Google. Please sign in with Google instead."
+            );
+            setLoading(false);
+            return;
+          } else if (signInMethods.includes("password")) {
+            setError(
+              "This email is already registered. Please sign in instead."
+            );
+            setLoading(false);
+            return;
+          }
+        }
+
+        await authService.signUp(email, password);
+        navigate("/verify-email");
+      } else {
+        await authService.signIn(email, password);
+        navigate(returnUrl);
+      }
+    } catch (err) {
+      setError(getErrorMessage(err));
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleGoogleSignIn = async () => {
     setError("");
@@ -33,7 +96,19 @@ export const Login = () => {
       await authService.signInWithGoogle();
       navigate(returnUrl);
     } catch (err) {
-      setError("Failed to sign in with Google.");
+      if (err instanceof FirebaseError) {
+        if (err.code === "auth/account-exists-with-different-credential") {
+          setError(
+            "An account already exists with this email address. Please sign in with email and password instead."
+          );
+        } else if (err.code === "auth/popup-closed-by-user") {
+          setError("Sign-in cancelled.");
+        } else {
+          setError("Failed to sign in with Google.");
+        }
+      } else {
+        setError("Failed to sign in with Google.");
+      }
       console.error(err);
     } finally {
       setLoading(false);
@@ -44,8 +119,10 @@ export const Login = () => {
     <div className="min-h-screen flex items-center justify-center bg-background">
       <div className="w-full max-w-md p-8 space-y-6">
         <div className="text-center">
-          <h1 className="text-3xl font-bold">scrabbbbbble</h1>
-          {/* <p className="text-muted-foreground mt-2">Sign in to continue</p> */}
+          <ScrabbbbbbleLogo />
+          <p className="text-muted-foreground mt-2">
+            {isSignUp ? "Create an account" : "Sign in to continue"}
+          </p>
         </div>
 
         {error && (
@@ -54,11 +131,9 @@ export const Login = () => {
           </div>
         )}
 
-        {/* <form onSubmit={handleSubmit} className="space-y-4">
-         */}
-
-        {/* <div className="space-y-2">
-            <label htmlFor="emaFil" className="text-sm font-medium">
+        <form onSubmit={handleEmailSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <label htmlFor="email" className="text-sm font-medium">
               Email
             </label>
             <input
@@ -73,9 +148,20 @@ export const Login = () => {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="password" className="text-sm font-medium">
-              Password
-            </label>
+            <div className="flex items-center justify-between">
+              <label htmlFor="password" className="text-sm font-medium">
+                Password
+              </label>
+              {!isSignUp && (
+                <button
+                  type="button"
+                  onClick={() => navigate("/forgot-password")}
+                  className="text-xs text-primary hover:underline"
+                >
+                  Forgot password?
+                </button>
+              )}
+            </div>
             <input
               id="password"
               type="password"
@@ -84,26 +170,51 @@ export const Login = () => {
               className="w-full px-3 py-2 border border-input rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-ring"
               placeholder="••••••••"
               required
+              minLength={6}
             />
-          </div> */}
+          </div>
 
-        {/* <button
+          {isSignUp && (
+            <div className="space-y-2">
+              <label htmlFor="confirmPassword" className="text-sm font-medium">
+                Confirm Password
+              </label>
+              <input
+                id="confirmPassword"
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="w-full px-3 py-2 border border-input rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-ring"
+                placeholder="••••••••"
+                required
+                minLength={6}
+              />
+            </div>
+          )}
+
+          <button
             type="submit"
             disabled={loading}
             className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? 'Signing in...' : 'Sign In'}
+            {loading
+              ? isSignUp
+                ? "Creating account..."
+                : "Signing in..."
+              : isSignUp
+              ? "Sign Up"
+              : "Sign In"}
           </button>
-        </form> */}
+        </form>
 
-        {/* <div className="relative">
+        <div className="relative">
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-border"></div>
           </div>
           <div className="relative flex justify-center text-sm">
             <span className="px-2 bg-background text-muted-foreground">Or</span>
           </div>
-        </div> */}
+        </div>
 
         <button
           onClick={handleGoogleSignIn}
@@ -112,6 +223,23 @@ export const Login = () => {
         >
           Sign in with Google
         </button>
+
+        <div className="text-center">
+          <button
+            type="button"
+            onClick={() => {
+              setIsSignUp(!isSignUp);
+              setError("");
+              setPassword("");
+              setConfirmPassword("");
+            }}
+            className="text-sm text-primary hover:underline"
+          >
+            {isSignUp
+              ? "Already have an account? Sign in"
+              : "Don't have an account? Sign up"}
+          </button>
+        </div>
       </div>
     </div>
   );

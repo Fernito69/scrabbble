@@ -55,7 +55,7 @@ export const PlayfieldContainer = () => {
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-between items-center mb-8">
             <div>
-              {/* <h1 className="text-3xl font-bold">Playfield</h1> */}
+              
               <p className="text-muted-foreground mt-1">
                 {t("playfield.welcome", { userName })}
               </p>

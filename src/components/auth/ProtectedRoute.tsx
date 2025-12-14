@@ -31,5 +31,10 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     );
   }
 
+  // Check if user's email is verified (Google users are auto-verified)
+  if (user.providerData[0]?.providerId === 'password' && !user.emailVerified) {
+    return <Navigate to="/verify-email" replace />;
+  }
+
   return <>{children}</>;
 };

@@ -2,14 +2,13 @@ import { LanguageSwitcher } from "@/components/LanguageSwitcher/LanguageSwitcher
 
 import { useAuth } from "@/contexts/AuthContext";
 import { authService } from "@/services/auth";
-import {
-  useGetUserConfig
-} from "@/services/collections/userConfig/userConfig.hooks";
+import { useGetUserConfig } from "@/services/collections/userConfig/userConfig.hooks";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { LanguageSelectDialog } from "./LanguageSelectDialog/LanguageSelectDialog";
 import { OngoingGames } from "./OngoingGames/OngoingGames";
+import { ScrabbbbbbleLogo } from "@/components/ScrabbbbbbleLogo/ScrabbbbbbleLogo";
 
 export const LobbyContainer = () => {
   const { t } = useTranslation();
@@ -39,7 +38,7 @@ export const LobbyContainer = () => {
     <div className="min-h-screen flex flex-col items-center justify-center bg-background p-8">
       <div className="w-full max-w-2xl space-y-6">
         <div className="text-center space-y-2">
-          <h1 className="text-4xl font-bold">{t("lobby.title")}</h1>
+          <ScrabbbbbbleLogo size="text-4xl" />
           <p className="text-muted-foreground">
             {t("lobby.welcome", { userName })}
           </p>

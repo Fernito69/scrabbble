@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl:*)",
+      "Bash(start nvm-setup.exe)",
+      "Bash(nvm:*)",
+      "Bash(del nvm-setup.exe)",
+      "Bash(rm:*)",
+      "Bash(cat:*)",
+      "Bash(npm run build:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

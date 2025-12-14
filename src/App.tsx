@@ -3,6 +3,8 @@ import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { Login } from "@/pages/Login";
 import { Lobby } from "@/pages/Lobby";
 import { Playfield } from "@/pages/Playfield";
+import { VerifyEmail } from "@/pages/VerifyEmail";
+import { ForgotPassword } from "@/pages/ForgotPassword";
 import { useAuth } from "@/contexts/AuthContext";
 import { LanguageInitializer } from "@/components/LanguageInitializer/LanguageInitializer";
 
@@ -12,6 +14,8 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<LoginRoute />} />
+          <Route path="/verify-email" element={<VerifyEmail />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route
             path="/"
             element={
