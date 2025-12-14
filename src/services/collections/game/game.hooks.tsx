@@ -24,23 +24,31 @@ type UseGetGameSnapshot = {
   state: GameState | undefined;
   template: LanguageTemplate | undefined;
   createdByUserId: string | undefined;
+  hasError: boolean;
 };
 export const useGetGameSnapshot = (gameId: string): UseGetGameSnapshot => {
   const [state, setState] = useState<GameState | undefined>();
   const [template, setTemplate] = useState<LanguageTemplate | undefined>();
   const [createdByUserId, setCreatedByUserId] = useState<string | undefined>();
+  const [hasError, setHasError] = useState<boolean>(false);
 
   useEffect(
     () =>
-      getGameSnapshot(db, gameId, (newS, newT, newId) => {
-        setState(newS);
-        setTemplate(newT);
-        setCreatedByUserId(newId);
-      }),
+      getGameSnapshot(
+        db,
+        gameId,
+        (newS, newT, newId) => {
+          setHasError(false);
+          setState(newS);
+          setTemplate(newT);
+          setCreatedByUserId(newId);
+        },
+        setHasError
+      ),
     [gameId]
   );
 
-  return { state, template, createdByUserId };
+  return { state, template, createdByUserId, hasError };
 };
 
 export const useUpdateGame = (gameId: string) => {

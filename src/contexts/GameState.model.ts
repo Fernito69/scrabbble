@@ -22,6 +22,7 @@ export interface UseGameStateEffects extends GameInterface {
   initted: boolean;
   setInitted: (initted: boolean) => void;
   initialPlayerHand: PlayerHand | undefined;
+  hasError: boolean;
 }
 
 export const DefaultGame: GameInterface = {

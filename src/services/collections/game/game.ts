@@ -35,19 +35,24 @@ export const getGameSnapshot = (
     state: GameState,
     template: LanguageTemplate,
     createdByUserId: string
-  ) => void
+  ) => void,
+  hasErrorCallback: (hasErr: boolean) => void
 ) => {
   const docRef = doc(db, GAME_COLLECTION, id);
 
   const unsubscribe = onSnapshot(docRef, {
     next: (docSnap) => {
-      const res = docSnap.data() as DbGamePayload;
+      const res = docSnap.data() as DbGamePayload | undefined;
+
+      if (!res) return hasErrorCallback(true);
 
       // Convert state
       const state = mapDbGamePayloadToGameState(res);
 
+      hasErrorCallback(false);
       callback(state, res.template, res.createdByUserId);
     },
+    error: () => hasErrorCallback(true),
   });
 
   return unsubscribe;

@@ -13,7 +13,8 @@
     "currentMove": "Quién juega",
     "currentTurn": "Turno",
     "loadingGames": "Cargando partidas en curso...",
-    "noGames": "No tienes partidas en curso 😢 ¡Crea una ahora!"
+    "noGames": "No tienes partidas en curso 😢 ¡Crea una ahora!",
+    "missingGame": "Esta partida ya no existe 😢"
   },
   "languageSelect": {
     "title": "Seleccionar idioma",

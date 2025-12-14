@@ -31,7 +31,8 @@ export const GameStateProvider = ({
 }: GameStateProviderProps) => {
   // Data
   const { user } = useAuth();
-  const { state, template, createdByUserId } = useGetGameSnapshot(gameId);
+  const { state, template, createdByUserId, hasError } =
+    useGetGameSnapshot(gameId);
 
   // Data-derived consts
   const initialPlayerHand: PlayerHand | undefined =
@@ -91,6 +92,7 @@ export const GameStateProvider = ({
     initialPlayerHand,
     isMyTurn,
     setInitted,
+    hasError,
   });
 
   return (

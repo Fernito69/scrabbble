@@ -13,7 +13,8 @@
     "currentMove": "Current move",
     "currentTurn": "Turn",
     "loadingGames": "Loading ongoing games...",
-    "noGames": "No ongoing games 😢 Create one now!"
+    "noGames": "No ongoing games 😢 Create one now!",
+    "missingGame": "This game doesn't exist anymore 😢"
   },
   "languageSelect": {
     "title": "Select language",

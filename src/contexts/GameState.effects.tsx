@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import { useAuth } from "./AuthContext";
 import { DefaultGame, UseGameStateEffects } from "./GameState.model";
 import { cloneDeep } from "lodash";
+import { useTranslation } from "react-i18next";
 
 export const useGameStateEffects = ({
   gameId,
@@ -27,13 +28,25 @@ export const useGameStateEffects = ({
   initted,
   setInitted,
   setLocalPlayerHand,
+  hasError,
 }: UseGameStateEffects) => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   // Mutations
   const updateGame = useUpdateGame(gameId);
   const reshuffleGame = useReshuffleGame(gameId);
+
+  /***************/
+  // Missing game failsafe
+  /***************/
+  useEffect(() => {
+    if (hasError) {
+      toast(t("lobby.missingGame"));
+      navigate("/");
+    }
+  }, [hasError, t, navigate]);
 
   /**********/
   // Add new players to game
