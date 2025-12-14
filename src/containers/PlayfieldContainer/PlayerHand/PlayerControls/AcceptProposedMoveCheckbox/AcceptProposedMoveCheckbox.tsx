@@ -23,6 +23,12 @@ export const AcceptProposedMoveCheckbox = () => {
   // Handlers
   const handleChangeVote = () => {
     if (!state.currentVote) return;
+    if (
+      state.currentPlayerId === user!.uid &&
+      !window.confirm(t("acceptMove.rejectOwnMove"))
+    )
+      return;
+
     updateGame({
       currentVote: {
         ...state.currentVote,

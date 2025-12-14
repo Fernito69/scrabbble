@@ -102,19 +102,9 @@ export const useGameStateEffects = ({
   // Initial vote
   /***************/
   useEffect(() => {
-    console.log("EFFECT RUNS", state, isGameOrganizer);
     if (!state || !isGameOrganizer) return;
-    console.log(
-      "numPlayers",
-      numPlayers,
-      state.playerIds,
-      "!state.currentVote",
-      !state.currentVote,
-      "started?",
-      state.gameStarted
-    );
+
     if (numPlayers > 1 && !state.currentVote && !state.gameStarted) {
-      console.log("Initial vote!!!");
       const currentVote = {
         type: VoteType.START_VOTE,
         voteFinished: false,

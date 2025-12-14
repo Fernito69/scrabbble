@@ -37,7 +37,8 @@
   },
   "acceptMove": {
     "acceptFrom": "Accept move from",
-    "myself": "myself"
+    "myself": "myself",
+    "rejectOwnMove": "Are you sure you want to reject your own move? You will get no points during this turn."
   },
   "playerControls": {
     "proposeMove": "Propose move",

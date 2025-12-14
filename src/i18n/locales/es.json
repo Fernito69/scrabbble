@@ -37,7 +37,8 @@
   },
   "acceptMove": {
     "acceptFrom": "Aceptar jugada de",
-    "myself": "mí mismo"
+    "myself": "mí mismo",
+    "rejectOwnMove": "¿Estás seguro de que quieres rechazar tu propia jugada? No obtendrás puntos durante este turno."
   },
   "playerControls": {
     "proposeMove": "Proponer jugada",
