@@ -3,6 +3,8 @@ import { Bonus, Move } from "@/model/core.model";
 import { TileComponent } from "../TileComponent/TileComponent";
 import { DroppableBoardSquare } from "./DroppableBoardSquare";
 import { DraggableBoardTile } from "../TileComponent/DraggableBoardTile";
+import { ProposedMoveScoreIndicator } from "./ProposedMoveScoreIndicator";
+import { useAuth } from "@/contexts/AuthContext";
 
 const bonusColorMap: Record<Bonus, string> = {
   [Bonus.DOUBLE_LETTER]: "bg-blue-200",
@@ -21,33 +23,61 @@ const bonusMessageMap: Record<Bonus, string[]> = {
 export const BoardComponent = () => {
   // Context
   const { state, template, localProposedMove } = useGameContext();
+  const { user } = useAuth();
 
   // Render
   if (!template || !state) return null;
 
   const { board, currentProposedMove } = state;
 
+  // Determine which proposed move to show score for
+  const activeProposedMove =
+    localProposedMove.length > 0
+      ? localProposedMove
+      : currentProposedMove?.move;
+
   return (
     <div className="flex justify-center items-center">
       <div className="flex justify-center items-center p-8 rounded-xl bg-green-200 border-green-400 border-1">
-        <div className="grid grid-cols-15 gap-0 w-[720px]">
-          {board.map((row, yIndex) =>
-            row.map(({ tile, bonus }, xIndex) => {
-              const key = `${xIndex}-${yIndex}`;
+        <div className="relative">
+          <div className="grid grid-cols-15 gap-0 w-[720px]">
+            {board.map((row, yIndex) =>
+              row.map(({ tile, bonus }, xIndex) => {
+                const key = `${xIndex}-${yIndex}`;
 
-              // Check whether it's a proposed move
-              const proposedMove: Move | undefined = (
-                localProposedMove.length > 0
-                  ? localProposedMove
-                  : currentProposedMove?.move
-              )?.find((m) => m.x === xIndex && m.y === yIndex);
+                // Check whether it's a proposed move
+                const proposedMove: Move | undefined = (
+                  localProposedMove.length > 0
+                    ? localProposedMove
+                    : currentProposedMove?.move
+                )?.find((m) => m.x === xIndex && m.y === yIndex);
 
-              const letter = proposedMove?.letter ?? tile?.letter;
+                const letter = proposedMove?.letter ?? tile?.letter;
 
-              const squareColor = bonus ? bonusColorMap[bonus] : "bg-green-600";
+                const squareColor = bonus
+                  ? bonusColorMap[bonus]
+                  : "bg-green-600";
 
-              // Empty square
-              if (!letter) {
+                // Empty square
+                if (!letter) {
+                  return (
+                    <DroppableBoardSquare
+                      key={key}
+                      x={xIndex}
+                      y={yIndex}
+                      squareColor={squareColor}
+                    >
+                      <div className="text-[10px] flex flex-col items-center justify-center h-full">
+                        {bonus &&
+                          bonusMessageMap[bonus].map((v, i) => (
+                            <p key={i}>{v}</p>
+                          ))}
+                      </div>
+                    </DroppableBoardSquare>
+                  );
+                }
+
+                // Tile
                 return (
                   <DroppableBoardSquare
                     key={key}
@@ -55,32 +85,27 @@ export const BoardComponent = () => {
                     y={yIndex}
                     squareColor={squareColor}
                   >
-                    <div className="text-[10px] flex flex-col items-center justify-center h-full">
-                      {bonus &&
-                        bonusMessageMap[bonus].map((v, i) => (
-                          <p key={i}>{v}</p>
-                        ))}
-                    </div>
+                    {proposedMove ? (
+                      <DraggableBoardTile
+                        letter={letter}
+                        x={xIndex}
+                        y={yIndex}
+                      />
+                    ) : (
+                      <TileComponent letter={letter} proposedMove={false} />
+                    )}
                   </DroppableBoardSquare>
                 );
-              }
+              })
+            )}
+          </div>
 
-              // Tile
-              return (
-                <DroppableBoardSquare
-                  key={key}
-                  x={xIndex}
-                  y={yIndex}
-                  squareColor={squareColor}
-                >
-                  {proposedMove ? (
-                    <DraggableBoardTile letter={letter} x={xIndex} y={yIndex} />
-                  ) : (
-                    <TileComponent letter={letter} proposedMove={false} />
-                  )}
-                </DroppableBoardSquare>
-              );
-            })
+          {/* Score indicator overlay */}
+          {activeProposedMove && activeProposedMove.length > 0 && user && (
+            <ProposedMoveScoreIndicator
+              proposedMove={activeProposedMove}
+              playerId={user.uid}
+            />
           )}
         </div>
       </div>
