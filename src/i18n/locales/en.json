@@ -53,7 +53,10 @@
     "language": "Language:",
     "turn": "Turn:",
     "currentMove": "Current move:",
-    "tilesLeft": "Tiles left:"
+    "tilesLeft": "Tiles left:",
+    "invitePlayers": "Invite Players",
+    "inviteMessage": "You have been invited to a game of Scrabble! {{url}}",
+    "linkCopied": "Invitation link copied to clipboard!"
   },
   "playerVotes": {
     "accept": "Accept",

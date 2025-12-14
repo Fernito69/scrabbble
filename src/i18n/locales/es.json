@@ -53,7 +53,10 @@
     "language": "Idioma:",
     "turn": "Turno:",
     "currentMove": "Jugada actual:",
-    "tilesLeft": "Fichas restantes:"
+    "tilesLeft": "Fichas restantes:",
+    "invitePlayers": "Invitar Jugadores",
+    "inviteMessage": "¡Has sido invitado a una partida de Scrabble! {{url}}",
+    "linkCopied": "¡Enlace de invitación copiado al portapapeles!"
   },
   "playerVotes": {
     "accept": "Aceptar",
