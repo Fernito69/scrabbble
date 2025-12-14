@@ -1,5 +1,6 @@
 import { BoardDiorama } from "@/components/BoardDiorama/BoardDiorama";
 import { OverlayWithLoader } from "@/components/OverlayWithLoader/OverlayWithLoader";
+import { UserAvatar } from "@/components/UserAvatar";
 import { Separator } from "@/components/ui/separator";
 import {
   Table,
@@ -9,10 +10,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { PlayerBadge } from "@/containers/PlayfieldContainer/PlayerBadge/PlayerBadge";
 import { useAuth } from "@/contexts/AuthContext";
 import { useGetLastNPlayerGames } from "@/services/collections/game/game.hooks";
-import { useGetPlayerName } from "@/services/collections/userConfig/userConfig.hooks";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
@@ -23,7 +22,6 @@ export const OngoingGames = () => {
 
   // Hooks
   const { t } = useTranslation();
-  const getPlayerName = useGetPlayerName();
   const navigate = useNavigate();
 
   // Render
@@ -60,7 +58,9 @@ export const OngoingGames = () => {
                       (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
                     )
                     .map((game, i) => {
-                      const playerIds = game.playerIds.filter(Boolean);
+                      const playerIds = game.playerIds.filter(
+                        Boolean
+                      ) as string[];
 
                       return (
                         <TableRow
@@ -76,24 +76,31 @@ export const OngoingGames = () => {
                           </TableCell>
                           <TableCell>
                             <div className="flex flex-row gap-2 whitespace-nowrap tracking-tight">
-                              {playerIds
-                                .map((id) => getPlayerName(id))
-                                .join(", ")}
+                              {playerIds.map((id, idx) => (
+                                <UserAvatar
+                                  key={id}
+                                  userId={id}
+                                  diameter={28}
+                                  shadingIndex={idx}
+                                />
+                              ))}
                             </div>
                           </TableCell>
                           <TableCell>
                             {playerIds
-                              .map((id) => game.score.total[id!] ?? 0)
+                              .map((id) => game.score.total[id] ?? 0)
                               .join(", ")}
                           </TableCell>
                           <TableCell>
                             <span>
                               {game.currentPlayerId != null ? (
-                                <PlayerBadge
-                                  playerId={game.currentPlayerId}
-                                  colorIndex={
-                                    game.currentPlayerId === user!.uid ? 0 : 1
-                                  }
+                                <UserAvatar
+                                  userId={game.currentPlayerId}
+                                  glow={game.currentPlayerId === user!.uid}
+                                  shadingIndex={game.playerIds.indexOf(
+                                    game.currentPlayerId
+                                  )}
+                                  diameter={28}
                                 />
                               ) : (
                                 "-"

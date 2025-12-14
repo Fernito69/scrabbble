@@ -5,32 +5,35 @@ import { Lobby } from "@/pages/Lobby";
 import { Playfield } from "@/pages/Playfield";
 import { useAuth } from "@/contexts/AuthContext";
 import { LanguageInitializer } from "@/components/LanguageInitializer/LanguageInitializer";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 function App() {
   return (
-    <LanguageInitializer>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<LoginRoute />} />
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <Lobby />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/game/:gameId"
-            element={
-              <ProtectedRoute>
-                <Playfield />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-      </BrowserRouter>
-    </LanguageInitializer>
+    <TooltipProvider>
+      <LanguageInitializer>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login" element={<LoginRoute />} />
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <Lobby />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/game/:gameId"
+              element={
+                <ProtectedRoute>
+                  <Playfield />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </BrowserRouter>
+      </LanguageInitializer>
+    </TooltipProvider>
   );
 }
 
