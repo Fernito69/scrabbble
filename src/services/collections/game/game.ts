@@ -97,7 +97,7 @@ export const reshuffleInitialPlayerHands = async (
 ) => {
   if (!currState) return;
   const payload = {
-    ...getInitialGamePayload(currState.playerIds[0]!, currTemplate),
+    ...getInitialGamePayload(currState.createdByUserId, currTemplate),
     gameName: currState.gameName,
     currentVote: null,
   } satisfies Partial<DbGamePayload>;

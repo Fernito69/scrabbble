@@ -49,7 +49,7 @@ export const PlayfieldContainer = () => {
   // Consts
   const userName = userConfig?.displayName ?? user?.email;
   const showReshuffleModal =
-    state.currentVote?.type === VoteType.RESHUFFLE &&
+    state.currentVote?.type === VoteType.INITIAL_RESHUFFLE &&
     !state.currentVote?.voteFinished &&
     state.playerIds.filter(Boolean).length > 1;
 

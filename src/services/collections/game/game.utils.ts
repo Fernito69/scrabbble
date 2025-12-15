@@ -237,7 +237,7 @@ export const buildInitialReshuffleVotePayload = (
   if (!user) throw new Error("User not found");
 
   const currentVote = {
-    type: VoteType.RESHUFFLE,
+    type: VoteType.INITIAL_RESHUFFLE,
     proposerId: user.uid,
     voteFinished: false,
     votes: state.playerIds

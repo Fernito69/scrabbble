@@ -159,12 +159,12 @@ export const useGameStateEffects = ({
   }, [state?.currentVote]);
 
   /***************/
-  // Vote for reshuffle
+  // Vote for initial hand reshuffle
   /***************/
   useEffect(() => {
     if (
       !isGameOrganizer ||
-      state?.currentVote?.type !== VoteType.RESHUFFLE ||
+      state?.currentVote?.type !== VoteType.INITIAL_RESHUFFLE ||
       !template
     )
       return;
@@ -185,7 +185,7 @@ export const useGameStateEffects = ({
   // Vote failsafe (I've experienced some weird bugs with firebase, some kind of race condition)
   useEffect(() => {
     const failSafeEligibleTypes = [
-      VoteType.RESHUFFLE,
+      VoteType.INITIAL_RESHUFFLE,
       VoteType.ACCEPT_PROPOSED_MOVE,
       VoteType.START_VOTE,
     ] as const;
