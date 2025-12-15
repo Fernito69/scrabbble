@@ -29,12 +29,18 @@
     "creatingGame": "Creando partida...",
     "gameName": "Nombre de la partida",
     "gameNamePlaceholder": "Nombre de la partida",
-    "gameNameDefault": "Partida sin nombre"
+    "gameNameDefault": "Partida sin nombre",
+    "gameNameDescription": "El nombre de la partida se usará para identificar la partida en la lista de partidas"
   },
   "scoreBoard": {
     "turn": "Turno",
     "total": "TOTAL",
     "yourTurn": "¡TE TOCA!"
+  },
+  "languageInfo": {
+    "title": "Distribución de cantidad y puntos por letra",
+    "score": "Puntuación",
+    "quantity": "Cantidad"
   },
   "reshuffleVote": {
     "titlePrefix": "ha solicitado barajar las fichas",

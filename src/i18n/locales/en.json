@@ -29,12 +29,18 @@
     "creatingGame": "Creating game...",
     "gameName": "Game name",
     "gameNamePlaceholder": "Game name",
-    "gameNameDefault": "Untitled game"
+    "gameNameDefault": "Untitled game",
+    "gameNameDescription": "The game name will be used to identify the match in the games list"
   },
   "scoreBoard": {
     "turn": "Turn",
     "total": "TOTAL",
     "yourTurn": "YOUR TURN!"
+  },
+  "languageInfo": {
+    "title": "Score/quantity distribution by letter",
+    "score": "Score",
+    "quantity": "Quantity"
   },
   "reshuffleVote": {
     "titlePrefix": "has requested a hand reshuffle",

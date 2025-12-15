@@ -18,6 +18,7 @@ import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
+import { LanguageInfoModal } from "./LanguageInfoModal/LanguageInfoModal";
 
 interface Props {
   close: () => void;
@@ -88,15 +89,26 @@ export const LanguageSelectDialog = ({ close }: Props) => {
             {t("languageSelect.description")}
           </DialogDescription>
         </DialogHeader>
-        <Select
-          options={options}
-          value={selectedOption}
-          onChange={(option) =>
-            setSelectedTemplate(option?.template ?? undefined)
-          }
-          isDisabled={isCreating}
-        />
-        <div>{t("languageSelect.gameName")}</div>
+        <div className="flex flex-row gap-4 items-center">
+          <Select
+            className="w-full"
+            options={options}
+            value={selectedOption}
+            onChange={(option) =>
+              setSelectedTemplate(option?.template ?? undefined)
+            }
+            isDisabled={isCreating}
+          />
+          {selectedOption != null && (
+            <LanguageInfoModal template={selectedOption.template} />
+          )}
+        </div>
+        <div className="font-semibold text-lg -mb-3">
+          {t("languageSelect.gameName")}
+        </div>
+        <div className="text-sm text-muted-foreground">
+          {t("languageSelect.gameNameDescription")}
+        </div>
         <Input
           ref={inputRef}
           value={gameName ?? ""}
