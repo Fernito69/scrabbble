@@ -160,7 +160,11 @@ export const PlayfieldContainer = () => {
                             state.playerIds
                               .filter(
                                 (id) =>
-                                  id !== null && id !== state.currentPlayerId
+                                  id !== null &&
+                                  id !== state.currentPlayerId &&
+                                  state.currentVote?.votes.some(
+                                    (v) => v.playerId === id && !v.voted
+                                  )
                               )
                               .map((id, i) => (
                                 <UserAvatar

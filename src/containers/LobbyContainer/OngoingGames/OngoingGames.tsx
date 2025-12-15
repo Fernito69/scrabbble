@@ -48,7 +48,9 @@ export const OngoingGames = () => {
     () =>
       (playerGames ?? []).filter((g) =>
         g.currentVote?.type === VoteType.ACCEPT_PROPOSED_MOVE
-          ? g.currentVote.proposerId !== user!.uid
+          ? g.currentVote.votes.some(
+              (v) => v.playerId === user!.uid && !v.voted
+            )
           : g.currentPlayerId === user!.uid
       ).length,
     [playerGames]
@@ -170,7 +172,10 @@ export const OngoingGames = () => {
                                     .filter(
                                       (id) =>
                                         id !== null &&
-                                        id !== game.currentPlayerId
+                                        id !== game.currentPlayerId &&
+                                        game.currentVote?.votes.some(
+                                          (v) => v.playerId === id && !v.voted
+                                        )
                                     )
                                     .map((id, i) => (
                                       <UserAvatar
