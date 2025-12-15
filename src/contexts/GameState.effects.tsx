@@ -1,5 +1,5 @@
 import { MAX_PLAYERS } from "@/model/core.defaults";
-import { Vote, VoteType } from "@/model/core.model";
+import { PlayerIds, Vote, VoteType } from "@/model/core.model";
 import {
   useReshuffleGame,
   useUpdateGame,
@@ -105,16 +105,25 @@ export const useGameStateEffects = ({
         return user.uid;
       }
       return v;
-    });
+    }) as PlayerIds;
 
     const payload = {
       tilePouch,
       playerIds,
+      currentVote: state.currentVote
+        ? {
+            ...state.currentVote,
+            votes: [
+              ...state.currentVote.votes,
+              { playerId: user.uid, voted: null },
+            ],
+          }
+        : null,
       playerHands: {
         ...state.playerHands,
         [user.uid]: hand,
       },
-    } as Partial<DbGamePayload>;
+    } satisfies Partial<DbGamePayload>;
 
     updateGame(payload);
 
