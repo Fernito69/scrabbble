@@ -8,6 +8,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useClickToSelect } from "../useClickToSelect.hook";
 import { OverlayWithLoader } from "@/components/OverlayWithLoader/OverlayWithLoader";
 import { useTranslation } from "react-i18next";
+import { isMoveValid } from "@/services/collections/game/game.utils";
 
 const bonusColorMap: Record<Bonus, string> = {
   [Bonus.DOUBLE_LETTER]: "bg-blue-200",
@@ -53,7 +54,9 @@ export const BoardComponent = ({
     <div className="flex justify-center items-center relative">
       {showWaitingForPlayers && (
         <OverlayWithLoader>
-          <div className="text-2xl font-semibold">{t("lobby.waitingForPlayers")}</div>
+          <div className="text-2xl font-semibold">
+            {t("lobby.waitingForPlayers")}
+          </div>
         </OverlayWithLoader>
       )}
       <div className="flex justify-center items-center p-8 rounded-xl bg-green-200 border-green-400 border-1">
@@ -145,12 +148,15 @@ export const BoardComponent = ({
           </div>
 
           {/* Score indicator overlay */}
-          {activeProposedMove && activeProposedMove.length > 0 && user && (
-            <ProposedMoveScoreIndicator
-              proposedMove={activeProposedMove}
-              playerId={user.uid}
-            />
-          )}
+          {activeProposedMove &&
+            activeProposedMove.length > 0 &&
+            user &&
+            isMoveValid(activeProposedMove).valid && (
+              <ProposedMoveScoreIndicator
+                proposedMove={activeProposedMove}
+                playerId={user.uid}
+              />
+            )}
         </div>
       </div>
     </div>
