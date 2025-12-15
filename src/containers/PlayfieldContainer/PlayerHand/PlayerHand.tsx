@@ -22,7 +22,7 @@ export const PlayerHand = ({ clickToSelectHandlers }: Props) => {
     },
   });
 
-  if (!state || !state.gameStarted) return null;
+  if (!state || state.playerIds.filter(Boolean).length <= 1) return null;
 
   // Create unique IDs for each tile
   const containerCn = `shadow w-fit flex justify-center items-center w-[720px] bg-green-200 gap-2 p-2 border border-black rounded-md transition-colors ${
