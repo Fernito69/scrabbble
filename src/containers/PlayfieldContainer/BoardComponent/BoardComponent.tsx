@@ -53,7 +53,7 @@ export const BoardComponent = ({
     <div className="flex justify-center items-center relative">
       {showWaitingForPlayers && (
         <OverlayWithLoader>
-          <div className="text-2xl font-semibold">{t("lobby.loadingGames")}</div>
+          <div className="text-2xl font-semibold">{t("lobby.waitingForPlayers")}</div>
         </OverlayWithLoader>
       )}
       <div className="flex justify-center items-center p-8 rounded-xl bg-green-200 border-green-400 border-1">
