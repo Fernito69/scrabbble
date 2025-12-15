@@ -116,7 +116,7 @@ export const PlayfieldContainer = () => {
                   <div className="flex flex-row gap-2 ">
                     {(state.playerIds ?? []).filter(Boolean).map((v, i) => (
                       <UserAvatar
-                        key={v}
+                        key={i}
                         userId={v!}
                         diameter={20}
                         shadingIndex={i}
@@ -162,8 +162,9 @@ export const PlayfieldContainer = () => {
                                 (id) =>
                                   id !== null && id !== state.currentPlayerId
                               )
-                              .map((id) => (
+                              .map((id, i) => (
                                 <UserAvatar
+                                  key={i}
                                   shadingIndex={state.playerIds.findIndex(
                                     (uid) => uid === id
                                   )}

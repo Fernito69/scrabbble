@@ -18,12 +18,17 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useAuth } from "@/contexts/AuthContext";
+import { VoteType } from "@/model/core.model";
 import {
   useDeleteGame,
   useGetLastNPlayerGames,
 } from "@/services/collections/game/game.hooks";
-import { getDefaultGameName } from "@/services/collections/game/game.utils";
+import {
+  getDefaultGameName,
+  playNotificationSound,
+} from "@/services/collections/game/game.utils";
 import { Trash2 } from "lucide-react";
+import { useEffect, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
@@ -38,6 +43,26 @@ export const OngoingGames = () => {
   // Hooks
   const { t } = useTranslation();
   const navigate = useNavigate();
+
+  const numGamesWhereItsPlayersTurn: number = useMemo(
+    () =>
+      (playerGames ?? []).filter((g) =>
+        g.currentVote?.type === VoteType.ACCEPT_PROPOSED_MOVE
+          ? g.currentVote.proposerId !== user!.uid
+          : g.currentPlayerId === user!.uid
+      ).length,
+    [playerGames]
+  );
+  const prevNumGamesWhereItsPlayersTurn = useRef<number>(
+    numGamesWhereItsPlayersTurn
+  );
+
+  useEffect(() => {
+    if (numGamesWhereItsPlayersTurn > prevNumGamesWhereItsPlayersTurn.current) {
+      playNotificationSound(3);
+    }
+    prevNumGamesWhereItsPlayersTurn.current = numGamesWhereItsPlayersTurn;
+  }, [numGamesWhereItsPlayersTurn]);
 
   // Render
   return (
@@ -124,7 +149,7 @@ export const OngoingGames = () => {
                             <div className="flex flex-row gap-2 whitespace-nowrap tracking-tight">
                               {playerIds.map((id, idx) => (
                                 <UserAvatar
-                                  key={id}
+                                  key={idx}
                                   userId={id}
                                   diameter={28}
                                   shadingIndex={idx}
@@ -147,9 +172,9 @@ export const OngoingGames = () => {
                                         id !== null &&
                                         id !== game.currentPlayerId
                                     )
-                                    .map((id) => (
+                                    .map((id, i) => (
                                       <UserAvatar
-                                        key={id}
+                                        key={i}
                                         userId={id!}
                                         bounce={id === user!.uid}
                                         shadingIndex={game.playerIds.findIndex(

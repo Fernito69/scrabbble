@@ -395,3 +395,8 @@ export const bonusMultiplierMap: Record<Bonus, number> = {
   [Bonus.TRIPLE_LETTER]: 3,
   [Bonus.TRIPLE_WORD]: 3,
 };
+
+export const playNotificationSound = (num: 1 | 2 | 3 = 2) => {
+  const audio = new Audio(`/sounds/notification${num}.wav`);
+  audio.play();
+};

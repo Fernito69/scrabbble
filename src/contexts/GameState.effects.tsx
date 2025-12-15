@@ -9,6 +9,7 @@ import {
   buildMovePayload,
   computeRemainingTilesScore,
   drawCards,
+  playNotificationSound,
 } from "@/services/collections/game/game.utils";
 import { cloneDeep } from "lodash";
 import { useEffect } from "react";
@@ -38,12 +39,6 @@ export const useGameStateEffects = ({
   // Mutations
   const updateGame = useUpdateGame(gameId);
   const reshuffleGame = useReshuffleGame(gameId);
-
-  // Handlers
-  const playNotificationSound = (num: 1 | 2 = 2) => {
-    const audio = new Audio(`/sounds/notification${num}.wav`);
-    audio.play();
-  };
 
   /***************/
   // Indicate player turn
