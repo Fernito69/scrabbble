@@ -217,6 +217,7 @@ export const buildProposeMovePayload = (
       tentativeNewHand: localPlayerHand,
     },
     currentVote: {
+      proposerId: user.uid,
       type: VoteType.ACCEPT_PROPOSED_MOVE,
       voteFinished: false,
       votes: state.playerIds.filter(Boolean).map((id) => ({

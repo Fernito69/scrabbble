@@ -40,8 +40,8 @@ export const useGameStateEffects = ({
   const reshuffleGame = useReshuffleGame(gameId);
 
   // Handlers
-  const playNotificationSound = () => {
-    const audio = new Audio("/sounds/notification2.wav");
+  const playNotificationSound = (num: 1 | 2 = 2) => {
+    const audio = new Audio(`/sounds/notification${num}.wav`);
     audio.play();
   };
 
@@ -53,6 +53,15 @@ export const useGameStateEffects = ({
       playNotificationSound();
     }
   }, [isMyTurn]);
+
+  /***************/
+  // Indicate vote
+  /***************/
+  useEffect(() => {
+    if (!!state?.currentVote && state.currentVote.proposerId !== user?.uid) {
+      playNotificationSound(1);
+    }
+  }, [!!state?.currentVote]);
 
   /***************/
   // Missing game failsafe

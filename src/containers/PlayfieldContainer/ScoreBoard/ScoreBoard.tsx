@@ -7,7 +7,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useAuth } from "@/contexts/AuthContext";
 import { useGameContext } from "@/contexts/GameState.context";
 import { useTranslation } from "react-i18next";
 
@@ -19,7 +18,6 @@ interface ScoreRow {
 export const ScoreBoard = () => {
   const { t } = useTranslation();
   const { state } = useGameContext();
-  const { user } = useAuth();
 
   if (!state?.score) return null;
 
@@ -49,16 +47,17 @@ export const ScoreBoard = () => {
         <TableHeader className="bg-muted">
           <TableRow>
             <TableHead>{t("scoreBoard.turn")}</TableHead>
-            {presentPlayerIds.map((id, i) => (
-              <TableHead key={i}>
-                <UserAvatar
-                  userId={id!}
-                  diameter={24}
-                  glow={state.currentPlayerId === id && user?.uid === id}
-                  shadingIndex={i}
-                />
-              </TableHead>
-            ))}
+            {presentPlayerIds.map((id, i) => {
+              const isCurrPlayer = state.currentPlayerId === id;
+              return (
+                <TableHead
+                  key={i}
+                  className={isCurrPlayer ? "bg-yellow-200" : ""}
+                >
+                  <UserAvatar userId={id!} diameter={24} shadingIndex={i} />
+                </TableHead>
+              );
+            })}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -66,14 +65,31 @@ export const ScoreBoard = () => {
             <TableRow key={i}>
               <TableCell>{turn + 1}</TableCell>
               {playerScores.map((score, j) => (
-                <TableCell key={j}>{score === 0 ? "-" : score}</TableCell>
+                <TableCell
+                  className={
+                    j ===
+                    state.playerIds.findIndex(
+                      (id) => id === state.currentPlayerId
+                    )
+                      ? "bg-yellow-100"
+                      : ""
+                  }
+                  key={j}
+                >
+                  {score === 0 ? "-" : score}
+                </TableCell>
               ))}
             </TableRow>
           ))}
           <TableRow className="bg-gray-100 font-semibold">
             <TableCell>{t("scoreBoard.total")}</TableCell>
             {presentPlayerIds.map((id, i) => (
-              <TableCell key={i}>{state.score.total[id] ?? 0}</TableCell>
+              <TableCell
+                key={i}
+                className={state.currentPlayerId === id ? "bg-yellow-200" : ""}
+              >
+                {state.score.total[id] ?? 0}
+              </TableCell>
             ))}
           </TableRow>
         </TableBody>
