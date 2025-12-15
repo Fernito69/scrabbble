@@ -33,7 +33,8 @@
   },
   "scoreBoard": {
     "turn": "Turno",
-    "total": "TOTAL"
+    "total": "TOTAL",
+    "yourTurn": "¡TE TOCA!"
   },
   "reshuffleVote": {
     "titlePrefix": "ha solicitado barajar las fichas",

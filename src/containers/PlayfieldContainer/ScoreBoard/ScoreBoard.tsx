@@ -7,6 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useAuth } from "@/contexts/AuthContext";
 import { useGameContext } from "@/contexts/GameState.context";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
@@ -18,7 +19,8 @@ interface ScoreRow {
 
 export const ScoreBoard = () => {
   const { t } = useTranslation();
-  const { state } = useGameContext();
+  const { state, isMyTurn } = useGameContext();
+  const { user } = useAuth();
 
   if (!state?.score) return null;
 
@@ -48,7 +50,9 @@ export const ScoreBoard = () => {
       <Table>
         <TableHeader className="bg-muted">
           <TableRow>
-            <TableHead className={cn(borderCn, "w-6")}>{t("scoreBoard.turn")}</TableHead>
+            <TableHead className={cn(borderCn, "w-6")}>
+              {t("scoreBoard.turn")}
+            </TableHead>
             {presentPlayerIds.map((id, i) => {
               const isCurrPlayer = state.currentPlayerId === id;
               return (
@@ -56,8 +60,13 @@ export const ScoreBoard = () => {
                   key={i}
                   className={isCurrPlayer ? "bg-yellow-200" : borderCn}
                 >
-                  <div className="flex-1 flex items-center justify-center">
+                  <div className="flex flex-row items-center justify-center gap-2">
                     <UserAvatar userId={id!} diameter={24} shadingIndex={i} />
+                    {isMyTurn && id === user!.uid && !state.currentVote && (
+                      <div className="tracking-tight text-xs font-black text-red-600 animate-pulse-scale">
+                        {t("scoreBoard.yourTurn")}
+                      </div>
+                    )}
                   </div>
                 </TableHead>
               );

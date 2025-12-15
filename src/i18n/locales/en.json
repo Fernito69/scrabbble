@@ -33,7 +33,8 @@
   },
   "scoreBoard": {
     "turn": "Turn",
-    "total": "TOTAL"
+    "total": "TOTAL",
+    "yourTurn": "YOUR TURN!"
   },
   "reshuffleVote": {
     "titlePrefix": "has requested a hand reshuffle",
