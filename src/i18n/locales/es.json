@@ -18,14 +18,18 @@
     "missingGame": "Esta partida ya no existe 😢",
     "deleteGame": "Eliminar partida",
     "deleteGameConfirm": "¿Estás seguro de que quieres eliminar esta partida?",
-    "waitingForPlayers": "Esperando a que se se unan más jugadores..."
+    "waitingForPlayers": "Esperando a que se se unan más jugadores...",
+    "gameName": "Nombre de la partida"
   },
   "languageSelect": {
     "title": "Seleccionar idioma",
     "description": "Selecciona un idioma de la lista",
     "accept": "Aceptar",
     "cancel": "Cancelar",
-    "creatingGame": "Creando partida..."
+    "creatingGame": "Creando partida...",
+    "gameName": "Nombre de la partida",
+    "gameNamePlaceholder": "Nombre de la partida",
+    "gameNameDefault": "Partida sin nombre"
   },
   "scoreBoard": {
     "turn": "Turno",
@@ -69,7 +73,8 @@
     "tilesLeft": "Fichas restantes:",
     "invitePlayers": "Invitar Jugadores",
     "inviteMessage": "¡Has sido invitado a una partida de Scrabble! {{url}}",
-    "linkCopied": "¡Enlace de invitación copiado al portapapeles!"
+    "linkCopied": "¡Enlace de invitación copiado al portapapeles!",
+    "gameName": "Nombre de la partida:"
   },
   "playerVotes": {
     "accept": "Aceptar",

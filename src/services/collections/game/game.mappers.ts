@@ -8,6 +8,7 @@ export const mapDbGamePayloadToGameState = (
   dbGame: DbGamePayload
 ): GameState => {
   return {
+    gameName: dbGame.gameName,
     board: dbGame.board ? (JSON.parse(dbGame.board) as Board) : EMPTY_BOARD,
     playerIds: dbGame.playerIds,
     currentPlayerId: dbGame.currentPlayerId ?? undefined,
@@ -31,6 +32,7 @@ export const mapGameStateToDbGamePayload = (
   template?: LanguageTemplate
 ): Partial<DbGamePayload> => {
   return {
+    gameName: gameState.gameName,
     board: JSON.stringify(gameState.board),
     playerIds: gameState.playerIds,
     currentPlayerId: gameState.currentPlayerId,

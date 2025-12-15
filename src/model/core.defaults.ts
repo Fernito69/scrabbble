@@ -456,6 +456,7 @@ export const EMPTY_BOARD: Board = [
 ];
 
 export const DEFAULT_GAME_STATE: GameState = {
+  gameName: "Untitled",
   createdByUserId: "system",
   createdAt: new Date(),
   board: EMPTY_BOARD,

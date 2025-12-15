@@ -12,7 +12,7 @@ export const ScrabbbbbbleLogo = ({
       className={className}
       style={{
         textShadow:
-          "3px 3px 0px rgba(0, 0, 0, 0.1), 6px 6px 0px rgba(30, 30, 30, 0.80)",
+          "3px 3px 0px rgba(0, 0, 0, 0.2), 6px 6px 0px rgba(30, 30, 30, 0.80)",
         WebkitBackgroundClip: "text",
 
         WebkitTextFillColor: "transparent",

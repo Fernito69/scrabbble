@@ -10,6 +10,7 @@ import { LanguageTemplate } from "../letterValueMap/languageTemplate.model";
 import { Timestamp } from "firebase/firestore";
 
 interface DbGameBase {
+  gameName: string;
   createdByUserId: string;
   template: LanguageTemplate;
   tilePouch: LetterLiteral[];

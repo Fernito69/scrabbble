@@ -5,6 +5,11 @@ import { UserAvatar } from "@/components/UserAvatar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   Table,
   TableBody,
   TableCell,
@@ -20,6 +25,7 @@ import {
 import { Trash2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { getDefaultGameName } from "@/services/collections/game/game.utils";
 
 export const OngoingGames = () => {
   // Data
@@ -50,6 +56,7 @@ export const OngoingGames = () => {
               <Table className="text-xs">
                 <TableHeader className="bg-muted text-xs">
                   <TableRow>
+                    <TableHead>{t("lobby.gameName")}</TableHead>
                     <TableHead />
                     <TableHead>{t("lobby.createdAt")}</TableHead>
                     <TableHead>{t("lobby.players")}</TableHead>
@@ -74,12 +81,35 @@ export const OngoingGames = () => {
                       const playerIsCreator =
                         user?.uid === game.createdByUserId;
 
+                      const maxLength = 40;
+                      const fullName =
+                        game.gameName ??
+                        getDefaultGameName(t("languageSelect.gameNameDefault"));
+                      const nameTooLong = fullName.length > maxLength;
+                      const shownName = nameTooLong
+                        ? fullName.slice(0, maxLength) + "…"
+                        : fullName;
+
                       return (
                         <TableRow
                           key={i}
-                          className="cursor-pointer animate-out"
+                          className="cursor-pointer animate-out odd:bg-white even:bg-gray-50"
                           onClick={() => navigate(`/game/${game.id}`)}
                         >
+                          {nameTooLong ? (
+                            <Tooltip>
+                              <TooltipTrigger>
+                                <TableCell className="tracking-tight text-xs">
+                                  <p className="">{shownName}</p>
+                                </TableCell>
+                              </TooltipTrigger>
+                              <TooltipContent>{fullName}</TooltipContent>
+                            </Tooltip>
+                          ) : (
+                            <TableCell className="tracking-tight text-xs">
+                              <p className="">{shownName}</p>
+                            </TableCell>
+                          )}
                           <TableCell>
                             <BoardDiorama game={game} />
                           </TableCell>

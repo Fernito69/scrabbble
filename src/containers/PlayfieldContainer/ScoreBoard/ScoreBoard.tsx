@@ -8,6 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useGameContext } from "@/contexts/GameState.context";
+import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 
 interface ScoreRow {
@@ -39,6 +40,7 @@ export const ScoreBoard = () => {
     });
 
   const presentPlayerIds = state.playerIds.filter(Boolean) as string[];
+  const borderCn = "border-l ";
 
   // Render
   return (
@@ -46,41 +48,52 @@ export const ScoreBoard = () => {
       <Table>
         <TableHeader className="bg-muted">
           <TableRow>
-            <TableHead>{t("scoreBoard.turn")}</TableHead>
+            <TableHead className={cn(borderCn, "w-6")}>{t("scoreBoard.turn")}</TableHead>
             {presentPlayerIds.map((id, i) => {
               const isCurrPlayer = state.currentPlayerId === id;
               return (
                 <TableHead
                   key={i}
-                  className={isCurrPlayer ? "bg-yellow-200" : ""}
+                  className={isCurrPlayer ? "bg-yellow-200" : borderCn}
                 >
-                  <UserAvatar userId={id!} diameter={24} shadingIndex={i} />
+                  <div className="flex-1 flex items-center justify-center">
+                    <UserAvatar userId={id!} diameter={24} shadingIndex={i} />
+                  </div>
                 </TableHead>
               );
             })}
           </TableRow>
         </TableHeader>
         <TableBody>
-          {aggregateScores.map(({ turn, playerScores }, i) => (
-            <TableRow key={i}>
-              <TableCell>{turn + 1}</TableCell>
-              {playerScores.map((score, j) => (
-                <TableCell
-                  className={
-                    j ===
-                    state.playerIds.findIndex(
-                      (id) => id === state.currentPlayerId
-                    )
-                      ? "bg-yellow-100"
-                      : ""
-                  }
-                  key={j}
-                >
-                  {score === 0 ? "-" : score}
+          {aggregateScores.map(({ turn, playerScores }, i) => {
+            const playerCn = i % 2 === 0 ? "bg-yellow-50" : "bg-yellow-100";
+            const otherCn = i % 2 === 0 ? "bg-white" : "bg-gray-50";
+            return (
+              <TableRow key={i}>
+                <TableCell className={cn(otherCn, borderCn)}>
+                  {turn + 1}
                 </TableCell>
-              ))}
-            </TableRow>
-          ))}
+                {playerScores.map((score, j) => (
+                  <TableCell
+                    className={cn(
+                      j ===
+                        state.playerIds.findIndex(
+                          (id) => id === state.currentPlayerId
+                        )
+                        ? playerCn
+                        : otherCn,
+                      borderCn
+                    )}
+                    key={j}
+                  >
+                    <div className="flex-1 flex items-center justify-center">
+                      {score === 0 ? "-" : score}
+                    </div>
+                  </TableCell>
+                ))}
+              </TableRow>
+            );
+          })}
           <TableRow className="bg-gray-100 font-semibold">
             <TableCell>{t("scoreBoard.total")}</TableCell>
             {presentPlayerIds.map((id, i) => (
@@ -88,7 +101,9 @@ export const ScoreBoard = () => {
                 key={i}
                 className={state.currentPlayerId === id ? "bg-yellow-200" : ""}
               >
-                {state.score.total[id] ?? 0}
+                <div className="flex-1 flex items-center justify-center">
+                  {state.score.total[id] ?? 0}
+                </div>
               </TableCell>
             ))}
           </TableRow>

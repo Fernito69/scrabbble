@@ -321,14 +321,27 @@ export const buildSkipTurnPayload = (
   return payload;
 };
 
+export const getDefaultGameName = (defaultString: string): string => {
+  return `${defaultString} - ${new Date().toLocaleString()}`;
+};
+
 export const getInitialGamePayload = (
   userId: string,
-  template: LanguageTemplate
+  template: LanguageTemplate,
+  game: GameState = DEFAULT_GAME_STATE
 ): Partial<DbGamePayload> => {
-  const { playerIds, score, gameStarted, gameOver, currentTurn, board } =
-    DEFAULT_GAME_STATE;
+  const {
+    playerIds,
+    score,
+    gameStarted,
+    gameOver,
+    currentTurn,
+    board,
+    gameName,
+  } = game;
 
   const payload = {
+    gameName,
     createdByUserId: userId,
     createdAt: new Date(),
     template,

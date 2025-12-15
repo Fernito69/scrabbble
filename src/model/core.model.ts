@@ -152,6 +152,7 @@ export type PlayerIds = [
 ];
 
 export type GameState = {
+  gameName: string;
   board: Board;
   tilePouch: LetterLiteral[];
   playerIds: PlayerIds;

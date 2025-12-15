@@ -1,22 +1,25 @@
 import { LanguageSwitcher } from "@/components/LanguageSwitcher/LanguageSwitcher";
+import { ScrabbbbbbleLogo } from "@/components/ScrabbbbbbleLogo/ScrabbbbbbleLogo";
+import { UserAvatar } from "@/components/UserAvatar";
 import { useAuth } from "@/contexts/AuthContext";
 import { useGameContext } from "@/contexts/GameState.context";
 import { cn } from "@/lib/utils";
 import { VoteType } from "@/model/core.model";
+import { useUpdateGame } from "@/services/collections/game/game.hooks";
+import { getDefaultGameName } from "@/services/collections/game/game.utils";
 import { useGetUserConfig } from "@/services/collections/userConfig/userConfig.hooks";
 import { DndContext, DragOverlay } from "@dnd-kit/core";
+import { Edit } from "lucide-react";
 import { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { BoardComponent } from "./BoardComponent/BoardComponent";
 import { PlayerHand } from "./PlayerHand/PlayerHand";
 import { usePlayfieldHandlers } from "./PlayfieldContainer.hooks";
-import { useClickToSelect } from "./useClickToSelect.hook";
 import { ScoreBoard } from "./ScoreBoard/ScoreBoard";
 import { TileComponent } from "./TileComponent/TileComponent";
 import { ReshuffleVoteModal } from "./VoteModals/ReshuffleVoteModal/ReshuffleVoteModal";
-import { UserAvatar } from "@/components/UserAvatar";
-import { ScrabbbbbbleLogo } from "@/components/ScrabbbbbbleLogo/ScrabbbbbbleLogo";
+import { useClickToSelect } from "./useClickToSelect.hook";
 
 export const PlayfieldContainer = () => {
   // Hooks
@@ -100,6 +103,7 @@ export const PlayfieldContainer = () => {
 
           <div id="badges" className="rounded-lg text-center p-2">
             <div className="flex flex-row flex-wrap gap-2 mb-4 items-center">
+              <Badge label={t("playfield.gameName")} value={<GameName />} />
               <Badge
                 label={t("playfield.players")}
                 value={
@@ -108,7 +112,7 @@ export const PlayfieldContainer = () => {
                       <UserAvatar
                         key={v}
                         userId={v!}
-                        diameter={24}
+                        diameter={20}
                         shadingIndex={i}
                       />
                     ))}
@@ -183,6 +187,39 @@ export const Badge = ({
     <div className={className}>
       <b>{label}</b>
       <span>{value}</span>
+    </div>
+  );
+};
+
+/**********/
+
+export const GameName = () => {
+  const { state, gameId } = useGameContext();
+  const { user } = useAuth();
+  const { t } = useTranslation();
+
+  if (!state || !user) return null;
+
+  const updateGame = useUpdateGame(gameId);
+
+  const handleEditGameName = () => {
+    // TODO: use a proper modal
+    updateGame({
+      gameName:
+        prompt("Enter game name", state.gameName) ??
+        state.gameName ??
+        getDefaultGameName(t("languageSelect.gameNameDefault")),
+    });
+  };
+
+  const allowEdit = state.createdByUserId === user.uid;
+
+  return (
+    <div className="text-md flex flex-row gap-2 items-center">
+      {state.gameName}
+      {allowEdit && (
+        <Edit className="h-4 w-4 cursor-pointer" onClick={handleEditGameName} />
+      )}
     </div>
   );
 };

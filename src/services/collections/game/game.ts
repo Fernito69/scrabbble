@@ -21,9 +21,13 @@ import { buildProposeMovePayload, getInitialGamePayload } from "./game.utils";
 export const createGame = async (
   db: Firestore,
   userId: string,
-  template: LanguageTemplate
+  template: LanguageTemplate,
+  gameName?: string
 ): Promise<string> => {
-  const payload = getInitialGamePayload(userId, template);
+  const payload = {
+    ...getInitialGamePayload(userId, template),
+    gameName,
+  } satisfies Partial<DbGamePayload>;
 
   const docRef = await addDoc(collection(db, GAME_COLLECTION), payload);
   return docRef.id;
@@ -94,6 +98,7 @@ export const reshuffleInitialPlayerHands = async (
   if (!currState) return;
   const payload = {
     ...getInitialGamePayload(currState.playerIds[0]!, currTemplate),
+    gameName: currState.gameName,
     currentVote: null,
   } satisfies Partial<DbGamePayload>;
 

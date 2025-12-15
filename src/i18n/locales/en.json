@@ -18,14 +18,18 @@
     "missingGame": "This game doesn't exist anymore 😢",
     "deleteGame": "Delete game",
     "deleteGameConfirm": "Are you sure you want to delete this game?",
-    "waitingForPlayers": "Waiting for more players to join..."
+    "waitingForPlayers": "Waiting for more players to join...",
+    "gameName": "Game name"
   },
   "languageSelect": {
     "title": "Select language",
     "description": "Select a language from the list",
     "accept": "Accept",
     "cancel": "Cancel",
-    "creatingGame": "Creating game..."
+    "creatingGame": "Creating game...",
+    "gameName": "Game name",
+    "gameNamePlaceholder": "Game name",
+    "gameNameDefault": "Untitled game"
   },
   "scoreBoard": {
     "turn": "Turn",
@@ -69,7 +73,8 @@
     "tilesLeft": "Tiles left:",
     "invitePlayers": "Invite Players",
     "inviteMessage": "You have been invited to a game of Scrabble! {{url}}",
-    "linkCopied": "Invitation link copied to clipboard!"
+    "linkCopied": "Invitation link copied to clipboard!",
+    "gameName": "Game name:"
   },
   "playerVotes": {
     "accept": "Accept",

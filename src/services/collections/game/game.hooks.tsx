@@ -14,11 +14,11 @@ import {
 } from "./game";
 import { DbGamePayload } from "./game.model";
 
-export const useCreateGame = () => {
+export const useCreateGame = (gameName?: string) => {
   const { user } = useAuth();
   if (!user) throw new Error("User not found");
   return (template: LanguageTemplate, callback?: (gameId: string) => void) =>
-    createGame(db, user.uid, template).then(callback);
+    createGame(db, user.uid, template, gameName).then(callback);
 };
 
 type UseGetGameSnapshot = {
