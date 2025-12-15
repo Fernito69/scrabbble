@@ -18,12 +18,12 @@ export const VoteCheckboxes = ({ handleChangeVote }: Props) => {
   // Render
   return (
     <div className="grid grid-cols-4 gap-2 items-center">
-      {state.playerIds.map((id) => {
+      {state.playerIds.map((id, i) => {
         if (id === null)
           return (
             <div
               className="flex flex-col gap-1 items-center justify-center w-full h-full border rounded-sm p-1 border-gray-600 bg-gray-100"
-              key={id}
+              key={i}
             >
               -
             </div>
@@ -42,7 +42,7 @@ export const VoteCheckboxes = ({ handleChangeVote }: Props) => {
         );
 
         return (
-          <div className={className} key={id}>
+          <div className={className} key={i}>
             <UserAvatar
               userId={id}
               diameter={24}

@@ -64,7 +64,7 @@ export const PlayfieldContainer = () => {
                 {t("playfield.welcome", { userName })}
               </p>
             </div>
-            <div className="flex gap-4 items-center">
+            <div className="flex gap-2 items-center">
               {!state.gameStarted && (
                 <button
                   onClick={handleLeave}
@@ -90,11 +90,11 @@ export const PlayfieldContainer = () => {
               <LanguageSwitcher />
               <button
                 onClick={handleSignOut}
-                className="px-4 py-2 text-sm border border-input rounded-md hover:bg-accent"
+                className="px-4 py-2 text-sm border border-input rounded-md hover:bg-accent mr-2"
               >
                 {t("playfield.signOut")}
               </button>
-              <UserAvatar userId={user!.uid} diameter={24} />
+              <UserAvatar userId={user!.uid} diameter={32} />
             </div>
           </div>
 

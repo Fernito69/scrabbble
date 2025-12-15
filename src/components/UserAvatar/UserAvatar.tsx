@@ -56,21 +56,23 @@ export const UserAvatar = ({
   userId,
   diameter = 40,
   glow = false,
-  shadingIndex = 0,
+  shadingIndex,
 }: UserAvatarProps) => {
   const userConfig = useUserConfigSnapshot(userId);
   const initials = getInitials(userConfig?.displayName);
 
-  const glowColor = glowColors[shadingIndex];
-  const glowStyle = {
-    boxShadow: `
+  const glowColor = shadingIndex != null ? glowColors[shadingIndex] : undefined;
+  const glowStyle = glowColor
+    ? {
+        boxShadow: `
           0 0 2px rgba(${glowColor}, 0.9),
           0 0 4px rgba(${glowColor}, 0.8),
           0 0 6px rgba(${glowColor}, 0.7),
           0 0 8px rgba(${glowColor}, 0.6),
           0 0 10px rgba(${glowColor}, 0.5)
         `,
-  };
+      }
+    : {};
 
   return (
     <Tooltip>
