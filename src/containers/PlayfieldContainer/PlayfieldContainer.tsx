@@ -25,6 +25,8 @@ export const PlayfieldContainer = () => {
   const navigate = useNavigate();
   const { state, template } = useGameContext();
 
+  const clickToSelectHandlers = useClickToSelect();
+
   const {
     sensors,
     handleDragStart,
@@ -33,9 +35,7 @@ export const PlayfieldContainer = () => {
     handleLeave,
     handleInvitePlayers,
     activeLetter,
-  } = usePlayfieldHandlers();
-
-  const clickToSelectHandlers = useClickToSelect();
+  } = usePlayfieldHandlers(clickToSelectHandlers.clearSelection);
 
   // Data
   const userConfig = useGetUserConfig();

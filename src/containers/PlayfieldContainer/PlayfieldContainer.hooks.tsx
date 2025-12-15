@@ -21,7 +21,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-export const usePlayfieldHandlers = () => {
+export const usePlayfieldHandlers = (clearSelection: () => void) => {
   // Hooks
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -90,13 +90,19 @@ export const usePlayfieldHandlers = () => {
 
     setActiveLetter(null);
 
-    if (!over || !state || !user) return;
+    if (!over || !state || !user) {
+      clearSelection();
+      return;
+    }
 
     const activeSource = active.data.current?.source;
     const activeLetter = active.data.current?.letter as LetterLiteral | null;
 
     // If vote is in progress, ignore
-    if (state.currentVote) return;
+    if (state.currentVote) {
+      clearSelection();
+      return;
+    }
 
     // Case 1: Reordering within hand
     if (activeSource === "hand" && over.data.current?.source === "hand") {
@@ -111,11 +117,15 @@ export const usePlayfieldHandlers = () => {
         ) as PlayerHandType;
         setLocalPlayerHand(newHand);
       }
+      clearSelection();
       return;
     }
 
     // All the rest of the cases are only for the current player
-    if (!isMyTurn) return;
+    if (!isMyTurn) {
+      clearSelection();
+      return;
+    }
 
     // Case 2: Dragging from hand to board
     if (activeSource === "hand" && over.data.current?.type === "board-square") {
@@ -125,7 +135,10 @@ export const usePlayfieldHandlers = () => {
 
       if (activeLetter && typeof x === "number" && typeof y === "number") {
         // If there's already a positioned tile, cancel
-        if (state.board[y][x].tile) return;
+        if (state.board[y][x].tile) {
+          clearSelection();
+          return;
+        }
 
         // Check if there's already a proposed tile at this position
         const existingTileAtPosition = localProposedMove.find(
@@ -153,6 +166,7 @@ export const usePlayfieldHandlers = () => {
         setLocalPlayerHand(newHand);
         setLocalProposedMove(newProposedMove);
       }
+      clearSelection();
       return;
     }
 
@@ -192,6 +206,7 @@ export const usePlayfieldHandlers = () => {
         setLocalPlayerHand(newHand);
         setLocalProposedMove(newProposedMove);
       }
+      clearSelection();
       return;
     }
 
@@ -206,7 +221,10 @@ export const usePlayfieldHandlers = () => {
       const toY = over.data.current.y;
 
       // Cancel if there's a tile at the destination
-      if (state.board[toY][toX].tile) return;
+      if (state.board[toY][toX].tile) {
+        clearSelection();
+        return;
+      }
 
       if (
         activeLetter &&
@@ -241,8 +259,12 @@ export const usePlayfieldHandlers = () => {
 
         setLocalProposedMove(newProposedMove);
       }
+      clearSelection();
       return;
     }
+
+    // Clear selection for any unhandled cases
+    clearSelection();
   };
 
   const handleInvitePlayers = async () => {
