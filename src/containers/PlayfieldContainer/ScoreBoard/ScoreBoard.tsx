@@ -23,7 +23,7 @@ export const ScoreBoard = () => {
   const { state, isMyTurn } = useGameContext();
   const { user } = useAuth();
 
-  if (!state?.score) return null;
+  if (!state?.score || !state.gameStarted) return null;
 
   // Consts
   const aggregateScores: ScoreRow[] = Array(state.currentTurn)
