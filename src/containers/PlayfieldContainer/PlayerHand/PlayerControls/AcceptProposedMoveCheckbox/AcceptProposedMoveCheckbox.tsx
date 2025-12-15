@@ -51,7 +51,6 @@ export const AcceptProposedMoveCheckbox = () => {
         {t("acceptMove.acceptFrom")}
         <UserAvatar
           userId={state.currentPlayerId!}
-          glow={state.currentPlayerId === user!.uid}
           shadingIndex={state.playerIds.indexOf(state.currentPlayerId!)}
           diameter={24}
         />

@@ -81,7 +81,8 @@
     "invitePlayers": "Invitar Jugadores",
     "inviteMessage": "¡Has sido invitado a una partida de Scrabble! {{url}}",
     "linkCopied": "¡Enlace de invitación copiado al portapapeles!",
-    "gameName": "Nombre de la partida:"
+    "gameName": "Nombre de la partida:",
+    "awaitingApproval": "Esperando a:"
   },
   "playerVotes": {
     "accept": "Aceptar",

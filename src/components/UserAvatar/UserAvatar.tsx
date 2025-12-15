@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 interface UserAvatarProps {
   userId: string;
   diameter?: number;
-  glow?: boolean;
+  bounce?: boolean;
   shadingIndex?: number;
 }
 
@@ -55,7 +55,7 @@ const glowColors = [
 export const UserAvatar = ({
   userId,
   diameter = 40,
-  glow = false,
+  bounce = false,
   shadingIndex,
 }: UserAvatarProps) => {
   const userConfig = useUserConfigSnapshot(userId);
@@ -80,7 +80,7 @@ export const UserAvatar = ({
         <div
           className={cn(
             "rounded-full flex items-center justify-center overflow-hidden bg-gray-300 text-gray-700 font-semibold",
-            glow ? "animate-bounce" : ""
+            bounce ? "animate-bounce" : ""
           )}
           style={{
             width: `${diameter}px`,

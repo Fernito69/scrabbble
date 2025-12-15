@@ -5,11 +5,6 @@ import { UserAvatar } from "@/components/UserAvatar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
   Table,
   TableBody,
   TableCell,
@@ -17,15 +12,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   useDeleteGame,
   useGetLastNPlayerGames,
 } from "@/services/collections/game/game.hooks";
+import { getDefaultGameName } from "@/services/collections/game/game.utils";
 import { Trash2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { getDefaultGameName } from "@/services/collections/game/game.utils";
 
 export const OngoingGames = () => {
   // Data
@@ -140,14 +140,34 @@ export const OngoingGames = () => {
                           <TableCell>
                             <span>
                               {game.currentPlayerId != null ? (
-                                <UserAvatar
-                                  userId={game.currentPlayerId}
-                                  glow={game.currentPlayerId === user!.uid}
-                                  shadingIndex={game.playerIds.indexOf(
-                                    game.currentPlayerId
-                                  )}
-                                  diameter={28}
-                                />
+                                game.currentVote ? (
+                                  game.playerIds
+                                    .filter(
+                                      (id) =>
+                                        id !== null &&
+                                        id !== game.currentPlayerId
+                                    )
+                                    .map((id) => (
+                                      <UserAvatar
+                                        key={id}
+                                        userId={id!}
+                                        bounce={id === user!.uid}
+                                        shadingIndex={game.playerIds.findIndex(
+                                          (uid) => uid === id
+                                        )}
+                                        diameter={28}
+                                      />
+                                    ))
+                                ) : (
+                                  <UserAvatar
+                                    userId={game.currentPlayerId}
+                                    bounce={game.currentPlayerId === user!.uid}
+                                    shadingIndex={game.playerIds.indexOf(
+                                      game.currentPlayerId
+                                    )}
+                                    diameter={28}
+                                  />
+                                )
                               ) : (
                                 "-"
                               )}
@@ -155,7 +175,10 @@ export const OngoingGames = () => {
                           </TableCell>
                           <TableCell>{game.currentTurn || "-"}</TableCell>
                           <TableCell>{game.tilePouch.length}</TableCell>
-                          <TableCell onClick={(e) => e.stopPropagation()} className="w-1">
+                          <TableCell
+                            onClick={(e) => e.stopPropagation()}
+                            className="w-1"
+                          >
                             {playerIsCreator && (
                               <ConfirmationDialog
                                 triggerElement={

@@ -52,6 +52,8 @@ export const PlayfieldContainer = () => {
     state.currentVote?.type === VoteType.INITIAL_RESHUFFLE &&
     !state.currentVote?.voteFinished &&
     state.playerIds.filter(Boolean).length > 1;
+  const awaitingApproval =
+    state?.currentVote?.type === VoteType.ACCEPT_PROPOSED_MOVE;
 
   return (
     <DndContext
@@ -134,15 +136,42 @@ export const PlayfieldContainer = () => {
                   />
                   {state.currentPlayerId != null && (
                     <Badge
-                      label={t("playfield.currentMove")}
+                      label={
+                        awaitingApproval
+                          ? t("playfield.awaitingApproval")
+                          : t("playfield.currentMove")
+                      }
                       value={
                         <div className="flex flex-row items-center justify-center gap-2">
-                          <UserAvatar
-                            userId={state.currentPlayerId}
-                            glow={state.currentPlayerId === user!.uid}
-                            diameter={24}
-                          />
-                          {isMyTurn && <YourTurnMessage />}
+                          {!state.currentVote && (
+                            <UserAvatar
+                              userId={state.currentPlayerId}
+                              bounce={state.currentPlayerId === user!.uid}
+                              diameter={24}
+                              shadingIndex={state.playerIds.indexOf(
+                                state.currentPlayerId!
+                              )}
+                            />
+                          )}
+                          {isMyTurn && !state.currentVote && (
+                            <YourTurnMessage />
+                          )}
+                          {awaitingApproval &&
+                            state.playerIds
+                              .filter(
+                                (id) =>
+                                  id !== null && id !== state.currentPlayerId
+                              )
+                              .map((id) => (
+                                <UserAvatar
+                                  shadingIndex={state.playerIds.findIndex(
+                                    (uid) => uid === id
+                                  )}
+                                  bounce
+                                  userId={id!}
+                                  diameter={24}
+                                />
+                              ))}
                         </div>
                       }
                     />

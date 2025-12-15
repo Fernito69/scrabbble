@@ -81,7 +81,8 @@
     "invitePlayers": "Invite Players",
     "inviteMessage": "You have been invited to a game of Scrabble! {{url}}",
     "linkCopied": "Invitation link copied to clipboard!",
-    "gameName": "Game name:"
+    "gameName": "Game name:",
+    "awaitingApproval": "Waiting for:"
   },
   "playerVotes": {
     "accept": "Accept",
