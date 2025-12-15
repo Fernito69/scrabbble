@@ -10,13 +10,13 @@ import {
   computeRemainingTilesScore,
   drawCards,
 } from "@/services/collections/game/game.utils";
+import { cloneDeep } from "lodash";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useAuth } from "./AuthContext";
 import { DefaultGame, UseGameStateEffects } from "./GameState.model";
-import { cloneDeep } from "lodash";
-import { useTranslation } from "react-i18next";
 
 export const useGameStateEffects = ({
   gameId,
@@ -27,6 +27,7 @@ export const useGameStateEffects = ({
   initialPlayerHand,
   initted,
   setInitted,
+  isMyTurn,
   setLocalPlayerHand,
   hasError,
 }: UseGameStateEffects) => {
@@ -37,6 +38,21 @@ export const useGameStateEffects = ({
   // Mutations
   const updateGame = useUpdateGame(gameId);
   const reshuffleGame = useReshuffleGame(gameId);
+
+  // Handlers
+  const playNotificationSound = () => {
+    const audio = new Audio("/sounds/notification2.wav");
+    audio.play();
+  };
+
+  /***************/
+  // Indicate player turn
+  /***************/
+  useEffect(() => {
+    if (isMyTurn) {
+      playNotificationSound();
+    }
+  }, [isMyTurn]);
 
   /***************/
   // Missing game failsafe
