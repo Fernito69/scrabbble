@@ -62,11 +62,14 @@ export const PlayfieldContainer = () => {
       <div className="min-h-screen bg-background p-8">
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-between items-center mb-2">
-            <div className="flex flex-col">
-              <ScrabbbbbbleLogo />
-              <p className="text-muted-foreground mt-1">
+            <div className="flex flex-row items-end gap-2 h-full pb-3">
+              <div className="flex items-center mr-2">
+                <ScrabbbbbbleLogo withLink />
+              </div>
+              <div className="text-blue-400">→</div>
+              <div className="text-muted-foreground mt-1 h-full ">
                 {t("playfield.welcome", { userName })}
-              </p>
+              </div>
             </div>
             <div className="flex gap-2 items-center">
               {!state.gameStarted && (
