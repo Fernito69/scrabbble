@@ -14,4 +14,5 @@ export type LanguageTemplate = {
 export enum Language {
   EN = "en",
   ES = "es",
+  CL = "cl",
 }

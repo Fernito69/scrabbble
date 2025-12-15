@@ -17,7 +17,7 @@
     "noGames": "No tienes partidas en curso 😢 ¡Crea una ahora!",
     "missingGame": "Esta partida ya no existe 😢",
     "deleteGame": "Eliminar partida",
-    "deleteGameConfirm": "¿Estás seguro/a de que quieres eliminar esta partida?",
+    "deleteGameConfirm": "¿Estás seguro de que quieres eliminar esta partida?",
     "waitingForPlayers": "Esperando a que se se unan más jugadores...",
     "gameName": "Nombre de la partida"
   },
@@ -34,10 +34,10 @@
   "scoreBoard": {
     "turn": "Turno",
     "total": "TOTAL",
-    "yourTurn": "¡TE TOCA!"
+    "yourTurn": "¡AVÍSPATE!"
   },
   "reshuffleVote": {
-    "titlePrefix": "ha solicitado barajar las fichas",
+    "titlePrefix": "ha solicitado borrón y cuenta nueva",
     "description": "Por favor acepta o rechaza la solicitud",
     "aPlayer": "Un jugador"
   },
@@ -46,35 +46,35 @@
   },
   "acceptMove": {
     "acceptFrom": "Aceptar jugada de",
-    "myself": "mí mismo/a",
-    "rejectOwnMove": "¿Estás seguro/a de que quieres rechazar tu propia jugada? No obtendrás puntos durante este turno."
+    "myself": "mí mismo",
+    "rejectOwnMove": "¿Tai seguro de que quieres rechazar tu propia jugada? Te vai a quedar sin puntos durante este turno."
   },
   "playerControls": {
     "proposeMove": "Proponer jugada",
-    "proposeMoveConfirm": "¿Estás seguro/a de que quieres proponer esta jugada?",
+    "proposeMoveConfirm": "¿Tai seguro/a?",
     "skipTurn": "Saltar turno",
-    "skipTurnConfirm": "¿Estás seguro/a de que quieres saltar tu turno?",
+    "skipTurnConfirm": "Tai seguro/a de que quieres saltarte el turno?",
     "skip": "Saltar",
-    "reshuffleInitialHands": "Barajar fichas",
+    "reshuffleInitialHands": "Borrón y cuenta nueva",
     "reshuffleHand": "Cambiar mano",
-    "requestReshuffle": "Solicitar barajado",
-    "requestInitialReshuffleConfirm": "¡Qué mano tan mala! ¿Quieres solicitar un barajado?",
-    "requestReshuffleConfirm": "¿Estás seguro/a de que quieres cambiar tu mano? Vas a perder el turno",
-    "recallTiles": "Recoger fichas"
+    "requestReshuffle": "Solicitar borrón y cuenta nueva",
+    "requestInitialReshuffleConfirm": "¡La mano ql mala! ¿Y si partimos de nuevo?",
+    "requestReshuffleConfirm": "¿Tai seguro/a de que quieres cambiar tu mano? Vas a perder el turno",
+    "recallTiles": "Recoge tus fichas"
   },
   "playfield": {
-    "welcome": "Bienvenido, {{userName}}",
+    "welcome": "Weeeena, {{userName}}",
     "leaveGame": "Salir de la Partida",
-    "backToHome": "Volver al inicio",
+    "backToHome": "Volver al home",
     "signOut": "Cerrar Sesión",
     "players": "Jugadores:",
     "language": "Idioma:",
     "turn": "Turno:",
-    "currentMove": "Jugada actual:",
-    "tilesLeft": "Fichas restantes:",
-    "invitePlayers": "Invitar Jugadores",
-    "inviteMessage": "¡Has sido invitado a una partida de Scrabble! {{url}}",
-    "linkCopied": "¡Enlace de invitación copiado al portapapeles!",
+    "currentMove": "Quién juega?:",
+    "tilesLeft": "Fichas faltantes:",
+    "invitePlayers": "Invita a tus miwis",
+    "inviteMessage": "Te invito a jugar scrabbbbbbleeeeee! {{url}}",
+    "linkCopied": "Link copiado, mándaselo a los brocas!",
     "gameName": "Nombre de la partida:"
   },
   "playerVotes": {
@@ -83,8 +83,9 @@
     "awaitingVote": "Esperando voto..."
   },
   "languageSwitcher": {
-    "selectLanguage": "Seleccionar Idioma",
+    "selectLanguage": "Selecciona Idioma",
     "english": "Inglés 🇬🇧/🇺🇸",
-    "spanish": "Español 🇪🇸"
+    "spanish": "Español chile 🇨🇱",
+    "chilean": "Español 🇪🇸"
   }
 }

@@ -12,6 +12,7 @@ import { useUpdateUserConfig } from "@/services/collections/userConfig/userConfi
 const LANGUAGES = [
   { code: Language.EN, label: "🇬🇧/🇺🇸" },
   { code: Language.ES, label: "🇪🇸" },
+  { code: Language.CL, label: "🇨🇱" },
 ] as const;
 
 export const LanguageSwitcher = () => {
