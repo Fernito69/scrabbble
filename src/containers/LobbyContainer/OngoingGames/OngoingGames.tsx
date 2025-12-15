@@ -66,7 +66,7 @@ export const OngoingGames = () => {
                     <TableHead className="whitespace-wrap">
                       {t("lobby.tilesLeft")}
                     </TableHead>
-                    <TableHead />
+                    <TableHead className="w-1" />
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -81,7 +81,7 @@ export const OngoingGames = () => {
                       const playerIsCreator =
                         user?.uid === game.createdByUserId;
 
-                      const maxLength = 40;
+                      const maxLength = 30;
                       const fullName =
                         game.gameName ??
                         getDefaultGameName(t("languageSelect.gameNameDefault"));
@@ -99,15 +99,19 @@ export const OngoingGames = () => {
                           {nameTooLong ? (
                             <Tooltip>
                               <TooltipTrigger>
-                                <TableCell className="tracking-tight text-xs">
-                                  <p className="">{shownName}</p>
+                                <TableCell>
+                                  <p className="tracking-tight text-xs">
+                                    {shownName}
+                                  </p>
                                 </TableCell>
                               </TooltipTrigger>
                               <TooltipContent>{fullName}</TooltipContent>
                             </Tooltip>
                           ) : (
-                            <TableCell className="tracking-tight text-xs">
-                              <p className="">{shownName}</p>
+                            <TableCell>
+                              <p className="tracking-tight text-xs">
+                                {shownName}
+                              </p>
                             </TableCell>
                           )}
                           <TableCell>
@@ -151,13 +155,13 @@ export const OngoingGames = () => {
                           </TableCell>
                           <TableCell>{game.currentTurn || "-"}</TableCell>
                           <TableCell>{game.tilePouch.length}</TableCell>
-                          <TableCell onClick={(e) => e.stopPropagation()}>
+                          <TableCell onClick={(e) => e.stopPropagation()} className="w-1">
                             {playerIsCreator && (
                               <ConfirmationDialog
                                 triggerElement={
                                   <Button
                                     variant={"ghost"}
-                                    className="text-red-600"
+                                    className="text-red-600 w-1"
                                   >
                                     <Trash2 />
                                   </Button>
