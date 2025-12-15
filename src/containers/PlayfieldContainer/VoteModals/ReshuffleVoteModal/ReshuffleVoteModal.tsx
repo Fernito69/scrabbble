@@ -1,3 +1,4 @@
+import { UserAvatar } from "@/components/UserAvatar";
 import {
   Dialog,
   DialogContent,
@@ -10,7 +11,6 @@ import { useGameContext } from "@/contexts/GameState.context";
 import { Vote } from "@/model/core.model";
 import { useUpdateGame } from "@/services/collections/game/game.hooks";
 import { useTranslation } from "react-i18next";
-import { PlayerBadge } from "../../PlayerBadge/PlayerBadge";
 import { PlayerVotesButtons } from "../PlayerVotesButtons/PlayerVotesButtons";
 
 interface Props {
@@ -44,9 +44,9 @@ export const ReshuffleVoteModal = ({ vote }: Props) => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            <div className="flex flex-row gap-2">
+            <div className="flex flex-row gap-2 items-center">
               {vote.proposerId ? (
-                <PlayerBadge playerId={vote.proposerId} />
+                <UserAvatar userId={vote.proposerId} diameter={24} />
               ) : (
                 t("reshuffleVote.aPlayer")
               )}

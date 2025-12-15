@@ -17,7 +17,8 @@
     "noGames": "No tienes partidas en curso 😢 ¡Crea una ahora!",
     "missingGame": "Esta partida ya no existe 😢",
     "deleteGame": "Eliminar partida",
-    "deleteGameConfirm": "¿Estás seguro de que quieres eliminar esta partida?"
+    "deleteGameConfirm": "¿Estás seguro de que quieres eliminar esta partida?",
+    "waitingForPlayers": "Esperando a que se se unan más jugadores..."
   },
   "languageSelect": {
     "title": "Seleccionar idioma",

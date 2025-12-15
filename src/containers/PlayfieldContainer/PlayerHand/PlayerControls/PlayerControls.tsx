@@ -152,18 +152,18 @@ export const PlayerControls = () => {
         {showInitialReshuffleButton && (
           <ConfirmationDialog
             title={t("playerControls.requestReshuffle")}
-            description={t("playerControls.requestReshuffleConfirm")}
+            description={t("playerControls.requestInitialReshuffleConfirm")}
             onAccept={handleInitialReshuffle}
             triggerElement={
               <Button className="text-xs" variant={"destructive"}>
-                {t("playerControls.reshuffleHands")}
+                {t("playerControls.reshuffleInitialHands")}
               </Button>
             }
           />
         )}
         {showReshuffleButton && (
           <ConfirmationDialog
-            title={t("playerControls.requestReshuffle")}
+            title={t("playerControls.reshuffleHand")}
             description={t("playerControls.requestReshuffleConfirm")}
             onAccept={handleReshuffle}
             triggerElement={
@@ -174,7 +174,10 @@ export const PlayerControls = () => {
           />
         )}
         {showRecallTilesButton && (
-          <Button onClick={handleRecallTiles} className="text-xs bg-green-600 hover:bg-green-700">
+          <Button
+            onClick={handleRecallTiles}
+            className="text-xs bg-green-600 hover:bg-green-700"
+          >
             {t("playerControls.recallTiles")}
           </Button>
         )}

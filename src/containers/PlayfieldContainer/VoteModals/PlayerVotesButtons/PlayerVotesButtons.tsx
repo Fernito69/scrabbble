@@ -1,10 +1,10 @@
+import { UserAvatar } from "@/components/UserAvatar";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 import { PlayerVote } from "@/model/core.model";
 import { Check, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { PlayerBadge } from "../../PlayerBadge/PlayerBadge";
 
 interface Props {
   votes: PlayerVote[];
@@ -38,7 +38,7 @@ export const PlayerVotesButtons = ({ votes, onChangeVote }: Props) => {
 
         return (
           <div key={playerId} className={className}>
-            <PlayerBadge playerId={playerId} />
+            <UserAvatar userId={playerId} />
 
             {showSwitches ? (
               <div className="flex flex-row gap-2 text-xs">
@@ -61,7 +61,9 @@ export const PlayerVotesButtons = ({ votes, onChangeVote }: Props) => {
                 </Button>
               </div>
             ) : voted === null ? (
-              <i className="text-sm text-gray-500">{t("playerVotes.awaitingVote")}</i>
+              <i className="text-sm text-gray-500">
+                {t("playerVotes.awaitingVote")}
+              </i>
             ) : voted ? (
               <Check />
             ) : (

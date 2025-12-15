@@ -6,6 +6,8 @@ import { DraggableBoardTile } from "../TileComponent/DraggableBoardTile";
 import { ProposedMoveScoreIndicator } from "./ProposedMoveScoreIndicator";
 import { useAuth } from "@/contexts/AuthContext";
 import { useClickToSelect } from "../useClickToSelect.hook";
+import { OverlayWithLoader } from "@/components/OverlayWithLoader/OverlayWithLoader";
+import { useTranslation } from "react-i18next";
 
 const bonusColorMap: Record<Bonus, string> = {
   [Bonus.DOUBLE_LETTER]: "bg-blue-200",
@@ -31,6 +33,7 @@ export const BoardComponent = ({
   // Context
   const { state, template, localProposedMove } = useGameContext();
   const { user } = useAuth();
+  const { t } = useTranslation();
 
   // Render
   if (!template || !state) return null;
@@ -43,8 +46,16 @@ export const BoardComponent = ({
       ? localProposedMove
       : currentProposedMove?.move;
 
+  const showWaitingForPlayers =
+    !state.gameStarted && state.playerIds.filter(Boolean).length === 1;
+
   return (
-    <div className="flex justify-center items-center">
+    <div className="flex justify-center items-center relative">
+      {showWaitingForPlayers && (
+        <OverlayWithLoader>
+          <div className="text-2xl font-semibold">{t("lobby.loadingGames")}</div>
+        </OverlayWithLoader>
+      )}
       <div className="flex justify-center items-center p-8 rounded-xl bg-green-200 border-green-400 border-1">
         <div className="relative">
           <div className="grid grid-cols-15 gap-0 w-[720px]">
@@ -67,11 +78,8 @@ export const BoardComponent = ({
 
                 // Empty square
                 if (!letter) {
-                  const isEmptySquareSelected = clickToSelectHandlers.isSelected(
-                    "board",
-                    xIndex,
-                    yIndex
-                  );
+                  const isEmptySquareSelected =
+                    clickToSelectHandlers.isSelected("board", xIndex, yIndex);
 
                   return (
                     <DroppableBoardSquare
