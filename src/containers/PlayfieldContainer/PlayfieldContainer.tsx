@@ -20,13 +20,14 @@ import { ScoreBoard } from "./ScoreBoard/ScoreBoard";
 import { TileComponent } from "./TileComponent/TileComponent";
 import { ReshuffleVoteModal } from "./VoteModals/ReshuffleVoteModal/ReshuffleVoteModal";
 import { useClickToSelect } from "./useClickToSelect.hook";
+import { YourTurnMessage } from "./YourTurnMessage/YourTurnMessage";
 
 export const PlayfieldContainer = () => {
   // Hooks
   const { t } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { state, template } = useGameContext();
+  const { state, template, isMyTurn } = useGameContext();
 
   const clickToSelectHandlers = useClickToSelect();
 
@@ -132,11 +133,14 @@ export const PlayfieldContainer = () => {
                     <Badge
                       label={t("playfield.currentMove")}
                       value={
-                        <UserAvatar
-                          userId={state.currentPlayerId}
-                          glow={state.currentPlayerId === user!.uid}
-                          diameter={24}
-                        />
+                        <div className="flex flex-row items-center justify-center gap-2">
+                          <UserAvatar
+                            userId={state.currentPlayerId}
+                            glow={state.currentPlayerId === user!.uid}
+                            diameter={24}
+                          />
+                          {isMyTurn && <YourTurnMessage />}
+                        </div>
                       }
                     />
                   )}

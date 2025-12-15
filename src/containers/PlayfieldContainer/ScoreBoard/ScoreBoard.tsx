@@ -11,6 +11,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useGameContext } from "@/contexts/GameState.context";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
+import { YourTurnMessage } from "../YourTurnMessage/YourTurnMessage";
 
 interface ScoreRow {
   turn: number;
@@ -63,9 +64,7 @@ export const ScoreBoard = () => {
                   <div className="flex flex-row items-center justify-center gap-2">
                     <UserAvatar userId={id!} diameter={24} shadingIndex={i} />
                     {isMyTurn && id === user!.uid && !state.currentVote && (
-                      <div className="tracking-tight text-xs font-black text-red-600 animate-pulse-scale">
-                        {t("scoreBoard.yourTurn")}
-                      </div>
+                      <YourTurnMessage />
                     )}
                   </div>
                 </TableHead>
