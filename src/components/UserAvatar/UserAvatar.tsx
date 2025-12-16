@@ -1,13 +1,11 @@
-import { db } from "@/config/firebase";
-import { getUserConfigSnapshot } from "@/services/collections/userConfig/userConfig";
-import { UserConfig } from "@/services/collections/userConfig/userConfig.model";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
+import { getInitials } from "@/services/collections/userConfig/useConfig.utils";
+import { useUserConfigSnapshot } from "@/services/collections/userConfig/userConfig.hooks";
 
 interface UserAvatarProps {
   userId: string;
@@ -15,35 +13,6 @@ interface UserAvatarProps {
   bounce?: boolean;
   shadingIndex?: number;
 }
-
-const useUserConfigSnapshot = (userId: string): UserConfig | null => {
-  const [userConfig, setUserConfig] = useState<UserConfig | null>(null);
-
-  useEffect(() => {
-    if (!userId) {
-      setUserConfig(null);
-      return;
-    }
-
-    return getUserConfigSnapshot(db, userId, (data) => {
-      setUserConfig(data);
-    });
-  }, [userId]);
-
-  return userConfig;
-};
-
-const getInitials = (displayName?: string): string => {
-  if (!displayName) return "?";
-
-  const parts = displayName.trim().split(/\s+/);
-
-  if (parts.length === 1) {
-    return parts[0].charAt(0).toUpperCase();
-  }
-
-  return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
-};
 
 const glowColors = [
   "96, 165, 250", // blue-500

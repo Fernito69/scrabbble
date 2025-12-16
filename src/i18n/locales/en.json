@@ -50,6 +50,11 @@
   "readyCheckbox": {
     "ready": "Get ready!"
   },
+  "userConfig": {
+    "changeName": "Change name",
+    "logout": "Logout",
+    "enterName": "Enter new name"
+  },
   "acceptMove": {
     "acceptFrom": "Accept move from",
     "myself": "myself",

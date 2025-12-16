@@ -21,6 +21,11 @@
     "waitingForPlayers": "Esperando a que se unan más jugadores...",
     "gameName": "Nombre de la partida"
   },
+  "userConfig": {
+    "changeName": "Cambiar nombre",
+    "logout": "Cerrar sesión",
+    "enterName": "Introduce un nuevo nombre"
+  },
   "languageSelect": {
     "title": "Seleccionar idioma",
     "description": "Selecciona un idioma de la lista",

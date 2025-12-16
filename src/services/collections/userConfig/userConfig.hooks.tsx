@@ -68,3 +68,20 @@ export const useUpdateUserConfig = () => {
     }
   };
 };
+
+export const useUserConfigSnapshot = (userId: string): UserConfig | null => {
+  const [userConfig, setUserConfig] = useState<UserConfig | null>(null);
+
+  useEffect(() => {
+    if (!userId) {
+      setUserConfig(null);
+      return;
+    }
+
+    return getUserConfigSnapshot(db, userId, (data) => {
+      setUserConfig(data);
+    });
+  }, [userId]);
+
+  return userConfig;
+};

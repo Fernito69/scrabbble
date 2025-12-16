@@ -21,6 +21,7 @@ import { TileComponent } from "./TileComponent/TileComponent";
 import { ReshuffleVoteModal } from "./VoteModals/ReshuffleVoteModal/ReshuffleVoteModal";
 import { useClickToSelect } from "./useClickToSelect.hook";
 import { YourTurnMessage } from "./YourTurnMessage/YourTurnMessage";
+import { UserConfigPopover } from "@/components/UserConfigPopover/UserConfigPopover";
 
 export const PlayfieldContainer = () => {
   // Hooks
@@ -103,7 +104,7 @@ export const PlayfieldContainer = () => {
               >
                 {t("playfield.signOut")}
               </button>
-              <UserAvatar userId={user!.uid} diameter={32} />
+              <UserConfigPopover />
             </div>
           </div>
 
