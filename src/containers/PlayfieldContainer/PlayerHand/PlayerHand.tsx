@@ -7,6 +7,8 @@ import {
 import { SortableTile } from "../TileComponent/SortableTile";
 import { PlayerControls } from "./PlayerControls/PlayerControls";
 import { useClickToSelect } from "../useClickToSelect.hook";
+import { useAuth } from "@/contexts/AuthContext";
+import { LetterLiteral } from "@/model/core.model";
 
 interface Props {
   clickToSelectHandlers: ReturnType<typeof useClickToSelect>;
@@ -14,6 +16,7 @@ interface Props {
 
 export const PlayerHand = ({ clickToSelectHandlers }: Props) => {
   // Context
+  const { user } = useAuth();
   const { localPlayerHand, state } = useGameContext();
   const { setNodeRef, isOver } = useDroppable({
     id: "player-hand-drop-zone",
@@ -28,7 +31,24 @@ export const PlayerHand = ({ clickToSelectHandlers }: Props) => {
   const containerCn = `shadow w-fit flex justify-center items-center w-[720px] bg-green-200 gap-2 p-2 border border-black rounded-md transition-colors ${
     isOver ? "ring-2 ring-blue-500 z-10" : ""
   }`;
-  const tileIds = localPlayerHand.map((_, i) => `hand-tile-${i}`);
+
+  let proposedMoveLetters: LetterLiteral[] =
+    state.currentProposedMove?.playerId === user!.uid
+      ? state.currentProposedMove.move.map((t) => t.letter)
+      : [];
+  const renderedHand =
+    proposedMoveLetters.length > 0
+      ? localPlayerHand.map((t) => {
+          const letterIndex = proposedMoveLetters.indexOf(t!);
+          if (letterIndex >= 0) {
+            proposedMoveLetters.splice(letterIndex, 1);
+            return null;
+          }
+          return t;
+        })
+      : localPlayerHand;
+
+  const tileIds = renderedHand.map((_, i) => `hand-tile-${i}`);
 
   // Effects
   return (
@@ -39,7 +59,7 @@ export const PlayerHand = ({ clickToSelectHandlers }: Props) => {
             items={tileIds}
             strategy={horizontalListSortingStrategy}
           >
-            {localPlayerHand.map((letter, i) => (
+            {renderedHand.map((letter, i) => (
               <SortableTile
                 key={tileIds[i]}
                 id={tileIds[i]}

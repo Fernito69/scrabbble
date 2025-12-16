@@ -13,6 +13,8 @@ import { cloneDeep } from "lodash";
 import { GameState, Vote, VoteType } from "../../src/model/core.model";
 import { mapDbGamePayloadToGameState } from "../../src/services/collections/game/game.mappers";
 import { DbGamePayload } from "../../src/services/collections/game/game.model";
+import { GAME_COLLECTION } from "../../src/services/collections/game/game.defaults";
+
 import {
   buildMovePayload,
   computeRemainingTilesScore,
@@ -24,7 +26,6 @@ admin.initializeApp();
 export const firestore = admin.firestore() as any;
 
 // Admin SDK compatible version of updateGame
-const GAME_COLLECTION = "games";
 const updateGame = (
   db: admin.firestore.Firestore,
   id: string,
