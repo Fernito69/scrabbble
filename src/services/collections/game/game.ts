@@ -11,6 +11,7 @@ import {
   query,
   updateDoc,
   where,
+  orderBy,
 } from "firebase/firestore";
 import { LanguageTemplate } from "../letterValueMap/languageTemplate.model";
 import { GAME_COLLECTION } from "./game.defaults";
@@ -69,7 +70,7 @@ export const updateGame = (
   game: Partial<DbGamePayload>
 ) => {
   const docRef = doc(db, GAME_COLLECTION, id);
-  return updateDoc(docRef, game);
+  return updateDoc(docRef, { ...game, lastModifiedAt: new Date() });
 };
 
 export const deleteGame = async (db: Firestore, id: string) => {
@@ -116,6 +117,7 @@ export const getLastNPlayerGamesSnapshot = (
     collection(db, GAME_COLLECTION),
     where("playerIds", "array-contains", userId),
     where("gameOver", "==", false),
+    orderBy("lastModifiedAt", "desc"),
     limit(n)
   );
 
@@ -125,6 +127,13 @@ export const getLastNPlayerGamesSnapshot = (
         ...mapDbGamePayloadToGameState(d.data() as DbGamePayload),
         id: d.id,
       }));
+      console.log(
+        "Querying games",
+        collSnap.docs.map(
+          (d) => new Date(d.data().lastModifiedAt.seconds * 1000)
+        )
+      );
+
       callback(data);
     },
     error: (err) => errorCallback(err.message),

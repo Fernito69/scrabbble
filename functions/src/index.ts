@@ -32,7 +32,7 @@ const updateGame = (
   game: Partial<DbGamePayload>
 ) => {
   const docRef = db.collection(GAME_COLLECTION).doc(id);
-  return docRef.update(game);
+  return docRef.update({ ...game, lastModifiedAt: new Date() });
 };
 
 /***************/

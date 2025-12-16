@@ -97,137 +97,132 @@ export const OngoingGames = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {playerGames
-                    .sort(
-                      (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
-                    )
-                    .map((game, i) => {
-                      const playerIds = game.playerIds.filter(
-                        Boolean
-                      ) as string[];
-                      const playerIsCreator =
-                        user?.uid === game.createdByUserId;
+                  {playerGames.map((game, i) => {
+                    const playerIds = game.playerIds.filter(
+                      Boolean
+                    ) as string[];
+                    const playerIsCreator = user?.uid === game.createdByUserId;
 
-                      const maxLength = 30;
-                      const fullName =
-                        game.gameName ??
-                        getDefaultGameName(t("languageSelect.gameNameDefault"));
-                      const nameTooLong = fullName.length > maxLength;
-                      const shownName = nameTooLong
-                        ? fullName.slice(0, maxLength) + "…"
-                        : fullName;
+                    const maxLength = 30;
+                    const fullName =
+                      game.gameName ??
+                      getDefaultGameName(t("languageSelect.gameNameDefault"));
+                    const nameTooLong = fullName.length > maxLength;
+                    const shownName = nameTooLong
+                      ? fullName.slice(0, maxLength) + "…"
+                      : fullName;
 
-                      return (
-                        <TableRow
-                          key={i}
-                          className="cursor-pointer animate-out odd:bg-white even:bg-gray-50"
-                          onClick={() => navigate(`/game/${game.id}`)}
-                        >
-                          {nameTooLong ? (
-                            <Tooltip>
-                              <TooltipTrigger>
-                                <TableCell>
-                                  <p className="tracking-tight text-xs">
-                                    {shownName}
-                                  </p>
-                                </TableCell>
-                              </TooltipTrigger>
-                              <TooltipContent>{fullName}</TooltipContent>
-                            </Tooltip>
-                          ) : (
-                            <TableCell>
-                              <p className="tracking-tight text-xs">
-                                {shownName}
-                              </p>
-                            </TableCell>
-                          )}
+                    return (
+                      <TableRow
+                        key={i}
+                        className="cursor-pointer animate-out odd:bg-white even:bg-gray-50"
+                        onClick={() => navigate(`/game/${game.id}`)}
+                      >
+                        {nameTooLong ? (
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <TableCell>
+                                <p className="tracking-tight text-xs">
+                                  {shownName}
+                                </p>
+                              </TableCell>
+                            </TooltipTrigger>
+                            <TooltipContent>{fullName}</TooltipContent>
+                          </Tooltip>
+                        ) : (
                           <TableCell>
-                            <BoardDiorama game={game} />
+                            <p className="tracking-tight text-xs">
+                              {shownName}
+                            </p>
                           </TableCell>
-                          <TableCell>
-                            {new Date(game.createdAt).toLocaleString()}
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex flex-row gap-2 whitespace-nowrap tracking-tight">
-                              {playerIds.map((id, idx) => (
-                                <UserAvatar
-                                  key={idx}
-                                  userId={id}
-                                  diameter={28}
-                                  shadingIndex={idx}
-                                />
-                              ))}
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            {playerIds
-                              .map((id) => game.score.total[id] ?? 0)
-                              .join(", ")}
-                          </TableCell>
-                          <TableCell>
-                            <span>
-                              {game.currentPlayerId != null ? (
-                                game.currentVote ? (
-                                  game.playerIds
-                                    .filter(
-                                      (id) =>
-                                        id !== null &&
-                                        id !== game.currentPlayerId &&
-                                        game.currentVote?.votes.some(
-                                          (v) => v.playerId === id && !v.voted
-                                        )
-                                    )
-                                    .map((id, i) => (
-                                      <UserAvatar
-                                        key={i}
-                                        userId={id!}
-                                        bounce={id === user!.uid}
-                                        shadingIndex={game.playerIds.findIndex(
-                                          (uid) => uid === id
-                                        )}
-                                        diameter={28}
-                                      />
-                                    ))
-                                ) : (
-                                  <UserAvatar
-                                    userId={game.currentPlayerId}
-                                    bounce={game.currentPlayerId === user!.uid}
-                                    shadingIndex={game.playerIds.indexOf(
-                                      game.currentPlayerId
-                                    )}
-                                    diameter={28}
-                                  />
-                                )
-                              ) : (
-                                "-"
-                              )}
-                            </span>
-                          </TableCell>
-                          <TableCell>{game.currentTurn || "-"}</TableCell>
-                          <TableCell>{game.tilePouch.length}</TableCell>
-                          <TableCell
-                            onClick={(e) => e.stopPropagation()}
-                            className="w-1"
-                          >
-                            {playerIsCreator && (
-                              <ConfirmationDialog
-                                triggerElement={
-                                  <Button
-                                    variant={"ghost"}
-                                    className="text-red-600 w-1"
-                                  >
-                                    <Trash2 />
-                                  </Button>
-                                }
-                                title={t("lobby.deleteGame")}
-                                description={t("lobby.deleteGameConfirm")}
-                                onAccept={() => deleteGame(game.id)}
+                        )}
+                        <TableCell>
+                          <BoardDiorama game={game} />
+                        </TableCell>
+                        <TableCell>
+                          {new Date(game.createdAt).toLocaleString()}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex flex-row gap-2 whitespace-nowrap tracking-tight">
+                            {playerIds.map((id, idx) => (
+                              <UserAvatar
+                                key={idx}
+                                userId={id}
+                                diameter={28}
+                                shadingIndex={idx}
                               />
+                            ))}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          {playerIds
+                            .map((id) => game.score.total[id] ?? 0)
+                            .join(", ")}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex flex-row gap-2 items-center">
+                            {game.currentPlayerId != null ? (
+                              game.currentVote ? (
+                                game.playerIds
+                                  .filter(
+                                    (id) =>
+                                      id !== null &&
+                                      id !== game.currentPlayerId &&
+                                      game.currentVote?.votes.some(
+                                        (v) => v.playerId === id && !v.voted
+                                      )
+                                  )
+                                  .map((id, i) => (
+                                    <UserAvatar
+                                      key={i}
+                                      userId={id!}
+                                      bounce={id === user!.uid}
+                                      shadingIndex={game.playerIds.findIndex(
+                                        (uid) => uid === id
+                                      )}
+                                      diameter={28}
+                                    />
+                                  ))
+                              ) : (
+                                <UserAvatar
+                                  userId={game.currentPlayerId}
+                                  bounce={game.currentPlayerId === user!.uid}
+                                  shadingIndex={game.playerIds.indexOf(
+                                    game.currentPlayerId
+                                  )}
+                                  diameter={28}
+                                />
+                              )
+                            ) : (
+                              "-"
                             )}
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
+                          </div>
+                        </TableCell>
+                        <TableCell>{game.currentTurn || "-"}</TableCell>
+                        <TableCell>{game.tilePouch.length}</TableCell>
+                        <TableCell
+                          onClick={(e) => e.stopPropagation()}
+                          className="w-1"
+                        >
+                          {playerIsCreator && (
+                            <ConfirmationDialog
+                              triggerElement={
+                                <Button
+                                  variant={"ghost"}
+                                  className="text-red-600 w-1"
+                                >
+                                  <Trash2 />
+                                </Button>
+                              }
+                              title={t("lobby.deleteGame")}
+                              description={t("lobby.deleteGameConfirm")}
+                              onAccept={() => deleteGame(game.id)}
+                            />
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
               </Table>
             </div>

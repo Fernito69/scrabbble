@@ -344,6 +344,7 @@ export const getInitialGamePayload = (
     gameName,
     createdByUserId: userId,
     createdAt: new Date(),
+    lastModifiedAt: new Date(),
     template,
     playerIds,
     currentPlayerId: null,

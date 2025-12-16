@@ -26,15 +26,15 @@ interface DbGameBase {
   gameOver: boolean;
   currentProposedMove: PlayerMove | null;
   currentVote: Vote | null;
+  createdAt: Date | Timestamp;
+  lastModifiedAt: Date | Timestamp;
 }
 
 export interface DbGame extends DbGameBase {
-  createdAt: Date | Timestamp;
   board: Board;
 }
 
 export interface DbGamePayload extends DbGameBase {
-  createdAt: Date | Timestamp;
   // Stringify the board because of firestore limitations
   board: string;
 }
