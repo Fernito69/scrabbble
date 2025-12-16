@@ -127,13 +127,6 @@ export const getLastNPlayerGamesSnapshot = (
         ...mapDbGamePayloadToGameState(d.data() as DbGamePayload),
         id: d.id,
       }));
-      console.log(
-        "Querying games",
-        collSnap.docs.map(
-          (d) => new Date(d.data().lastModifiedAt.seconds * 1000)
-        )
-      );
-
       callback(data);
     },
     error: (err) => errorCallback(err.message),
