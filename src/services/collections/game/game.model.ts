@@ -7,8 +7,11 @@ import {
   Vote,
 } from "@/model/core.model";
 import { LanguageTemplate } from "../letterValueMap/languageTemplate.model";
-import { Timestamp } from "firebase/firestore";
 
+export interface Timestamp {
+  seconds: number;
+  nanoseconds: number;
+}
 interface DbGameBase {
   gameName: string;
   createdByUserId: string;

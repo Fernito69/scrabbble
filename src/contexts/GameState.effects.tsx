@@ -1,17 +1,11 @@
 import { MAX_PLAYERS } from "@/model/core.defaults";
-import { PlayerIds, Vote, VoteType } from "@/model/core.model";
-import {
-  useReshuffleGame,
-  useUpdateGame,
-} from "@/services/collections/game/game.hooks";
+import { PlayerIds } from "@/model/core.model";
+import { useUpdateGame } from "@/services/collections/game/game.hooks";
 import { DbGamePayload } from "@/services/collections/game/game.model";
 import {
-  buildMovePayload,
-  computeRemainingTilesScore,
   drawCards,
   playNotificationSound,
 } from "@/services/collections/game/game.utils";
-import { cloneDeep } from "lodash";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -24,7 +18,6 @@ export const useGameStateEffects = ({
   state,
   template,
   numPlayers,
-  isGameOrganizer,
   initialPlayerHand,
   initted,
   setInitted,
@@ -38,7 +31,6 @@ export const useGameStateEffects = ({
 
   // Mutations
   const updateGame = useUpdateGame(gameId);
-  const reshuffleGame = useReshuffleGame(gameId);
 
   /***************/
   // Indicate player turn
@@ -128,120 +120,9 @@ export const useGameStateEffects = ({
   }, [state, template, user]);
 
   /***************/
-  // Initial vote
-  /***************/
-  useEffect(() => {
-    if (!state || !isGameOrganizer) return;
-
-    if (numPlayers > 1 && !state.currentVote && !state.gameStarted) {
-      const currentVote = {
-        type: VoteType.START_VOTE,
-        voteFinished: false,
-        votes: state.playerIds
-          .filter(Boolean)
-          .map((id) => ({ playerId: id!, voted: null })),
-      } satisfies Vote;
-
-      updateGame({ currentVote });
-    }
-  }, [state?.currentVote, isGameOrganizer, numPlayers]);
-
-  /***************/
-  // Vote for proposed move
-  /***************/
-  useEffect(() => {
-    if (
-      !isGameOrganizer ||
-      state?.currentVote?.type !== VoteType.ACCEPT_PROPOSED_MOVE ||
-      !template
-    )
-      return;
-
-    const payload = buildMovePayload(state, template);
-
-    if (payload) updateGame(payload);
-  }, [state?.currentVote]);
-
-  /***************/
-  // Vote for initial hand reshuffle
-  /***************/
-  useEffect(() => {
-    if (
-      !isGameOrganizer ||
-      state?.currentVote?.type !== VoteType.INITIAL_RESHUFFLE ||
-      !template
-    )
-      return;
-
-    // Shuffle accepted
-    if (state.currentVote.votes.every((v) => !!v.voted)) {
-      reshuffleGame(state, template);
-    }
-    // Shuffle rejected
-    else if (state.currentVote.votes.every((v) => v.voted === false)) {
-      updateGame({
-        currentVote: null,
-      });
-    }
-  }, [state?.currentVote]);
-
-  /***************/
-  // Vote failsafe (I've experienced some weird bugs with firebase, some kind of race condition)
-  useEffect(() => {
-    const failSafeEligibleTypes = [
-      VoteType.INITIAL_RESHUFFLE,
-      VoteType.ACCEPT_PROPOSED_MOVE,
-      VoteType.START_VOTE,
-    ] as const;
-
-    if (
-      isGameOrganizer &&
-      state?.currentVote &&
-      failSafeEligibleTypes.includes(state.currentVote.type) &&
-      state.currentVote.votes.every((v) => v.voted === false)
-    ) {
-      console.log("Failsafe: resetting currentVote");
-      updateGame({ currentVote: null });
-    }
-  }, [state?.currentVote]);
-
-  /***************/
   // Update local player hand if a change is detected in the db
   /***************/
   useEffect(() => {
     setLocalPlayerHand(initialPlayerHand ?? DefaultGame.localPlayerHand);
   }, [initialPlayerHand]);
-
-  /***************/
-  // End of the game
-  /***************/
-  useEffect(() => {
-    if (!state || state.gameOver || !template || !state.gameStarted) return;
-
-    // Game is over if the pouch is empty and one player has no tiles
-    const [winningPlayerId] =
-      Object.entries(state.playerHands).find(
-        ([_, hand]) => hand.filter(Boolean).length === 0
-      ) ?? [];
-
-    if (state.tilePouch.length === 0 && winningPlayerId) {
-      // Winning player gets the points of the remaining tiles
-      const score = cloneDeep(state.score);
-      const points = computeRemainingTilesScore(state, template);
-
-      score.total[winningPlayerId] += points;
-      score.perTurn.push({
-        playerId: winningPlayerId,
-        turn: state.currentTurn + 1,
-        score: points,
-      });
-
-      const payload = {
-        gameOver: true,
-        score,
-      } satisfies Partial<DbGamePayload>;
-
-      updateGame(payload);
-    }
-  }, [state?.tilePouch]);
 };

@@ -1,8 +1,7 @@
 import { Board, GameState } from "@/model/core.model";
-import { DbGamePayload } from "./game.model";
+import { DbGamePayload, Timestamp } from "./game.model";
 import { LanguageTemplate } from "../letterValueMap/languageTemplate.model";
 import { EMPTY_BOARD } from "@/model/core.defaults";
-import { Timestamp } from "firebase/firestore";
 
 export const mapDbGamePayloadToGameState = (
   dbGame: DbGamePayload
