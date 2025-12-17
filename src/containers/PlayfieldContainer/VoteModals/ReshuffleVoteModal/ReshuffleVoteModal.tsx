@@ -12,6 +12,7 @@ import { Vote } from "@/model/core.model";
 import { useUpdateGame } from "@/services/collections/game/game.hooks";
 import { useTranslation } from "react-i18next";
 import { PlayerVotesButtons } from "../PlayerVotesButtons/PlayerVotesButtons";
+import { Chat } from "@/components/Chat/Chat";
 
 interface Props {
   vote: Vote;
@@ -41,7 +42,7 @@ export const ReshuffleVoteModal = ({ vote }: Props) => {
   // Render
   return (
     <Dialog open>
-      <DialogContent>
+      <DialogContent className="min-w-[800px]">
         <DialogHeader>
           <DialogTitle>
             <div className="flex flex-row gap-2 items-center">
@@ -57,10 +58,15 @@ export const ReshuffleVoteModal = ({ vote }: Props) => {
             {t("reshuffleVote.description")}
           </DialogDescription>
         </DialogHeader>
-        <PlayerVotesButtons
-          votes={vote.votes}
-          onChangeVote={handleChangeVote}
-        />
+        <div className="flex flex-row flex-1 gap-2 items-center">
+          <div className="h-fit">
+            <PlayerVotesButtons
+              votes={vote.votes}
+              onChangeVote={handleChangeVote}
+            />
+          </div>
+          <Chat />
+        </div>
       </DialogContent>
       <DialogFooter></DialogFooter>
     </Dialog>
