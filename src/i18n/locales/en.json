@@ -7,6 +7,7 @@
     "creatingGame": "Creating Game...",
     "signOut": "Sign Out",
     "yourGames": "Your ongoing matches",
+    "pastGames": "Past matches",
     "createdAt": "Created at",
     "players": "Players",
     "scores": "Scores",
@@ -19,7 +20,11 @@
     "deleteGame": "Delete game",
     "deleteGameConfirm": "Are you sure you want to delete this game?",
     "waitingForPlayers": "Waiting for more players to join...",
-    "gameName": "Game name"
+    "gameName": "Game name",
+    "lastModifiedAt": "Fecha de volá de raja",
+    "winner": "Winner!",
+    "lastTurn": "Last turn",
+    "error": "Error loading games"
   },
   "languageSelect": {
     "title": "Select language",

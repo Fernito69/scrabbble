@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { Loader2 } from "lucide-react";
 import { PropsWithChildren } from "react";
 interface Props extends PropsWithChildren {
   className?: string;
@@ -12,7 +13,9 @@ export const OverlayWithLoader = ({ children, className }: Props) => {
       )}
     >
       <div className="flex flex-col items-center gap-2 h-full justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+        <div className="flex flex-col gap-4 relative min-h-[200px] items-center justify-center">
+          <Loader2 className="h-12 w-12 animate-spin text-blue-400" />
+        </div>
         {children}
       </div>
     </div>

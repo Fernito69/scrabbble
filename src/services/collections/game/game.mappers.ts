@@ -3,6 +3,13 @@ import { DbGamePayload, Timestamp } from "./game.model";
 import { LanguageTemplate } from "../letterValueMap/languageTemplate.model";
 import { EMPTY_BOARD } from "@/model/core.defaults";
 
+export const timestampToDate = (date?: Timestamp | Date): Date | undefined =>
+  date
+    ? (((date as Timestamp).seconds
+        ? new Date((date as Timestamp).seconds * 1000)
+        : date) as Date)
+    : undefined;
+
 export const mapDbGamePayloadToGameState = (
   dbGame: DbGamePayload
 ): GameState => {
@@ -19,10 +26,9 @@ export const mapDbGamePayloadToGameState = (
     currentVote: dbGame.currentVote ?? undefined,
     tilePouch: dbGame.tilePouch,
     playerHands: dbGame.playerHands,
-    createdAt: ((dbGame.createdAt as Timestamp).seconds
-      ? new Date((dbGame.createdAt as Timestamp).seconds * 1000)
-      : dbGame.createdAt) as Date,
+    createdAt: timestampToDate(dbGame.createdAt)!,
     createdByUserId: dbGame.createdByUserId,
+    lastModifiedAt: timestampToDate(dbGame.lastModifiedAt),
   } satisfies GameState;
 };
 
@@ -46,5 +52,6 @@ export const mapGameStateToDbGamePayload = (
     playerHands: gameState.playerHands,
     createdAt: gameState.createdAt,
     createdByUserId: gameState.createdByUserId,
+    lastModifiedAt: gameState.lastModifiedAt,
   } satisfies Partial<DbGamePayload>;
 };

@@ -51,7 +51,7 @@ export const BoardComponent = ({
     !state.gameStarted && state.playerIds.filter(Boolean).length === 1;
 
   return (
-    <div className="flex justify-center items-center relative">
+    <div className="flex justify-center items-center relative min-h-[200px]">
       {showWaitingForPlayers && (
         <OverlayWithLoader>
           <div className="text-2xl font-semibold">

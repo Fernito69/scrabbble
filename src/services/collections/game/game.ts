@@ -134,3 +134,34 @@ export const getLastNPlayerGamesSnapshot = (
 
   return unsubscribe;
 };
+
+// TODO: refactor
+// With query: Query<DocumentData, DocumentData> as parameter
+export const getLastNPastGamesSnapshot = (
+  db: Firestore,
+  userId: string,
+  n: number,
+  callback: (data: (GameState & { id: string })[]) => void,
+  errorCallback: (err: string) => void
+) => {
+  const q = query(
+    collection(db, GAME_COLLECTION),
+    where("playerIds", "array-contains", userId),
+    where("gameOver", "==", true),
+    orderBy("lastModifiedAt", "desc"),
+    limit(n)
+  );
+
+  const unsubscribe = onSnapshot(q, {
+    next: (collSnap) => {
+      const data = collSnap.docs.map((d) => ({
+        ...mapDbGamePayloadToGameState(d.data() as DbGamePayload),
+        id: d.id,
+      }));
+      callback(data);
+    },
+    error: (err) => errorCallback(err.message),
+  });
+
+  return unsubscribe;
+};

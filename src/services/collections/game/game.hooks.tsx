@@ -7,6 +7,7 @@ import {
   createGame,
   deleteGame,
   getGameSnapshot,
+  getLastNPastGamesSnapshot,
   getLastNPlayerGamesSnapshot,
   proposeMove,
   reshuffleInitialPlayerHands,
@@ -109,6 +110,37 @@ export const useGetLastNPlayerGames = (
   useEffect(
     () =>
       getLastNPlayerGamesSnapshot(
+        db,
+        user!.uid,
+        n,
+        (data) => {
+          setGames(data);
+        },
+        (err) => {
+          setError(err);
+        }
+      ),
+    []
+  );
+
+  return { playerGames, error };
+};
+
+export const useGetLastNPastGames = (
+  n: number = 10
+): {
+  playerGames: (GameState & { id: string })[] | undefined;
+  error: string | undefined;
+} => {
+  const { user } = useAuth();
+  const [playerGames, setGames] = useState<
+    (GameState & { id: string })[] | undefined
+  >();
+  const [error, setError] = useState<string | undefined>();
+
+  useEffect(
+    () =>
+      getLastNPastGamesSnapshot(
         db,
         user!.uid,
         n,

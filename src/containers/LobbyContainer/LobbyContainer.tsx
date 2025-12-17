@@ -7,6 +7,9 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LanguageSelectDialog } from "./LanguageSelectDialog/LanguageSelectDialog";
 import { OngoingGames } from "./OngoingGames/OngoingGames";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { PastGames } from "./PastGames/PastGames";
+import { Separator } from "@/components/ui/separator";
 
 export const LobbyContainer = () => {
   const { t } = useTranslation();
@@ -39,7 +42,7 @@ export const LobbyContainer = () => {
               disabled={isCreatingGame}
               className="w-full px-6 py-3 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isCreatingGame ? t("lobby.creatingGame") : t("lobby.createGame")}
+              {t("lobby.createGame")}
             </button>
             <LanguageSwitcher />
           </div>
@@ -48,7 +51,19 @@ export const LobbyContainer = () => {
           <LanguageSelectDialog close={() => setIsCreatingGame(false)} />
         )}
       </div>
-      <OngoingGames />
+      <Separator className="my-4 text-muted-foreground w-full max-w-2xl" />
+      <Tabs defaultValue="ongoing">
+        <TabsList className="w-full grid grid-cols-2 gap-4">
+          <TabsTrigger value="ongoing">{t("lobby.yourGames")}</TabsTrigger>
+          <TabsTrigger value="waiting">{t("lobby.pastGames")}</TabsTrigger>
+        </TabsList>
+        <TabsContent value="ongoing">
+          <OngoingGames />
+        </TabsContent>
+        <TabsContent value="waiting">
+          <PastGames />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

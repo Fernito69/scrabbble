@@ -1,5 +1,4 @@
 import { BoardDiorama } from "@/components/BoardDiorama/BoardDiorama";
-import { ConfirmationDialog } from "@/components/Dialog/ConfirmationDialog";
 import { OverlayWithLoader } from "@/components/OverlayWithLoader/OverlayWithLoader";
 import { UserAvatar } from "@/components/UserAvatar";
 import {
@@ -16,53 +15,19 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useAuth } from "@/contexts/AuthContext";
-import { VoteType } from "@/model/core.model";
-import {
-  useDeleteGame,
-  useGetLastNPlayerGames,
-} from "@/services/collections/game/game.hooks";
-import {
-  getDefaultGameName,
-  playNotificationSound,
-} from "@/services/collections/game/game.utils";
-import { Trash2 } from "lucide-react";
-import { useEffect, useMemo, useRef } from "react";
+import { useGetLastNPastGames } from "@/services/collections/game/game.hooks";
+import { getDefaultGameName } from "@/services/collections/game/game.utils";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-export const OngoingGames = () => {
+export const PastGames = () => {
   // Data
-  const { playerGames, error } = useGetLastNPlayerGames();
+  const { playerGames, error } = useGetLastNPastGames();
   const { user } = useAuth();
-
-  // Mutations
-  const deleteGame = useDeleteGame();
 
   // Hooks
   const { t } = useTranslation();
   const navigate = useNavigate();
-
-  const numGamesWhereItsPlayersTurn: number = useMemo(
-    () =>
-      (playerGames ?? []).filter((g) =>
-        g.currentVote?.type === VoteType.ACCEPT_PROPOSED_MOVE
-          ? g.currentVote.votes.some(
-              (v) => v.playerId === user!.uid && !v.voted
-            )
-          : g.currentPlayerId === user!.uid
-      ).length,
-    [playerGames]
-  );
-  const prevNumGamesWhereItsPlayersTurn = useRef<number>(
-    numGamesWhereItsPlayersTurn
-  );
-
-  useEffect(() => {
-    if (numGamesWhereItsPlayersTurn > prevNumGamesWhereItsPlayersTurn.current) {
-      playNotificationSound(3);
-    }
-    prevNumGamesWhereItsPlayersTurn.current = numGamesWhereItsPlayersTurn;
-  }, [numGamesWhereItsPlayersTurn]);
 
   // Render
   return (
@@ -80,15 +45,11 @@ export const OngoingGames = () => {
                 <TableHeader className="bg-muted text-xs">
                   <TableRow>
                     <TableHead colSpan={2}>{t("lobby.gameName")}</TableHead>
-                    <TableHead>{t("lobby.createdAt")}</TableHead>
+                    <TableHead>{t("lobby.lastModifiedAt")}</TableHead>
                     <TableHead>{t("lobby.players")}</TableHead>
                     <TableHead>{t("lobby.scores")}</TableHead>
-                    <TableHead>{t("lobby.currentMove")}</TableHead>
-                    <TableHead>{t("lobby.currentTurn")}</TableHead>
-                    <TableHead className="whitespace-wrap">
-                      {t("lobby.tilesLeft")}
-                    </TableHead>
-                    <TableHead className="w-1" />
+                    <TableHead>{t("lobby.winner")}</TableHead>
+                    <TableHead>{t("lobby.lastTurn")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -96,7 +57,6 @@ export const OngoingGames = () => {
                     const playerIds = game.playerIds.filter(
                       Boolean
                     ) as string[];
-                    const playerIsCreator = user?.uid === game.createdByUserId;
 
                     const maxLength = 30;
                     const fullName =
@@ -106,6 +66,10 @@ export const OngoingGames = () => {
                     const shownName = nameTooLong
                       ? fullName.slice(0, maxLength) + "…"
                       : fullName;
+
+                    const [winnerId] = Object.entries(game.score.total).sort(
+                      ([_, b1], [__, b2]) => b2 - b1
+                    )[0];
 
                     return (
                       <TableRow
@@ -135,7 +99,9 @@ export const OngoingGames = () => {
                           <BoardDiorama game={game} />
                         </TableCell>
                         <TableCell>
-                          {new Date(game.createdAt).toLocaleString()}
+                          {new Date(
+                            game?.lastModifiedAt ?? game.createdAt
+                          ).toLocaleString()}
                         </TableCell>
                         <TableCell>
                           <div className="flex flex-row gap-2 whitespace-nowrap tracking-tight">
@@ -156,60 +122,15 @@ export const OngoingGames = () => {
                         </TableCell>
                         <TableCell>
                           <div className="flex flex-row gap-2 items-center">
-                            {game.currentPlayerId != null ? (
-                              game.currentVote ? (
-                                game.playerIds
-                                  .filter(
-                                    (id) =>
-                                      id !== null &&
-                                      id !== game.currentPlayerId &&
-                                      game.currentVote?.votes.some(
-                                        (v) => v.playerId === id && !v.voted
-                                      )
-                                  )
-                                  .map((id, i) => (
-                                    <UserAvatar
-                                      key={i}
-                                      userId={id!}
-                                      bounce={id === user!.uid}
-                                      shadingIndex={game.playerIds.findIndex(
-                                        (uid) => uid === id
-                                      )}
-                                      diameter={28}
-                                    />
-                                  ))
-                              ) : (
-                                <UserAvatar
-                                  userId={game.currentPlayerId}
-                                  bounce={game.currentPlayerId === user!.uid}
-                                  shadingIndex={game.playerIds.indexOf(
-                                    game.currentPlayerId
-                                  )}
-                                  diameter={28}
-                                />
-                              )
-                            ) : (
-                              "-"
-                            )}
+                            <UserAvatar
+                              userId={winnerId}
+                              bounce={winnerId === user!.uid}
+                              shadingIndex={game.playerIds.indexOf(winnerId)}
+                              diameter={28}
+                            />
                           </div>
                         </TableCell>
                         <TableCell>{game.currentTurn || "-"}</TableCell>
-                        <TableCell>{game.tilePouch.length}</TableCell>
-                        <TableCell
-                          onClick={(e) => e.stopPropagation()}
-                          className="w-1"
-                        >
-                          {playerIsCreator && (
-                            <ConfirmationDialog
-                              triggerElement={
-                                <Trash2 className="text-red-600 w-4 h-4 cursor-pointer hover:text-red-700" />
-                              }
-                              title={t("lobby.deleteGame")}
-                              description={t("lobby.deleteGameConfirm")}
-                              onAccept={() => deleteGame(game.id)}
-                            />
-                          )}
-                        </TableCell>
                       </TableRow>
                     );
                   })}

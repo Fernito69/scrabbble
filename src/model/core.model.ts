@@ -65,6 +65,7 @@ export enum Bonus {
 export type Tile = {
   ownerId: string;
   letter: LetterLiteral;
+  collapsedWildcard?: LetterLiteral;
 };
 
 export type Square = {
@@ -128,6 +129,7 @@ export type Move = {
   x: number;
   y: number;
   letter: LetterLiteral;
+  collapsedWildcard?: LetterLiteral;
 };
 export type PlayerMove = {
   playerId: string;
@@ -166,6 +168,7 @@ export type GameState = {
   currentVote: Vote | undefined;
   createdAt: Date;
   createdByUserId: string;
+  lastModifiedAt?: Date;
 };
 
 // For now just boolean votes

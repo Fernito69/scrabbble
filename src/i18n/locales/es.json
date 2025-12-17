@@ -7,6 +7,7 @@
     "creatingGame": "Creando Partida...",
     "signOut": "Cerrar Sesión",
     "yourGames": "Tus partidas en curso",
+    "pastGames": "Partidas pasadas",
     "createdAt": "Fecha de creación",
     "players": "Jugadores",
     "scores": "Puntuación",
@@ -19,7 +20,11 @@
     "deleteGame": "Eliminar partida",
     "deleteGameConfirm": "¿Estás seguro/a de que quieres eliminar esta partida?",
     "waitingForPlayers": "Esperando a que se unan más jugadores...",
-    "gameName": "Nombre de la partida"
+    "gameName": "Nombre de la partida",
+    "lastModifiedAt": "Última jugada",
+    "winner": "¡Ganador!",
+    "lastTurn": "Último turno",
+    "error": "Error al cargar partidas"
   },
   "languageSelect": {
     "title": "Seleccionar idioma",

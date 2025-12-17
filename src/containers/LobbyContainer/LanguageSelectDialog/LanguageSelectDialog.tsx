@@ -75,7 +75,7 @@ export const LanguageSelectDialog = ({ close }: Props) => {
   // Render
   return (
     <Dialog open onOpenChange={close}>
-      <DialogContent>
+      <DialogContent className="relative min-h-[200px]">
         {isCreating && (
           <OverlayWithLoader>
             <p className="text-sm text-muted-foreground">
