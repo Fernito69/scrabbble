@@ -47,7 +47,7 @@ export const ScoreBoard = () => {
 
   // Render
   return (
-    <div className="rounded-lg border w-1/2">
+    <div className="rounded-lg border w-1/2 h-fit overflow-hidden">
       <Table>
         <TableHeader className="bg-muted">
           <TableRow>

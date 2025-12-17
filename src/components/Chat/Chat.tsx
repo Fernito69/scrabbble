@@ -4,7 +4,7 @@ import {
   useAddMessage,
   useGetLastNChatMessages,
 } from "@/services/collections/game/chat/chat.hooks";
-import { Send, ChevronRight, ChevronLeft } from "lucide-react";
+import { Send, ChevronRight, ChevronLeft, MessagesSquare } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { UserAvatar } from "../UserAvatar";
@@ -70,23 +70,29 @@ export const Chat = () => {
       <div className="flex flex-col border-2 border-border rounded-lg bg-card shadow-md">
         <button
           onClick={() => setIsCollapsed(false)}
-          className="p-3 hover:bg-accent transition-colors flex items-center gap-2"
+          className="p-3 hover:bg-accent transition-colors flex items-center gap-2 h-full flex flex-col justify-center"
           title={t("chat.expand")}
         >
           <ChevronLeft className="h-5 w-5" />
-          <span className="font-semibold">{t("chat.title")}</span>
+          <MessagesSquare className="h-5 w-5" />
         </button>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col h-[600px] w-[300px] border-2 border-border rounded-lg bg-card shadow-md">
+    <div className="flex flex-col h-[600px] w-[300px] border-2 border-border rounded-lg bg-card shadow-md overflow-hidden">
       {/* Header */}
-      <div className="border-b bg-gray-100 border-border p-3 flex justify-between items-center">
-        <h3 className="font-semibold text-lg">{t("chat.title")}</h3>
+      <div
+        className="border-b bg-gray-100 border-border p-3 flex justify-between items-center cursor-pointer h-12"
+        onClick={() => setIsCollapsed(true)}
+      >
+        {
+          <h3 className="font-semibold text-lg flex flex-row gap-2 items-center">
+            {t("chat.title")} <MessagesSquare className="h-5 w-5" />
+          </h3>
+        }
         <button
-          onClick={() => setIsCollapsed(true)}
           className="p-1 hover:bg-accent rounded transition-colors"
           title={t("chat.collapse")}
         >
@@ -128,7 +134,9 @@ export const Chat = () => {
                         <UserAvatar userId={message.playerId} diameter={20} />
                       </div>
                     )}
-                    <div className="text-sm break-words text-start">{message.text}</div>
+                    <div className="text-sm break-words text-start">
+                      {message.text}
+                    </div>
                     <div
                       className={cn(
                         "absolute bottom-[1px] text-[6px] mt-1 right-1",
