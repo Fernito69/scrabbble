@@ -123,7 +123,7 @@ export const Chat = () => {
                   }`}
                 >
                   <div
-                    className={`max-w-[95%] rounded-lg p-2 flex flex-row items-center relative p-2 ${
+                    className={`max-w-[95%] rounded-lg p-2 flex flex-row items-center relative p-2 shadow-md ${
                       isOwnMessage
                         ? "bg-primary text-primary-foreground"
                         : "bg-muted text-foreground"
