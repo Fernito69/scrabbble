@@ -25,9 +25,10 @@ export const Chat = () => {
   // Play notification sound and scroll to bottom
   useEffect(() => {
     if (messagesContainerRef.current) {
-      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+      messagesContainerRef.current.scrollTop =
+        messagesContainerRef.current.scrollHeight;
     }
-    if (messages?.[0].playerId === user?.uid) return;
+    if (messages?.[0]?.playerId === user?.uid) return;
     playNotificationSound(3);
   }, [messages]);
 
@@ -85,7 +86,10 @@ export const Chat = () => {
       </div>
 
       {/* Messages */}
-      <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-3 space-y-2">
+      <div
+        ref={messagesContainerRef}
+        className="flex-1 overflow-y-auto p-3 space-y-2"
+      >
         {!messages || messages.length === 0 ? (
           <div className="text-muted-foreground text-sm text-center mt-4">
             {t("chat.noMessages")}
