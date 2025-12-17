@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import { addChatMessage, getLastNChatMessagesSnapshot } from "./chat";
 import { ChatMessage, ChatMessageBase } from "./chat.model";
 
-export const useGetLastNPlayerGames = (
+export const useGetLastNChatMessages = (
   gameId: string,
-  limit: number = 10
+  limit: number = 50
 ): {
   messages: ChatMessage[] | undefined;
   error: string | undefined;
@@ -26,7 +26,7 @@ export const useGetLastNPlayerGames = (
           setError(err);
         }
       ),
-    []
+    [gameId, limit]
   );
 
   return { messages, error };
@@ -42,3 +42,6 @@ export const useAddMessage = (gameId: string) => {
     }
   };
 };
+
+// Backward compatibility
+export const useGetLastNPlayerGames = useGetLastNChatMessages;

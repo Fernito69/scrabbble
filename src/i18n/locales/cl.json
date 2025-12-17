@@ -98,5 +98,14 @@
     "english": "Inglés 🇬🇧/🇺🇸",
     "spanish": "Español chile 🇨🇱",
     "chilean": "Español 🇪🇸"
+  },
+  "chat": {
+    "title": "Chat",
+    "noMessages": "No hay mensajes todavía. ¡Parte la conversa!",
+    "placeholder": "Escribe un mensaje...",
+    "you": "Tú",
+    "error": "Error al cargar los mensajes",
+    "collapse": "Contraer chat",
+    "expand": "Expandir chat"
   }
 }

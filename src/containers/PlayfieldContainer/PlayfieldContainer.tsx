@@ -22,6 +22,7 @@ import { ReshuffleVoteModal } from "./VoteModals/ReshuffleVoteModal/ReshuffleVot
 import { useClickToSelect } from "./useClickToSelect.hook";
 import { YourTurnMessage } from "./YourTurnMessage/YourTurnMessage";
 import { UserConfigPopover } from "@/components/UserConfigPopover/UserConfigPopover";
+import { Chat } from "@/components/Chat/Chat";
 
 export const PlayfieldContainer = () => {
   // Hooks
@@ -189,7 +190,10 @@ export const PlayfieldContainer = () => {
                 </>
               )}
             </div>
-            <BoardComponent clickToSelectHandlers={clickToSelectHandlers} />
+            <div className="flex gap-4 justify-center items-start">
+              <BoardComponent clickToSelectHandlers={clickToSelectHandlers} />
+              <Chat />
+            </div>
           </div>
           {showReshuffleModal && (
             <ReshuffleVoteModal vote={state!.currentVote!} />

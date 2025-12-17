@@ -98,5 +98,14 @@
     "selectLanguage": "Seleccionar Idioma",
     "english": "Inglés 🇬🇧/🇺🇸",
     "spanish": "Español 🇪🇸"
+  },
+  "chat": {
+    "title": "Chat",
+    "noMessages": "No hay mensajes aún. ¡Inicia la conversación!",
+    "placeholder": "Escribe un mensaje...",
+    "you": "Tú",
+    "error": "Error al cargar mensajes",
+    "collapse": "Contraer chat",
+    "expand": "Expandir chat"
   }
 }
