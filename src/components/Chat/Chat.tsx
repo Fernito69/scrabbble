@@ -46,7 +46,7 @@ export const Chat = () => {
     if (!inputValue.trim() || !user) return;
 
     try {
-      await addMessage({
+      addMessage({
         text: inputValue,
         playerId: user.uid,
       });
@@ -158,9 +158,13 @@ export const Chat = () => {
       {/* Input */}
       <form onSubmit={handleSendMessage} className="border-t border-border p-3">
         <div className="flex gap-2">
-          <input
-            type="text"
+          <textarea
             value={inputValue}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                handleSendMessage(e);
+              }
+            }}
             onChange={(e) => setInputValue(e.target.value)}
             placeholder={t("chat.placeholder")}
             className="flex-1 px-3 py-2 text-sm border border-input rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-ring"
