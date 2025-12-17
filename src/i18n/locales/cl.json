@@ -23,7 +23,8 @@
     "gameName": "Nombre de la partida",
     "winner": "¡Ganador!",
     "lastTurn": "Último turno",
-    "error": "Error al cargar partidas"
+    "error": "Error al cargar partidas",
+    "noPastGames": "No has terminado ninguna partida 😢"
   },
   "userConfig": {
     "changeName": "Cambiar nombre",

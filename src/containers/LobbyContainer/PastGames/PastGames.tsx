@@ -139,11 +139,11 @@ export const PastGames = () => {
             </div>
           </>
         ) : playerGames && !error ? (
-          <div className="text-center text-xl font-bold tracking-tight">
-            {t("lobby.noGames")}
+          <div className="text-center text-xl font-bold tracking-tight mt-4">
+            {t("lobby.noPastGames")}
           </div>
         ) : error ? (
-          <div className="text-center text-xl font-bold tracking-tight">
+          <div className="text-center text-xl font-bold tracking-tight mt-4">
             {t("lobby.error")}
           </div>
         ) : null}

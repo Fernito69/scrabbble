@@ -24,7 +24,8 @@
     "lastModifiedAt": "Última jugada",
     "winner": "¡Ganador!",
     "lastTurn": "Último turno",
-    "error": "Error al cargar partidas"
+    "error": "Error al cargar partidas",
+    "noPastGames": "No has terminado ninguna partida 😢"
   },
   "languageSelect": {
     "title": "Seleccionar idioma",

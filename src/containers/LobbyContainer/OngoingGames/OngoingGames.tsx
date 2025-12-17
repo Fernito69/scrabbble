@@ -218,11 +218,11 @@ export const OngoingGames = () => {
             </div>
           </>
         ) : playerGames && !error ? (
-          <div className="text-center text-xl font-bold tracking-tight">
+          <div className="text-center text-xl font-bold tracking-tight mt-4">
             {t("lobby.noGames")}
           </div>
         ) : error ? (
-          <div className="text-center text-xl font-bold tracking-tight">
+          <div className="text-center text-xl font-bold tracking-tight mt-4">
             {t("lobby.error")}
           </div>
         ) : null}

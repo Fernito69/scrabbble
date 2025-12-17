@@ -24,7 +24,8 @@
     "lastModifiedAt": "Fecha de volá de raja",
     "winner": "Winner!",
     "lastTurn": "Last turn",
-    "error": "Error loading games"
+    "error": "Error loading games",
+    "noPastGames": "You haven't finished any games yet 😢"
   },
   "languageSelect": {
     "title": "Select language",
