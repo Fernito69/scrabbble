@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { UserAvatar } from "../UserAvatar";
 import { playNotificationSound } from "@/services/collections/game/game.utils";
+import { cn } from "@/lib/utils";
 
 export const Chat = () => {
   const { t } = useTranslation();
@@ -24,13 +25,21 @@ export const Chat = () => {
 
   // Play notification sound and scroll to bottom
   useEffect(() => {
+    scrollToChatBottom();
+    if (messages?.[0]?.playerId === user?.uid) return;
+    playNotificationSound(3);
+  }, [messages]);
+
+  useEffect(() => {
+    scrollToChatBottom();
+  }, [isCollapsed]);
+
+  const scrollToChatBottom = () => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop =
         messagesContainerRef.current.scrollHeight;
     }
-    if (messages?.[0]?.playerId === user?.uid) return;
-    playNotificationSound(3);
-  }, [messages]);
+  };
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -108,7 +117,7 @@ export const Chat = () => {
                   }`}
                 >
                   <div
-                    className={`max-w-[95%] rounded-lg p-2 flex flex-row items-center p-2 ${
+                    className={`max-w-[95%] rounded-lg p-2 flex flex-row items-center relative p-2 ${
                       isOwnMessage
                         ? "bg-primary text-primary-foreground"
                         : "bg-muted text-foreground"
@@ -119,13 +128,18 @@ export const Chat = () => {
                         <UserAvatar userId={message.playerId} diameter={20} />
                       </div>
                     )}
-                    <div className="text-sm break-words">{message.text}</div>
-                    {/* <div className="text-xs opacity-50 mt-1">
+                    <div className="text-sm break-words text-start">{message.text}</div>
+                    <div
+                      className={cn(
+                        "absolute bottom-[1px] text-[6px] mt-1 right-1",
+                        isOwnMessage ? "text-blue-200" : "text-black"
+                      )}
+                    >
                       {message.createdAt.toLocaleTimeString([], {
                         hour: "2-digit",
                         minute: "2-digit",
                       })}
-                    </div> */}
+                    </div>
                   </div>
                 </div>
               );
