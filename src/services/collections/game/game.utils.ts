@@ -415,6 +415,7 @@ export const getWildcardLetter = (
 
   if (
     (letter === "0" && collapsedWildcard == null) ||
+    collapsedWildcard === "0" ||
     (collapsedWildcard != null &&
       !Object.keys(template!.quantityMap).includes(
         collapsedWildcard.toLowerCase()
