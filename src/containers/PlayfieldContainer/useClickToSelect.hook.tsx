@@ -59,14 +59,22 @@ export const useClickToSelect = () => {
         selectedTile.x !== undefined &&
         selectedTile.y !== undefined
       ) {
-        const { collapsedWildcard, hasError } = getWildcardLetter(
-          tile.letter,
-          template!,
-          t("playfield.wildcardPrompt")
-        );
-        if (hasError) {
-          toast.error(t("playfield.invalidWildcard"));
-          return;
+        let hasError = false;
+        let collapsedWildcard: LetterLiteral | undefined =
+          localProposedMove.find(
+            (m) => m.x === tile.x && m.y === tile.y
+          )?.collapsedWildcard;
+
+        if (collapsedWildcard == null) {
+          ({ collapsedWildcard, hasError } = getWildcardLetter(
+            tile.letter,
+            template!,
+            t("playfield.wildcardPrompt")
+          ));
+          if (hasError) {
+            toast.error(t("playfield.invalidWildcard"));
+            return;
+          }
         }
 
         // Move tile to the selected empty board square
