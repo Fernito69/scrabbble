@@ -25,45 +25,47 @@ export const LobbyContainer = () => {
   const userName = userConfig?.displayName ?? user?.email;
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background p-8">
-      <div className="w-full max-w-2xl space-y-6">
-        <div className="text-center space-y-2">
-          <ScrabbbbbbleLogo size="text-4xl" />
-          <div className="text-muted-foreground items-center justify-center flex flex-row gap-2">
-            {t("lobby.welcome", { userName })}
-            <UserConfigPopover avatarSize={40} />
+    <>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background p-8">
+        <div className="w-full max-w-2xl space-y-6">
+          <div className="text-center space-y-2">
+            <ScrabbbbbbleLogo size="text-4xl" />
+            <div className="text-muted-foreground items-center justify-center flex flex-row gap-2">
+              {t("lobby.welcome", { userName })}
+              <UserConfigPopover avatarSize={40} />
+            </div>
           </div>
-        </div>
 
-        <div className="flex flex-col gap-4">
-          <div className="flex gap-4">
-            <button
-              onClick={() => setIsCreatingGame(true)}
-              disabled={isCreatingGame}
-              className="w-full px-6 py-3 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {t("lobby.createGame")}
-            </button>
-            <LanguageSwitcher />
+          <div className="flex flex-col gap-4">
+            <div className="flex gap-4">
+              <button
+                onClick={() => setIsCreatingGame(true)}
+                disabled={isCreatingGame}
+                className="w-full px-6 py-3 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {t("lobby.createGame")}
+              </button>
+              <LanguageSwitcher />
+            </div>
           </div>
         </div>
-        {isCreatingGame && (
-          <LanguageSelectDialog close={() => setIsCreatingGame(false)} />
-        )}
+        <Separator className="my-4 text-muted-foreground w-full max-w-2xl" />
+        <Tabs defaultValue="ongoing">
+          <TabsList className="w-full grid grid-cols-2 gap-4">
+            <TabsTrigger value="ongoing">{t("lobby.yourGames")}</TabsTrigger>
+            <TabsTrigger value="waiting">{t("lobby.pastGames")}</TabsTrigger>
+          </TabsList>
+          <TabsContent value="ongoing">
+            <OngoingGames />
+          </TabsContent>
+          <TabsContent value="waiting">
+            <PastGames />
+          </TabsContent>
+        </Tabs>
       </div>
-      <Separator className="my-4 text-muted-foreground w-full max-w-2xl" />
-      <Tabs defaultValue="ongoing">
-        <TabsList className="w-full grid grid-cols-2 gap-4">
-          <TabsTrigger value="ongoing">{t("lobby.yourGames")}</TabsTrigger>
-          <TabsTrigger value="waiting">{t("lobby.pastGames")}</TabsTrigger>
-        </TabsList>
-        <TabsContent value="ongoing">
-          <OngoingGames />
-        </TabsContent>
-        <TabsContent value="waiting">
-          <PastGames />
-        </TabsContent>
-      </Tabs>
-    </div>
+      {isCreatingGame && (
+        <LanguageSelectDialog close={() => setIsCreatingGame(false)} />
+      )}
+    </>
   );
 };
