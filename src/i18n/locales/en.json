@@ -93,7 +93,9 @@
     "inviteMessage": "You have been invited to a game of Scrabble! {{url}}",
     "linkCopied": "Invitation link copied to clipboard!",
     "gameName": "Game name:",
-    "awaitingApproval": "Waiting for:"
+    "awaitingApproval": "Waiting for:",
+    "wildcardPrompt": "What letter do you want to use for the wildcard?",
+    "invalidWildcard": "The wildcard is invalid, please try another letter"
   },
   "playerVotes": {
     "accept": "Accept",

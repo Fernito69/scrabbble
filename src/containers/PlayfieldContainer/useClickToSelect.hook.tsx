@@ -1,10 +1,14 @@
 import { useGameContext } from "@/contexts/GameState.context";
 import {
   LetterLiteral,
+  Move,
   PlayerHand as PlayerHandType,
 } from "@/model/core.model";
+import { getWildcardLetter } from "@/services/collections/game/game.utils";
 import { arrayMove } from "@dnd-kit/sortable";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 export interface SelectedTile {
   letter?: LetterLiteral; // Optional - undefined means empty square/destination selected
@@ -22,9 +26,12 @@ export const useClickToSelect = () => {
     localPlayerHand,
     localProposedMove,
     setLocalPlayerHand,
+    template,
     setLocalProposedMove,
     isMyTurn,
   } = useGameContext();
+
+  const { t } = useTranslation();
 
   const [selectedTile, setSelectedTile] = useState<SelectedTile | null>(null);
 
@@ -47,7 +54,21 @@ export const useClickToSelect = () => {
 
     // If we have an empty destination selected, move this tile there
     if (selectedTile && !selectedTile.letter && tile.letter) {
-      if (selectedTile.source === "board" && selectedTile.x !== undefined && selectedTile.y !== undefined) {
+      if (
+        selectedTile.source === "board" &&
+        selectedTile.x !== undefined &&
+        selectedTile.y !== undefined
+      ) {
+        const { collapsedWildcard, hasError } = getWildcardLetter(
+          tile.letter,
+          template!,
+          t("playfield.wildcardPrompt")
+        );
+        if (hasError) {
+          toast.error(t("playfield.invalidWildcard"));
+          return;
+        }
+
         // Move tile to the selected empty board square
         if (tile.source === "hand" && tile.index !== undefined) {
           // Move from hand to selected board square
@@ -55,19 +76,33 @@ export const useClickToSelect = () => {
           newHand[tile.index] = null;
           const newProposedMove = [
             ...localProposedMove,
-            { x: selectedTile.x, y: selectedTile.y, letter: tile.letter },
+            {
+              x: selectedTile.x,
+              y: selectedTile.y,
+              letter: tile.letter,
+              collapsedWildcard,
+            } satisfies Move,
           ];
 
           setLocalPlayerHand(newHand as PlayerHandType);
           setLocalProposedMove(newProposedMove);
           setSelectedTile(null);
           return;
-        } else if (tile.source === "board" && tile.x !== undefined && tile.y !== undefined) {
+        } else if (
+          tile.source === "board" &&
+          tile.x !== undefined &&
+          tile.y !== undefined
+        ) {
           // Move from board to selected board square
           const newProposedMove = localProposedMove.filter(
             (m) => !(m.x === tile.x && m.y === tile.y)
           );
-          newProposedMove.push({ x: selectedTile.x, y: selectedTile.y, letter: tile.letter });
+          newProposedMove.push({
+            x: selectedTile.x,
+            y: selectedTile.y,
+            letter: tile.letter,
+            collapsedWildcard,
+          } satisfies Move);
 
           setLocalProposedMove(newProposedMove);
           setSelectedTile(null);
@@ -136,13 +171,36 @@ export const useClickToSelect = () => {
 
     // If we have a tile selected, place it at this empty board square
     if (selectedTile.letter) {
+      let hasError = false;
+      let collapsedWildcard: LetterLiteral | undefined = localProposedMove.find(
+        (m) => m.x === selectedTile.x && m.y === selectedTile.y
+      )?.collapsedWildcard;
+
+      if (collapsedWildcard == null) {
+        ({ collapsedWildcard, hasError } = getWildcardLetter(
+          selectedTile.letter,
+          template!,
+          t("playfield.wildcardPrompt")
+        ));
+        if (hasError) {
+          toast.error(t("playfield.invalidWildcard"));
+          return;
+        }
+      }
+
       if (selectedTile.source === "hand" && selectedTile.index !== undefined) {
         // Move from hand to board
         const newHand = [...localPlayerHand];
         newHand[selectedTile.index] = null;
+
         const newProposedMove = [
           ...localProposedMove,
-          { x, y, letter: selectedTile.letter },
+          {
+            x,
+            y,
+            letter: selectedTile.letter,
+            collapsedWildcard,
+          } satisfies Move,
         ];
 
         setLocalPlayerHand(newHand as PlayerHandType);
@@ -157,7 +215,12 @@ export const useClickToSelect = () => {
         const newProposedMove = localProposedMove.filter(
           (m) => !(m.x === selectedTile.x && m.y === selectedTile.y)
         );
-        newProposedMove.push({ x, y, letter: selectedTile.letter });
+        newProposedMove.push({
+          x,
+          y,
+          letter: selectedTile.letter,
+          collapsedWildcard,
+        } satisfies Move);
 
         setLocalProposedMove(newProposedMove);
         setSelectedTile(null);
@@ -232,7 +295,23 @@ export const useClickToSelect = () => {
       newHand[from.index] = to.letter;
 
       // Add the source tile to board
-      newProposedMove.push({ x: to.x, y: to.y, letter: from.letter });
+      const { collapsedWildcard, hasError } = getWildcardLetter(
+        from.letter,
+        template!,
+        t("playfield.wildcardPrompt")
+      );
+
+      if (hasError) {
+        toast.error(t("playfield.invalidWildcard"));
+        return;
+      }
+
+      newProposedMove.push({
+        x: to.x,
+        y: to.y,
+        letter: from.letter,
+        collapsedWildcard,
+      });
 
       setLocalPlayerHand(newHand as PlayerHandType);
       setLocalProposedMove(newProposedMove);
@@ -271,6 +350,13 @@ export const useClickToSelect = () => {
       to.x !== undefined &&
       to.y !== undefined
     ) {
+      let fromWildcard: LetterLiteral | undefined = localProposedMove.find(
+        (m) => m.x === from.x && m.y === from.y
+      )?.collapsedWildcard;
+      let toWildcard: LetterLiteral | undefined = localProposedMove.find(
+        (m) => m.x === to.x && m.y === to.y
+      )?.collapsedWildcard;
+
       let newProposedMove = localProposedMove.filter(
         (m) => !(m.x === from.x && m.y === from.y)
       );
@@ -279,8 +365,18 @@ export const useClickToSelect = () => {
       );
 
       // Swap the tiles
-      newProposedMove.push({ x: to.x, y: to.y, letter: from.letter });
-      newProposedMove.push({ x: from.x, y: from.y, letter: to.letter });
+      newProposedMove.push({
+        x: to.x,
+        y: to.y,
+        letter: from.letter,
+        collapsedWildcard: fromWildcard,
+      });
+      newProposedMove.push({
+        x: from.x,
+        y: from.y,
+        letter: to.letter,
+        collapsedWildcard: toWildcard,
+      });
 
       setLocalProposedMove(newProposedMove);
       return;

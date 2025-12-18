@@ -401,3 +401,27 @@ export const playNotificationSound = (num: 1 | 2 | 3 = 2) => {
   const audio = new Audio(`/sounds/notification${num}.wav`);
   audio.play();
 };
+
+export const getWildcardLetter = (
+  letter: LetterLiteral,
+  template: LanguageTemplate,
+  prompt: string
+): { collapsedWildcard: LetterLiteral | undefined; hasError: boolean } => {
+  let hasError = false;
+  const collapsedWildcard: LetterLiteral | undefined =
+    letter === "0"
+      ? (window.prompt(prompt)?.toLowerCase() as LetterLiteral) ?? undefined
+      : undefined;
+
+  if (
+    (letter === "0" && collapsedWildcard == null) ||
+    (collapsedWildcard != null &&
+      !Object.keys(template!.quantityMap).includes(
+        collapsedWildcard.toLowerCase()
+      ))
+  ) {
+    hasError = true;
+  }
+
+  return { collapsedWildcard, hasError };
+};

@@ -7,6 +7,7 @@ import {
 import { authService } from "@/services/auth";
 import { useUpdateGame } from "@/services/collections/game/game.hooks";
 import { DbGamePayload } from "@/services/collections/game/game.model";
+import { getWildcardLetter } from "@/services/collections/game/game.utils";
 import {
   DragEndEvent,
   DragStartEvent,
@@ -33,6 +34,7 @@ export const usePlayfieldHandlers = (clearSelection: () => void) => {
     localProposedMove,
     setLocalPlayerHand,
     setLocalProposedMove,
+    template,
     isMyTurn,
   } = useGameContext();
 
@@ -140,6 +142,16 @@ export const usePlayfieldHandlers = (clearSelection: () => void) => {
           return;
         }
 
+        const { collapsedWildcard, hasError } = getWildcardLetter(
+          activeLetter,
+          template!,
+          t("playfield.wildcardPrompt")
+        );
+        if (hasError) {
+          toast.error(t("playfield.invalidWildcard"));
+          return;
+        }
+
         // Check if there's already a proposed tile at this position
         const existingTileAtPosition = localProposedMove.find(
           (m) => m.x === x && m.y === y
@@ -161,7 +173,7 @@ export const usePlayfieldHandlers = (clearSelection: () => void) => {
         }
 
         // Add the new move
-        newProposedMove.push({ x, y, letter: activeLetter });
+        newProposedMove.push({ x, y, letter: activeLetter, collapsedWildcard });
 
         setLocalPlayerHand(newHand);
         setLocalProposedMove(newProposedMove);
@@ -237,6 +249,27 @@ export const usePlayfieldHandlers = (clearSelection: () => void) => {
         const existingMoveAtDestination = localProposedMove.find(
           (m) => m.x === toX && m.y === toY
         );
+        const existingWildcardAtDestination =
+          existingMoveAtDestination?.collapsedWildcard;
+
+        // Check if there's a wildcard at the origin
+        let collapsedWildcard: LetterLiteral | undefined =
+          localProposedMove.find(
+            (m) => m.x === fromX && m.y === fromY
+          )?.collapsedWildcard;
+        let hasError = false;
+
+        if (collapsedWildcard == null) {
+          ({ collapsedWildcard, hasError } = getWildcardLetter(
+            activeLetter,
+            template!,
+            t("playfield.wildcardPrompt")
+          ));
+          if (hasError) {
+            toast.error(t("playfield.invalidWildcard"));
+            return;
+          }
+        }
 
         let newProposedMove = localProposedMove.filter(
           (m) => !(m.x === fromX && m.y === fromY)
@@ -251,11 +284,17 @@ export const usePlayfieldHandlers = (clearSelection: () => void) => {
             x: fromX,
             y: fromY,
             letter: existingMoveAtDestination.letter,
+            collapsedWildcard: existingWildcardAtDestination,
           });
         }
 
         // Move the dragged tile to destination
-        newProposedMove.push({ x: toX, y: toY, letter: activeLetter });
+        newProposedMove.push({
+          x: toX,
+          y: toY,
+          letter: activeLetter,
+          collapsedWildcard,
+        });
 
         setLocalProposedMove(newProposedMove);
       }

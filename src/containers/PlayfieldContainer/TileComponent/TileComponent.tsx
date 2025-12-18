@@ -5,9 +5,14 @@ import { Star } from "lucide-react";
 
 interface Props {
   letter: LetterLiteral;
-  proposedMove?: boolean;
+  wildcardValue?: LetterLiteral;
+  isProposedMove?: boolean;
 }
-export const TileComponent = ({ letter, proposedMove = false }: Props) => {
+export const TileComponent = ({
+  letter,
+  isProposedMove = false,
+  wildcardValue,
+}: Props) => {
   const { template } = useGameContext();
 
   const letterScore = template?.scoreMap[letter];
@@ -16,7 +21,7 @@ export const TileComponent = ({ letter, proposedMove = false }: Props) => {
 
   const tileClassName = cn(
     "h-12 w-12 flex items-center justify-center text-2xl border-2 rounded-md h-full shadow select-none",
-    proposedMove
+    isProposedMove
       ? "border-red-500 bg-yellow-300 text-red-800 animate-pulse-scale"
       : "border-gray-300 bg-gray-50 text-gray-400"
   );
@@ -24,7 +29,9 @@ export const TileComponent = ({ letter, proposedMove = false }: Props) => {
   return (
     <div className="relative h-12 w-12">
       <div className={tileClassName}>
-        {letter !== "0" ? (
+        {wildcardValue != null ? (
+          wildcardValue.toUpperCase()
+        ) : letter !== "0" ? (
           letter.toUpperCase()
         ) : (
           <Star className="text-yellow-500 h-5 w-5" />

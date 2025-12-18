@@ -74,6 +74,8 @@ export const BoardComponent = ({
                 )?.find((m) => m.x === xIndex && m.y === yIndex);
 
                 const letter = proposedMove?.letter ?? tile?.letter;
+                const wildcardValue =
+                  proposedMove?.collapsedWildcard || tile?.collapsedWildcard;
 
                 const squareColor = bonus
                   ? bonusColorMap[bonus]
@@ -129,6 +131,7 @@ export const BoardComponent = ({
                         x={xIndex}
                         y={yIndex}
                         isSelected={isSelected}
+                        wildcardValue={wildcardValue}
                         onClick={() =>
                           clickToSelectHandlers.handleTileClick({
                             letter,
@@ -139,7 +142,11 @@ export const BoardComponent = ({
                         }
                       />
                     ) : (
-                      <TileComponent letter={letter} proposedMove={false} />
+                      <TileComponent
+                        letter={letter}
+                        isProposedMove={false}
+                        wildcardValue={wildcardValue}
+                      />
                     )}
                   </DroppableBoardSquare>
                 );

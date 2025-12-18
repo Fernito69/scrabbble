@@ -93,7 +93,9 @@
     "inviteMessage": "¡Has sido invitado a una partida de Scrabble! {{url}}",
     "linkCopied": "¡Enlace de invitación copiado al portapapeles!",
     "gameName": "Nombre de la partida:",
-    "awaitingApproval": "Esperando a:"
+    "awaitingApproval": "Esperando a:",
+    "wildcardPrompt": "¿Qué letra deseas usar para el comodín?",
+    "invalidWildcard": "El comodín no es válido, por favor intenta otra letra"
   },
   "playerVotes": {
     "accept": "Aceptar",

@@ -263,10 +263,10 @@ export class ScoringService {
   private updateBoard = (playerMove: PlayerMove): Board => {
     const newBoard = cloneDeep(this.board);
 
-    playerMove.move.forEach(({ x, y, letter }) => {
+    playerMove.move.forEach(({ x, y, letter, collapsedWildcard }) => {
       newBoard[y][x] = {
         ...newBoard[y][x],
-        tile: { letter, ownerId: playerMove.playerId },
+        tile: { letter, ownerId: playerMove.playerId, collapsedWildcard },
       };
     });
 

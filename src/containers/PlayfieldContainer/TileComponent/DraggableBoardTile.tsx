@@ -9,6 +9,7 @@ interface Props {
   y: number;
   isSelected?: boolean;
   onClick?: () => void;
+  wildcardValue?: LetterLiteral;
 }
 
 export const DraggableBoardTile = ({
@@ -16,6 +17,7 @@ export const DraggableBoardTile = ({
   x,
   y,
   isSelected,
+  wildcardValue,
   onClick,
 }: Props) => {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
@@ -54,7 +56,11 @@ export const DraggableBoardTile = ({
           : "select-none"
       }
     >
-      <TileComponent letter={letter} proposedMove />
+      <TileComponent
+        letter={letter}
+        isProposedMove
+        wildcardValue={wildcardValue}
+      />
     </div>
   );
 };
