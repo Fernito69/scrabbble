@@ -63,6 +63,8 @@ export const PlayerControls = () => {
 
   const handleReshuffle = () => {
     if (!state) return;
+    setLocalPlayerHand(state.playerHands[user!.uid]);
+    setLocalProposedMove([]);
     updateGame(buildReshufflePayload(state, user));
   };
 
