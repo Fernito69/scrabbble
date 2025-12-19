@@ -146,6 +146,11 @@ export const Chat = () => {
               return (
                 <div key={id} className={mainContainerCn}>
                   <div className={secondaryDivCn}>
+                    {!isOwnMessage && !isSystemMessage && playerId && (
+                      <div className="text-xs mr-2 flex items-top justify-start h-full">
+                        <UserAvatar userId={playerId} diameter={20} />
+                      </div>
+                    )}
                     {isSystemMessage && (
                       <div className="flex flow-row justify-center items-center text-semibold text-sm">
                         {text}
@@ -160,11 +165,6 @@ export const Chat = () => {
                     {!isSystemMessage && (
                       <div className="text-sm break-words text-start">
                         {text}
-                      </div>
-                    )}
-                    {!isOwnMessage && !isSystemMessage && playerId && (
-                      <div className="text-xs mr-1">
-                        <UserAvatar userId={playerId} diameter={20} />
                       </div>
                     )}
                     {!isSystemMessage && (
