@@ -52,7 +52,8 @@ export const LobbyContainer = () => {
         </div>
         <Separator className="my-4 text-muted-foreground w-full max-w-2xl" />
         <Tabs defaultValue="ongoing">
-          <TabsList className="w-full grid grid-cols-3 gap-4">
+          {/* <TabsList className="w-full grid grid-cols-3 gap-4"> */}{" "}
+          <TabsList className="w-full grid grid-cols-2 gap-4">
             <TabsTrigger value="ongoing">{t("lobby.yourGames")}</TabsTrigger>
             <TabsTrigger value="waiting">{t("lobby.pastGames")}</TabsTrigger>
             {/* HIDDEN FOR NOW */}
