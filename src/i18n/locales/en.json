@@ -25,7 +25,8 @@
     "winner": "Winner!",
     "lastTurn": "Last turn",
     "error": "Error loading games",
-    "noPastGames": "You haven't finished any games yet 😢"
+    "noPastGames": "You haven't finished any games yet 😢",
+    "allLastGames": "Last games"
   },
   "languageSelect": {
     "title": "Select language",
@@ -67,6 +68,8 @@
     "rejectOwnMove": "Are you sure you want to reject your own move? You will get no points during this turn."
   },
   "playerControls": {
+    "actions": "Actions",
+    "selectAction": "Select an action",
     "proposeMove": "Propose move",
     "proposeMoveConfirm": "Are you sure you want to propose this move?",
     "skipTurn": "Skip turn",
@@ -100,7 +103,8 @@
   "playerVotes": {
     "accept": "Accept",
     "reject": "Reject",
-    "awaitingVote": "Awaiting vote..."
+    "awaitingVote": "Awaiting vote...",
+    "currentHand": "Your current hand"
   },
   "languageSwitcher": {
     "selectLanguage": "Select Language",

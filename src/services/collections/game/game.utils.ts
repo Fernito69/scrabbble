@@ -10,10 +10,10 @@ import {
   VoteType,
 } from "@/model/core.model";
 import { ScoringService } from "@/services/scoring";
+import { User } from "firebase/auth";
 import { cloneDeep } from "lodash";
 import { LanguageTemplate } from "../letterValueMap/languageTemplate.model";
 import { DbGamePayload } from "./game.model";
-import { User } from "firebase/auth";
 
 export const computeTilePouch = (
   quantityMap: LetterValueMap
@@ -72,12 +72,19 @@ export const drawCards = (
 
 // It's not perfect, but at least let's us check whether it's a straight line
 export const isMoveValid = (
-  move: Move[]
+  move: Move[],
+  turn: number | undefined
 ): {
   valid: boolean;
   error?: string;
 } => {
   let valid: boolean = true;
+
+  // Check for first move
+  if (turn === 0 || turn === undefined) {
+    valid = move.length < 2;
+    return { valid, error: "First move should be longer than 1 letter" };
+  }
 
   // Check if the move is valid
   if (move.length === 0) {

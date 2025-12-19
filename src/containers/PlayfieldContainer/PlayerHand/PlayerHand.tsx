@@ -8,7 +8,7 @@ import { SortableTile } from "../TileComponent/SortableTile";
 import { PlayerControls } from "./PlayerControls/PlayerControls";
 import { useClickToSelect } from "../useClickToSelect.hook";
 import { useAuth } from "@/contexts/AuthContext";
-import { LetterLiteral } from "@/model/core.model";
+import { LetterLiteral, VoteType } from "@/model/core.model";
 
 interface Props {
   clickToSelectHandlers: ReturnType<typeof useClickToSelect>;
@@ -83,7 +83,9 @@ export const PlayerHand = ({ clickToSelectHandlers }: Props) => {
             ))}
           </SortableContext>
         </div>
-        <PlayerControls />
+        {state.currentVote?.type !== VoteType.INITIAL_RESHUFFLE && (
+          <PlayerControls />
+        )}
       </div>
     </div>
   );

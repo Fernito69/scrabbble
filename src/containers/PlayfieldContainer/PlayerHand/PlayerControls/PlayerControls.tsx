@@ -1,5 +1,10 @@
 import { ConfirmationDialog } from "@/components/Dialog/ConfirmationDialog";
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useAuth } from "@/contexts/AuthContext";
 import { useGameContext } from "@/contexts/GameState.context";
 import { PLAYER_HAND_LENGTH } from "@/model/core.defaults";
@@ -16,6 +21,7 @@ import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { AcceptProposedMoveCheckbox } from "./AcceptProposedMoveCheckbox/AcceptProposedMoveCheckbox";
 import { ReadyCheckbox } from "./ReadyCheckbox/ReadyCheckbox";
+import { SendHorizontal, SkipForward, Shuffle, Undo } from "lucide-react";
 
 export const PlayerControls = () => {
   // Hooks
@@ -86,7 +92,7 @@ export const PlayerControls = () => {
   };
 
   // Consts
-  const { valid, error } = isMoveValid(localProposedMove);
+  const { valid, error } = isMoveValid(localProposedMove, state.currentTurn);
 
   const showReadyCheckbox =
     state.currentVote?.type === VoteType.START_VOTE &&
@@ -121,67 +127,113 @@ export const PlayerControls = () => {
         {isMyTurn && (
           <>
             {!state.currentVote && (
-              <ConfirmationDialog
-                isDisabled={proposeMoveButtonDisabled}
-                title={t("playerControls.proposeMove")}
-                description={t("playerControls.proposeMoveConfirm")}
-                onAccept={handleProposeMove}
-                triggerElement={
-                  <Button
-                    className="text-xs"
-                    disabled={proposeMoveButtonDisabled}
-                  >
-                    {t("playerControls.proposeMove")}
-                  </Button>
-                }
-              />
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div>
+                    <ConfirmationDialog
+                      isDisabled={proposeMoveButtonDisabled}
+                      title={t("playerControls.proposeMove")}
+                      description={t("playerControls.proposeMoveConfirm")}
+                      onAccept={handleProposeMove}
+                      triggerElement={
+                        <Button
+                          size="icon"
+                          disabled={proposeMoveButtonDisabled}
+                        >
+                          <SendHorizontal className="h-4 w-4" />
+                        </Button>
+                      }
+                    />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{t("playerControls.proposeMove")}</p>
+                </TooltipContent>
+              </Tooltip>
             )}
             {showSkipTurnButton && (
-              <ConfirmationDialog
-                title={t("playerControls.skip")}
-                description={t("playerControls.skipTurnConfirm")}
-                onAccept={handleSkipTurn}
-                triggerElement={
-                  <Button className="text-xs" variant={"destructive"}>
-                    {t("playerControls.skipTurn")}
-                  </Button>
-                }
-              />
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div>
+                    <ConfirmationDialog
+                      title={t("playerControls.skip")}
+                      description={t("playerControls.skipTurnConfirm")}
+                      onAccept={handleSkipTurn}
+                      triggerElement={
+                        <Button size="icon" variant={"destructive"}>
+                          <SkipForward className="h-4 w-4" />
+                        </Button>
+                      }
+                    />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{t("playerControls.skipTurn")}</p>
+                </TooltipContent>
+              </Tooltip>
             )}
           </>
         )}
         {showReadyCheckbox && <ReadyCheckbox vote={state.currentVote!} />}
         {showInitialReshuffleButton && (
-          <ConfirmationDialog
-            title={t("playerControls.requestReshuffle")}
-            description={t("playerControls.requestInitialReshuffleConfirm")}
-            onAccept={handleInitialReshuffle}
-            triggerElement={
-              <Button className="text-xs" variant={"destructive"}>
-                {t("playerControls.reshuffleInitialHands")}
-              </Button>
-            }
-          />
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div>
+                <ConfirmationDialog
+                  title={t("playerControls.requestReshuffle")}
+                  description={t(
+                    "playerControls.requestInitialReshuffleConfirm"
+                  )}
+                  onAccept={handleInitialReshuffle}
+                  triggerElement={
+                    <Button size="icon" variant={"destructive"}>
+                      <Shuffle className="h-4 w-4" />
+                    </Button>
+                  }
+                />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{t("playerControls.reshuffleInitialHands")}</p>
+            </TooltipContent>
+          </Tooltip>
         )}
         {showReshuffleButton && (
-          <ConfirmationDialog
-            title={t("playerControls.reshuffleHand")}
-            description={t("playerControls.requestReshuffleConfirm")}
-            onAccept={handleReshuffle}
-            triggerElement={
-              <Button className="text-xs">
-                {t("playerControls.reshuffleHand")}
-              </Button>
-            }
-          />
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div>
+                <ConfirmationDialog
+                  title={t("playerControls.reshuffleHand")}
+                  description={t("playerControls.requestReshuffleConfirm")}
+                  onAccept={handleReshuffle}
+                  triggerElement={
+                    <Button size="icon">
+                      <Shuffle className="h-4 w-4" />
+                    </Button>
+                  }
+                />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{t("playerControls.reshuffleHand")}</p>
+            </TooltipContent>
+          </Tooltip>
         )}
         {showRecallTilesButton && (
-          <Button
-            onClick={handleRecallTiles}
-            className="text-xs bg-green-600 hover:bg-green-700"
-          >
-            {t("playerControls.recallTiles")}
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                onClick={handleRecallTiles}
+                size="icon"
+                className="bg-green-600 hover:bg-green-700"
+              >
+                <Undo className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{t("playerControls.recallTiles")}</p>
+            </TooltipContent>
+          </Tooltip>
         )}
         {showProposedMoveCheckbox && <AcceptProposedMoveCheckbox />}
       </div>

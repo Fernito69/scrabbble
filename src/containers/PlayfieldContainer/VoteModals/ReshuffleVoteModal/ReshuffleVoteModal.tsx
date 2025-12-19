@@ -13,6 +13,9 @@ import { useUpdateGame } from "@/services/collections/game/game.hooks";
 import { useTranslation } from "react-i18next";
 import { PlayerVotesButtons } from "../PlayerVotesButtons/PlayerVotesButtons";
 import { Chat } from "@/components/Chat/Chat";
+import { PlayerHand } from "../../PlayerHand/PlayerHand";
+import { useClickToSelect } from "../../useClickToSelect.hook";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   vote: Vote;
@@ -20,6 +23,8 @@ interface Props {
 export const ReshuffleVoteModal = ({ vote }: Props) => {
   // Hooks
   const { t } = useTranslation();
+  const clickToSelectHandlers = useClickToSelect();
+  const navigate = useNavigate();
 
   // Context
   const { gameId } = useGameContext();
@@ -42,7 +47,13 @@ export const ReshuffleVoteModal = ({ vote }: Props) => {
   // Render
   return (
     <Dialog open>
-      <DialogContent className="min-w-[800px]">
+      <DialogContent className="min-w-[800px] max-w-[90vw]">
+        <button
+          onClick={() => navigate("/")}
+          className="absolute right-12 top-4 px-4 py-2 text-sm border border-input rounded-md hover:bg-accent"
+        >
+          {t("playfield.backToHome")}
+        </button>
         <DialogHeader>
           <DialogTitle>
             <div className="flex flex-row gap-2 items-center">
@@ -58,12 +69,14 @@ export const ReshuffleVoteModal = ({ vote }: Props) => {
             {t("reshuffleVote.description")}
           </DialogDescription>
         </DialogHeader>
-        <div className="flex flex-row flex-1 gap-2 items-center">
-          <div className="h-fit">
+        <div className="flex flex-row flex-1 gap-2 items-center justify-center">
+          <div className="h-fit flex flex-col gap-4 items-center">
             <PlayerVotesButtons
               votes={vote.votes}
               onChangeVote={handleChangeVote}
             />
+            <div className="text-lg">{t("reshuffleVote.currentHand")}:</div>
+            <PlayerHand clickToSelectHandlers={clickToSelectHandlers} />
           </div>
           <Chat />
         </div>

@@ -165,3 +165,30 @@ export const getLastNPastGamesSnapshot = (
 
   return unsubscribe;
 };
+
+export const getLastNGamesSnapshot = (
+  db: Firestore,
+  n: number,
+  callback: (data: (GameState & { id: string })[]) => void,
+  errorCallback: (err: string) => void
+) => {
+  const q = query(
+    collection(db, GAME_COLLECTION),
+    where("gameOver", "==", true),
+    orderBy("lastModifiedAt", "desc"),
+    limit(n)
+  );
+
+  const unsubscribe = onSnapshot(q, {
+    next: (collSnap) => {
+      const data = collSnap.docs.map((d) => ({
+        ...mapDbGamePayloadToGameState(d.data() as DbGamePayload),
+        id: d.id,
+      }));
+      callback(data);
+    },
+    error: (err) => errorCallback(err.message),
+  });
+
+  return unsubscribe;
+};

@@ -158,7 +158,7 @@ export const BoardComponent = ({
           {activeProposedMove &&
             activeProposedMove.length > 0 &&
             user &&
-            isMoveValid(activeProposedMove).valid && (
+            isMoveValid(activeProposedMove, state.currentTurn).valid && (
               <ProposedMoveScoreIndicator
                 proposedMove={activeProposedMove}
                 playerId={user.uid}

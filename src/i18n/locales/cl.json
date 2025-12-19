@@ -24,7 +24,8 @@
     "winner": "¡Ganador!",
     "lastTurn": "Último turno",
     "error": "Error al cargar partidas",
-    "noPastGames": "No has terminado ninguna partida 😢"
+    "noPastGames": "No has terminado ninguna partida 😢",
+    "allLastGames": "Últimas partidas"
   },
   "userConfig": {
     "changeName": "Cambiar nombre",
@@ -55,7 +56,8 @@
   "reshuffleVote": {
     "titlePrefix": "ha solicitado borrón y cuenta nueva",
     "description": "Por favor acepta o rechaza la solicitud",
-    "aPlayer": "Un jugador"
+    "aPlayer": "Un jugador",
+    "currentHand": "Tu mano actual"
   },
   "readyCheckbox": {
     "ready": "¡Prepara tus nalgas!"
@@ -66,6 +68,8 @@
     "rejectOwnMove": "¿Tai seguro de que quieres rechazar tu propia jugada? Te vai a quedar sin puntos durante este turno."
   },
   "playerControls": {
+    "actions": "Acciones",
+    "selectAction": "Elige una acción",
     "proposeMove": "Proponer jugada",
     "proposeMoveConfirm": "¿Tai seguro/a?",
     "skipTurn": "Saltar turno",

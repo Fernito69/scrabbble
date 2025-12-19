@@ -7,6 +7,7 @@ import {
   createGame,
   deleteGame,
   getGameSnapshot,
+  getLastNGamesSnapshot,
   getLastNPastGamesSnapshot,
   getLastNPlayerGamesSnapshot,
   proposeMove,
@@ -153,6 +154,37 @@ export const useGetLastNPastGames = (
       ),
     []
   );
+
+  return { playerGames, error };
+};
+
+export const useGetLastNGames = (
+  n: number = 20
+): {
+  playerGames: (GameState & { id: string })[] | undefined;
+  error: string | undefined;
+} => {
+  const [playerGames, setGames] = useState<
+    (GameState & { id: string })[] | undefined
+  >();
+  const [error, setError] = useState<string | undefined>();
+
+  useEffect(
+    () =>
+      getLastNGamesSnapshot(
+        db,
+        n,
+        (data) => {
+          setGames(data);
+        },
+        (err) => {
+          setError(err);
+        }
+      ),
+    []
+  );
+
+  console.log("useGetLastNGames", playerGames, error);
 
   return { playerGames, error };
 };

@@ -25,7 +25,8 @@
     "winner": "¡Ganador!",
     "lastTurn": "Último turno",
     "error": "Error al cargar partidas",
-    "noPastGames": "No has terminado ninguna partida 😢"
+    "noPastGames": "No has terminado ninguna partida 😢",
+    "allLastGames": "Últimas partidas"
   },
   "languageSelect": {
     "title": "Seleccionar idioma",
@@ -51,7 +52,8 @@
   "reshuffleVote": {
     "titlePrefix": "ha solicitado barajar las fichas",
     "description": "Por favor acepta o rechaza la solicitud",
-    "aPlayer": "Un jugador"
+    "aPlayer": "Un jugador",
+    "currentHand": "Tu mano actual"
   },
   "readyCheckbox": {
     "ready": "¡Prepara tus nalgas!"
@@ -67,6 +69,8 @@
     "enterName": "Introduce un nuevo nombre"
   },
   "playerControls": {
+    "actions": "Acciones",
+    "selectAction": "Selecciona una acción",
     "proposeMove": "Proponer jugada",
     "proposeMoveConfirm": "¿Estás seguro/a de que quieres proponer esta jugada?",
     "skipTurn": "Saltar turno",
