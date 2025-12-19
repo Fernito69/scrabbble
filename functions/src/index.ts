@@ -108,7 +108,6 @@ export const onGameUpdateTrigger = functions.firestore
           );
           addChatMessage(firestore, gameId, {
             text: `Turn ${payload.currentTurn}`,
-            playerId: undefined,
           } satisfies ChatMessageBase);
         }
 
