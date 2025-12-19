@@ -1,15 +1,15 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { useGameContext } from "@/contexts/GameState.context";
+import { cn } from "@/lib/utils";
 import {
   useAddMessage,
   useGetLastNChatMessages,
 } from "@/services/collections/game/chat/chat.hooks";
-import { Send, ChevronRight, ChevronLeft, MessagesSquare } from "lucide-react";
+import { playNotificationSound } from "@/services/collections/game/game.utils";
+import { ChevronLeft, ChevronRight, MessagesSquare, Send } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { UserAvatar } from "../UserAvatar";
-import { playNotificationSound } from "@/services/collections/game/game.utils";
-import { cn } from "@/lib/utils";
 
 export const Chat = () => {
   const { t } = useTranslation();
@@ -116,7 +116,7 @@ export const Chat = () => {
             .map((m) => {
               const { text, createdAt, id, playerId } = m;
               const isOwnMessage = playerId === user?.uid;
-              const isSystemMessage = playerId === null;
+              const isSystemMessage = playerId == null;
               const mainContainerCn = cn(
                 "flex",
                 isSystemMessage

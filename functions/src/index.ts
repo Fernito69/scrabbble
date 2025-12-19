@@ -100,6 +100,12 @@ export const onGameUpdateTrigger = functions.firestore
 
         // Add a message if it's a new turn
         if (payload?.currentTurn !== previousGame?.currentTurn) {
+          functions.logger.log(
+            "TURN CHANGE FROM" +
+              previousGame?.currentTurn +
+              " TO " +
+              payload.currentTurn
+          );
           addChatMessage(firestore, gameId, {
             text: `Turn ${payload.currentTurn}`,
             playerId: undefined,
