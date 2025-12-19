@@ -130,7 +130,7 @@ export const PlayfieldContainer = () => {
               {template && (
                 <Badge label={t("playfield.language")} value={template.name} />
               )}
-              {state.gameStarted && (
+              {state.gameStarted && !state.gameOver && (
                 <>
                   <Badge
                     label={t("playfield.turn")}
@@ -190,6 +190,7 @@ export const PlayfieldContainer = () => {
                 </>
               )}
             </div>
+
             <div className="flex gap-4 justify-center items-start">
               <BoardComponent clickToSelectHandlers={clickToSelectHandlers} />
             </div>
