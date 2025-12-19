@@ -29,7 +29,9 @@
     "allLastGames": "Últimas partidas",
     "gameOver": "¡La partida ha terminado!",
     "winningPlayer": "Ganador",
-    "winningScore": "Puntuación"
+    "winningScore": "Puntuación",
+    "youWon": "¡Ganaste!",
+    "youLost": "¡Perdiste!"
   },
   "languageSelect": {
     "title": "Seleccionar idioma",

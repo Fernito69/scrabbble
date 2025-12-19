@@ -71,7 +71,7 @@ export const BoardComponent = ({
         </OverlayWithLoader>
       )}
       {gameOver && winningPlayerId != null && (
-        <OverlayWithLoader>
+        <OverlayWithLoader hideLoader>
           <div className="text-2xl font-semibold">{t("lobby.gameOver")}</div>
           <div className="text-xl font-semibold flex flex-row gap-2 items-center">
             {t("lobby.winningPlayer")}:
@@ -82,6 +82,13 @@ export const BoardComponent = ({
             />
             <div className="font-bold">{getUserName(winningPlayerId)}</div>
           </div>
+          {winningPlayerId === user?.uid ? (
+            <div className="text-2xl text-black animate-pulse">
+              {t("lobby.youWon")} 😃
+            </div>
+          ) : (
+            <div className="text-2xl text-black">{t("lobby.youLost")} 😢</div>
+          )}
           <div className="relative mt-2">
             {/* Outer rainbow spinning glow */}
             <div className="absolute -inset-2 bg-gradient-to-r from-red-600 via-yellow-600 via-green-600 via-blue-600 via-purple-600 to-red-600 rounded-xl blur-md opacity-75 animate-spin bg-[length:400%_400%] animate-gradient"></div>
@@ -115,9 +122,18 @@ export const BoardComponent = ({
 
               {/* Corner sparkles */}
               <div className="absolute top-0 left-0 w-4 h-4 bg-white rounded-full blur-sm animate-ping"></div>
-              <div className="absolute top-0 right-0 w-4 h-4 bg-white rounded-full blur-sm animate-ping" style={{ animationDelay: "0.5s" }}></div>
-              <div className="absolute bottom-0 left-0 w-4 h-4 bg-white rounded-full blur-sm animate-ping" style={{ animationDelay: "1s" }}></div>
-              <div className="absolute bottom-0 right-0 w-4 h-4 bg-white rounded-full blur-sm animate-ping" style={{ animationDelay: "1.5s" }}></div>
+              <div
+                className="absolute top-0 right-0 w-4 h-4 bg-white rounded-full blur-sm animate-ping"
+                style={{ animationDelay: "0.5s" }}
+              ></div>
+              <div
+                className="absolute bottom-0 left-0 w-4 h-4 bg-white rounded-full blur-sm animate-ping"
+                style={{ animationDelay: "1s" }}
+              ></div>
+              <div
+                className="absolute bottom-0 right-0 w-4 h-4 bg-white rounded-full blur-sm animate-ping"
+                style={{ animationDelay: "1.5s" }}
+              ></div>
             </div>
           </div>
         </OverlayWithLoader>

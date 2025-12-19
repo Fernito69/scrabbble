@@ -28,7 +28,9 @@
     "allLastGames": "Últimas partidas",
     "gameOver": "¡Estuvo intenso!",
     "winningPlayer": "Ganador",
-    "winningScore": "Puntuación"
+    "winningScore": "Puntuación",
+    "youWon": "¡Ganaste!",
+    "youLost": "¡Perdiste!"
   },
   "userConfig": {
     "changeName": "Cambiar nombre",

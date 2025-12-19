@@ -29,7 +29,9 @@
     "allLastGames": "Last games",
     "gameOver": "Game over!",
     "winningPlayer": "Winning player",
-    "winningScore": "Score"
+    "winningScore": "Score",
+    "youWon": "You won!",
+    "youLost": "You lost!"
   },
   "languageSelect": {
     "title": "Select language",
