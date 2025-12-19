@@ -126,12 +126,12 @@ export const Chat = () => {
                   : "justify-start"
               );
               const secondaryDivCn = cn(
-                `max-w-[95%] rounded-lg p-2 flex flex-row items-center relative p-2 shadow-md`,
+                `max-w-[95%] rounded-lg p-2 flex items-center relative p-2 shadow-md`,
                 isSystemMessage
-                  ? "text-gray-500 bg-gray-300"
+                  ? "text-gray-500 bg-gray-300 flex-col"
                   : isOwnMessage
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted text-foreground"
+                  ? "bg-primary text-primary-foreground flex-row"
+                  : "bg-muted text-foreground flex-row"
               );
               const timeCn = cn(
                 "absolute bottom-[1px] text-[6px] mt-1 right-1",
@@ -152,8 +152,14 @@ export const Chat = () => {
                       </div>
                     )}
                     {isSystemMessage && (
-                      <div className="flex flow-row justify-center items-center text-xs">
+                      <div className="flex flow-row justify-center items-center text-[10px]">
                         {longTimeString}
+                      </div>
+                    )}
+                    {/* For now system message is just for the turn */}
+                    {!isSystemMessage && (
+                      <div className="text-sm break-words text-start">
+                        {text}
                       </div>
                     )}
                     {!isOwnMessage && !isSystemMessage && playerId && (
@@ -161,7 +167,6 @@ export const Chat = () => {
                         <UserAvatar userId={playerId} diameter={20} />
                       </div>
                     )}
-                    <div className="text-sm break-words text-start">{text}</div>
                     {!isSystemMessage && (
                       <div className={timeCn}>{timeString}</div>
                     )}

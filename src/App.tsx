@@ -14,8 +14,24 @@ import { ForgotPassword } from "@/pages/ForgotPassword";
 import { useAuth } from "@/contexts/AuthContext";
 import { LanguageInitializer } from "@/components/LanguageInitializer/LanguageInitializer";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { useVersionCheck } from "@/hooks/useVersionCheck";
+import { toast } from "sonner";
 
 function App() {
+  const { reloadPage } = useVersionCheck({
+    checkInterval: 5 * 60 * 1000, // Check every 5 minutes
+    onNewVersion: () => {
+      toast.info("A new version is available!", {
+        description: "Click to refresh and get the latest updates",
+        action: {
+          label: "Refresh",
+          onClick: reloadPage,
+        },
+        duration: Infinity, // Don't auto-dismiss
+      });
+    },
+  });
+
   return (
     <TooltipProvider>
       <LanguageInitializer>
