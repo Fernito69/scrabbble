@@ -11,11 +11,11 @@ import * as admin from "firebase-admin";
 import * as functions from "firebase-functions/v1";
 import { cloneDeep } from "lodash";
 import { GameState, Vote, VoteType } from "../../src/model/core.model";
+import { CHAT_COLLECTION } from "../../src/services/collections/game/chat/chat.defaults";
 import { ChatMessageBase } from "../../src/services/collections/game/chat/chat.model";
+import { GAME_COLLECTION } from "../../src/services/collections/game/game.defaults";
 import { mapDbGamePayloadToGameState } from "../../src/services/collections/game/game.mappers";
 import { DbGamePayload } from "../../src/services/collections/game/game.model";
-import { GAME_COLLECTION } from "../../src/services/collections/game/game.defaults";
-import { CHAT_COLLECTION } from "../../src/services/collections/game/chat/chat.defaults";
 
 import {
   buildMovePayload,
@@ -67,7 +67,6 @@ export const onGameUpdateTrigger = functions.firestore
       playerIds,
       gameStarted,
       currentTurn,
-      gameOver,
       tilePouch,
       playerHands,
     } = state;
@@ -154,8 +153,6 @@ export const onGameUpdateTrigger = functions.firestore
       return updateCurrGame({ currentVote: null });
     }
 
-    if (gameOver) return functions.logger.log("GAME OVER");
-
     // Game is over if the pouch is empty and one player has no tiles
     const [winningPlayerId] =
       Object.entries(playerHands).find(
@@ -179,10 +176,10 @@ export const onGameUpdateTrigger = functions.firestore
         score,
       } satisfies Partial<DbGamePayload>;
 
-      functions.logger.log("Game over!");
-      updateCurrGame(payload);
+      functions.logger.log("GAME OVER! Scores:", score);
+      return updateCurrGame(payload);
     }
 
-    functions.logger.log("Game updated. Nothing to do");
+    functions.logger.log("End of the function. Nothing to do");
     return;
   });
