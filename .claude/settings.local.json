@@ -14,7 +14,9 @@
       "Bash(npm ls:*)",
       "Bash(npm run dev:*)",
       "Bash(npm run typecheck:*)",
-      "Bash(npx shadcn@latest add:*)"
+      "Bash(npx shadcn@latest add:*)",
+      "Bash(npm run deploy:*)",
+      "Bash(firebase --version:*)"
     ],
     "deny": [],
     "ask": []

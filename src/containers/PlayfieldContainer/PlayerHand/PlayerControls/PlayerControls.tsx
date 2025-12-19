@@ -22,6 +22,7 @@ import { toast } from "sonner";
 import { AcceptProposedMoveCheckbox } from "./AcceptProposedMoveCheckbox/AcceptProposedMoveCheckbox";
 import { ReadyCheckbox } from "./ReadyCheckbox/ReadyCheckbox";
 import { SendHorizontal, SkipForward, Shuffle, Undo } from "lucide-react";
+import { useClickToSelect } from "../../useClickToSelect.hook";
 
 export const PlayerControls = () => {
   // Hooks
@@ -41,6 +42,7 @@ export const PlayerControls = () => {
 
   // Mutations
   const updateGame = useUpdateGame(gameId);
+  const clickToSelect = useClickToSelect();
 
   if (!state) return null;
 
@@ -76,6 +78,7 @@ export const PlayerControls = () => {
 
   const handleRecallTiles = () => {
     if (!state) return;
+    clickToSelect.clearSelection();
     setLocalPlayerHand((prev) => {
       const newHand = [
         ...prev.filter(Boolean),

@@ -113,41 +113,58 @@ export const Chat = () => {
           messages
             .slice()
             .reverse()
-            .map((message) => {
-              const isOwnMessage = message.playerId === user?.uid;
+            .map((m) => {
+              const { text, createdAt, id, playerId } = m;
+              const isOwnMessage = playerId === user?.uid;
+              const isSystemMessage = playerId === null;
+              const mainContainerCn = cn(
+                "flex",
+                isSystemMessage
+                  ? "justify-center"
+                  : isOwnMessage
+                  ? "justify-end"
+                  : "justify-start"
+              );
+              const secondaryDivCn = cn(
+                `max-w-[95%] rounded-lg p-2 flex flex-row items-center relative p-2 shadow-md`,
+                isSystemMessage
+                  ? "text-gray-500 bg-gray-300"
+                  : isOwnMessage
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted text-foreground"
+              );
+              const timeCn = cn(
+                "absolute bottom-[1px] text-[6px] mt-1 right-1",
+                isOwnMessage ? "text-blue-200" : "text-black"
+              );
+              const timeString = createdAt.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              });
+              const longTimeString = createdAt.toLocaleString();
+
               return (
-                <div
-                  key={message.id}
-                  className={`flex ${
-                    isOwnMessage ? "justify-end" : "justify-start"
-                  }`}
-                >
-                  <div
-                    className={`max-w-[95%] rounded-lg p-2 flex flex-row items-center relative p-2 shadow-md ${
-                      isOwnMessage
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-muted text-foreground"
-                    }`}
-                  >
-                    {!isOwnMessage && (
-                      <div className="text-xs mr-1">
-                        <UserAvatar userId={message.playerId} diameter={20} />
+                <div key={id} className={mainContainerCn}>
+                  <div className={secondaryDivCn}>
+                    {isSystemMessage && (
+                      <div className="flex flow-row justify-center items-center text-semibold text-sm">
+                        {text}
                       </div>
                     )}
-                    <div className="text-sm break-words text-start">
-                      {message.text}
-                    </div>
-                    <div
-                      className={cn(
-                        "absolute bottom-[1px] text-[6px] mt-1 right-1",
-                        isOwnMessage ? "text-blue-200" : "text-black"
-                      )}
-                    >
-                      {message.createdAt.toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </div>
+                    {isSystemMessage && (
+                      <div className="flex flow-row justify-center items-center text-xs">
+                        {longTimeString}
+                      </div>
+                    )}
+                    {!isOwnMessage && !isSystemMessage && playerId && (
+                      <div className="text-xs mr-1">
+                        <UserAvatar userId={playerId} diameter={20} />
+                      </div>
+                    )}
+                    <div className="text-sm break-words text-start">{text}</div>
+                    {!isSystemMessage && (
+                      <div className={timeCn}>{timeString}</div>
+                    )}
                   </div>
                 </div>
               );

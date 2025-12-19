@@ -7,6 +7,6 @@ export const mapDbChatMessageToApp = (
   return {
     ...dbMessage,
     id,
-    createdAt: new Date(dbMessage.createdAt.seconds * 1000),
+    createdAt: new Date((dbMessage.createdAt.seconds as number) * 1000),
   } satisfies ChatMessage;
 };

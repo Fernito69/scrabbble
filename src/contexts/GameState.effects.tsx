@@ -33,10 +33,17 @@ export const useGameStateEffects = ({
   const updateGame = useUpdateGame(gameId);
 
   /***************/
-  // Indicate player turn
+  // Indicate player should play
   /***************/
   useEffect(() => {
-    if (isMyTurn) {
+    if (
+      (isMyTurn && !state?.currentVote) ||
+      (!isMyTurn &&
+        state?.currentVote &&
+        state.currentVote.votes.some(
+          (v) => v.playerId === user?.uid && v.voted === null
+        ))
+    ) {
       playNotificationSound();
     }
   }, [isMyTurn]);

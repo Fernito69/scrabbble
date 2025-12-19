@@ -8,12 +8,14 @@
  */
 
 import * as admin from "firebase-admin";
-import * as functions from "firebase-functions";
+import * as functions from "firebase-functions/v1";
 import { cloneDeep } from "lodash";
 import { GameState, Vote, VoteType } from "../../src/model/core.model";
+import { ChatMessageBase } from "../../src/services/collections/game/chat/chat.model";
 import { mapDbGamePayloadToGameState } from "../../src/services/collections/game/game.mappers";
 import { DbGamePayload } from "../../src/services/collections/game/game.model";
 import { GAME_COLLECTION } from "../../src/services/collections/game/game.defaults";
+import { CHAT_COLLECTION } from "../../src/services/collections/game/chat/chat.defaults";
 
 import {
   buildMovePayload,
@@ -34,6 +36,17 @@ const updateGame = (
   const docRef = db.collection(GAME_COLLECTION).doc(id);
   return docRef.update({ ...game, lastModifiedAt: new Date() });
 };
+const addChatMessage = (
+  db: admin.firestore.Firestore,
+  gameId: string,
+  message: ChatMessageBase
+) => {
+  const colRef = db
+    .collection(GAME_COLLECTION)
+    .doc(gameId)
+    .collection(CHAT_COLLECTION);
+  return colRef.add({ ...message, createdAt: new Date() });
+};
 
 /***************/
 // This trigger is called every time a game is updated
@@ -42,6 +55,7 @@ export const onGameUpdateTrigger = functions.firestore
   .document("games/{id}")
   .onUpdate(async (doc, context) => {
     const dbGame = doc.after.data() as DbGamePayload;
+    const previousGame = doc.before.data() as DbGamePayload;
     const state: GameState = mapDbGamePayloadToGameState(dbGame);
     const gameId = context.params.id;
     const updateCurrGame = (payload: Partial<DbGamePayload>) =>
@@ -82,7 +96,17 @@ export const onGameUpdateTrigger = functions.firestore
 
       if (payload) {
         functions.logger.log("Proposed move vote finished");
-        return updateCurrGame(payload);
+        updateCurrGame(payload);
+
+        // Add a message if it's a new turn
+        if (payload?.currentTurn !== previousGame?.currentTurn) {
+          addChatMessage(firestore, gameId, {
+            text: `Turn ${payload.currentTurn}`,
+            playerId: undefined,
+          } satisfies ChatMessageBase);
+        }
+
+        return;
       }
     }
 
@@ -125,7 +149,7 @@ export const onGameUpdateTrigger = functions.firestore
       return updateCurrGame({ currentVote: null });
     }
 
-    if (gameOver) return functions.logger.log("Nothing to do");
+    if (gameOver) return functions.logger.log("GAME OVER");
 
     // Game is over if the pouch is empty and one player has no tiles
     const [winningPlayerId] =
@@ -154,6 +178,6 @@ export const onGameUpdateTrigger = functions.firestore
       updateCurrGame(payload);
     }
 
-    functions.logger.log("Nothing to do");
+    functions.logger.log("Game updated. Nothing to do");
     return;
   });

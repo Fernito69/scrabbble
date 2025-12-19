@@ -2,7 +2,7 @@ import { Timestamp } from "../game.model";
 
 export type ChatMessageBase = {
   text: string;
-  playerId: string;
+  playerId: string | undefined;
 };
 
 export interface ChatMessage extends ChatMessageBase {
