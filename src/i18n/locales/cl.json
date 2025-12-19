@@ -25,7 +25,10 @@
     "lastTurn": "Último turno",
     "error": "Error al cargar partidas",
     "noPastGames": "No has terminado ninguna partida 😢",
-    "allLastGames": "Últimas partidas"
+    "allLastGames": "Últimas partidas",
+    "gameOver": "¡Estuvo intenso!",
+    "winningPlayer": "Ganador",
+    "winningScore": "Puntuación"
   },
   "userConfig": {
     "changeName": "Cambiar nombre",

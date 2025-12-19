@@ -73,11 +73,25 @@ export default {
           "0%, 100%": { transform: "scale(1)" },
           "50%": { transform: "scale(1.1)" },
         },
+        "gradient": {
+          "0%, 100%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
+        },
+        "glow": {
+          "0%, 100%": {
+            boxShadow: "0 0 20px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 0, 255, 0.6)",
+          },
+          "50%": {
+            boxShadow: "0 0 40px rgba(255, 215, 0, 1), 0 0 80px rgba(255, 0, 255, 0.8), 0 0 100px rgba(0, 255, 255, 0.6)",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "pulse-scale": "pulse-scale 1s ease-in-out infinite",
+        "gradient": "gradient 3s ease infinite",
+        "glow": "glow 2s ease-in-out infinite",
       },
     },
   },

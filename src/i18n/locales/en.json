@@ -26,7 +26,10 @@
     "lastTurn": "Last turn",
     "error": "Error loading games",
     "noPastGames": "You haven't finished any games yet 😢",
-    "allLastGames": "Last games"
+    "allLastGames": "Last games",
+    "gameOver": "Game over!",
+    "winningPlayer": "Winning player",
+    "winningScore": "Score"
   },
   "languageSelect": {
     "title": "Select language",
