@@ -12,6 +12,7 @@ interface UserAvatarProps {
   diameter?: number;
   bounce?: boolean;
   shadingIndex?: number;
+  hidePicture?: boolean;
 }
 
 const glowColors = [
@@ -26,6 +27,7 @@ export const UserAvatar = ({
   diameter = 40,
   bounce = false,
   shadingIndex,
+  hidePicture = false,
 }: UserAvatarProps) => {
   const userConfig = useUserConfigSnapshot(userId);
   const initials = getInitials(userConfig?.displayName);
@@ -69,8 +71,17 @@ export const UserAvatar = ({
           )}
         </div>
       </TooltipTrigger>
-      <TooltipContent>
-        <p>{userConfig?.displayName || "User"}</p>
+      <TooltipContent className="flex flex-col items-center justify-center max-w-[600px] max-h-[600px]">
+        {userConfig?.photoURL && !hidePicture ? (
+          <img
+            src={userConfig.photoURL}
+            alt={userConfig.displayName || "User"}
+            className="max-w-[600px] max-h-[600px]"
+          />
+        ) : null}
+        <p className="font-semibold mt-2">
+          {userConfig?.displayName || "User"}
+        </p>
       </TooltipContent>
     </Tooltip>
   );
