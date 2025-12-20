@@ -79,14 +79,21 @@ export const useGameStateEffects = ({
 
     // If more than 4 players, redirect to lobby
     if (numPlayers >= MAX_PLAYERS && !userIsPartOfGame) {
-      toast("We are sorry, this game is already full!");
+      toast(t("lobby.tooManyPlayers"));
+      navigate("/");
+      return;
+    }
+
+    // If player doesn't belong to the game, redirect to lobby
+    if (!userIsPartOfGame && state.gameStarted) {
+      toast(t("lobby.notPartOfGame"));
       navigate("/");
       return;
     }
 
     // If already started, redirect to lobby
-    if (state.gameStarted && !userIsPartOfGame) {
-      toast("This game already started, you can't join anymore.");
+    if (state.gameStarted) {
+      toast(t("lobby.alreadyStarted"));
       navigate("/");
       return;
     }

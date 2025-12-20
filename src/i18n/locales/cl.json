@@ -30,7 +30,10 @@
     "winningPlayer": "Ganador",
     "winningScore": "Puntuación",
     "youWon": "¡Ganaste!",
-    "youLost": "¡Perdiste!"
+    "youLost": "¡Perdiste!",
+    "notPartOfGame": "Entero sapo! No eres parte de esta partida",
+    "alreadyStarted": "La partida ya empezó",
+    "tooManyPlayers": "La partida ya está llena, lo siento 😢"
   },
   "userConfig": {
     "changeName": "Cambiar nombre",

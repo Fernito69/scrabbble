@@ -27,7 +27,7 @@ export const LobbyContainer = () => {
 
   return (
     <>
-      <div className="min-h-screen flex flex-col items-center justify-center bg-background p-8">
+      <div className="min-h-screen min-w-200 flex flex-col items-center justify-center bg-background p-8">
         <div className="w-full max-w-2xl space-y-6">
           <div className="text-center space-y-2">
             <ScrabbbbbbleLogo size="text-4xl" />
@@ -37,7 +37,7 @@ export const LobbyContainer = () => {
             </div>
           </div>
 
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 ">
             <div className="flex gap-4">
               <button
                 onClick={() => setIsCreatingGame(true)}
@@ -50,13 +50,13 @@ export const LobbyContainer = () => {
             </div>
           </div>
         </div>
-        <Separator className="my-4 text-muted-foreground w-full max-w-2xl" />
+        <Separator className="my-4 text-muted-foreground w-200 max-w-2xl" />
         <Tabs defaultValue="ongoing">
           <TabsList
             className={
               isAdmin
-                ? "w-full grid grid-cols-3 gap-4"
-                : "w-full grid grid-cols-2 gap-4"
+                ? "w-200 w-min-500 grid grid-cols-3 gap-4"
+                : "w-200 w-min-500 grid grid-cols-2 gap-4"
             }
           >
             <TabsTrigger value="ongoing">{t("lobby.yourGames")}</TabsTrigger>

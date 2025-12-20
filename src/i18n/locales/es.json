@@ -31,7 +31,10 @@
     "winningPlayer": "Ganador",
     "winningScore": "Puntuación",
     "youWon": "¡Ganaste!",
-    "youLost": "¡Perdiste!"
+    "youLost": "¡Perdiste!",
+    "notPartOfGame": "No eres parte de esta partida",
+    "alreadyStarted": "La partida ya ha comenzado",
+    "tooManyPlayers": "La partida ya está llena, lo siento 😢"
   },
   "languageSelect": {
     "title": "Seleccionar idioma",

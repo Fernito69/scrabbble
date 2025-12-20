@@ -69,7 +69,7 @@ export const OngoingGames = () => {
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-4 relative min-h-[200px]">
         {!playerGames && !error && (
-          <OverlayWithLoader className="min-w-50 min-h-50">
+          <OverlayWithLoader className="min-w-200 min-h-200">
             <i>{t("lobby.loadingGames")}</i>
           </OverlayWithLoader>
         )}
