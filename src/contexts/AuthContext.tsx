@@ -2,6 +2,7 @@ import { db } from "@/config/firebase";
 import { authService } from "@/services/auth";
 import { initLanguageTemplate } from "@/services/collections/letterValueMap/languageTemplate";
 import { initUserConfig } from "@/services/collections/userConfig/userConfig";
+import { useGetUserConfig } from "@/services/collections/userConfig/userConfig.hooks";
 import { User } from "firebase/auth";
 import {
   ReactNode,
@@ -14,11 +15,13 @@ import {
 interface AuthContextType {
   user: User | null;
   loading: boolean;
+  isAdmin: boolean;
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
+  isAdmin: false,
 });
 
 export const useAuth = () => {
@@ -37,6 +40,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const userConfig = useGetUserConfig();
+
   useEffect(() => {
     const unsubscribe = authService.onAuthStateChange((user) => {
       setUser(user);
@@ -53,8 +58,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, [user]);
 
+  const isAdmin = userConfig?.isAdmin ?? false;
+
   return (
-    <AuthContext.Provider value={{ user, loading }}>
+    <AuthContext.Provider value={{ user, loading, isAdmin }}>
       {children}
     </AuthContext.Provider>
   );

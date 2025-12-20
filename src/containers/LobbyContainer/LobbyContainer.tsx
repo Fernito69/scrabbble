@@ -14,7 +14,7 @@ import { AllGames } from "./AllGames/AllGames";
 
 export const LobbyContainer = () => {
   const { t } = useTranslation();
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
 
   // State
   const [isCreatingGame, setIsCreatingGame] = useState(false);
@@ -52,14 +52,20 @@ export const LobbyContainer = () => {
         </div>
         <Separator className="my-4 text-muted-foreground w-full max-w-2xl" />
         <Tabs defaultValue="ongoing">
-          {/* <TabsList className="w-full grid grid-cols-3 gap-4"> */}{" "}
-          <TabsList className="w-full grid grid-cols-2 gap-4">
+          <TabsList
+            className={
+              isAdmin
+                ? "w-full grid grid-cols-3 gap-4"
+                : "w-full grid grid-cols-2 gap-4"
+            }
+          >
             <TabsTrigger value="ongoing">{t("lobby.yourGames")}</TabsTrigger>
             <TabsTrigger value="waiting">{t("lobby.pastGames")}</TabsTrigger>
-            {/* HIDDEN FOR NOW */}
-            {/* <TabsTrigger value="all-last">
-              {t("lobby.allLastGames")}
-            </TabsTrigger> */}
+            {isAdmin && (
+              <TabsTrigger value="all-last">
+                {t("lobby.allLastGames")}
+              </TabsTrigger>
+            )}
           </TabsList>
           <TabsContent value="ongoing">
             <OngoingGames />
@@ -67,9 +73,11 @@ export const LobbyContainer = () => {
           <TabsContent value="waiting">
             <PastGames />
           </TabsContent>
-          <TabsContent value="all-last">
-            <AllGames />
-          </TabsContent>
+          {isAdmin && (
+            <TabsContent value="all-last">
+              <AllGames />
+            </TabsContent>
+          )}
         </Tabs>
       </div>
       {isCreatingGame && (

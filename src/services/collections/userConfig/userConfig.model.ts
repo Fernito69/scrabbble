@@ -5,6 +5,7 @@ export type UserConfigBase = {
   email?: string;
   language?: Language;
   photoURL?: string;
+  isAdmin?: boolean;
 };
 
 export type UserConfig = UserConfigBase & {
