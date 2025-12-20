@@ -1,4 +1,4 @@
-import { MAX_PLAYERS } from "@/model/core.defaults";
+import { MAX_PLAYERS, PLAYER_HAND_LENGTH } from "@/model/core.defaults";
 import { PlayerIds } from "@/model/core.model";
 import { useUpdateGame } from "@/services/collections/game/game.hooks";
 import { DbGamePayload } from "@/services/collections/game/game.model";
@@ -24,6 +24,7 @@ export const useGameStateEffects = ({
   isMyTurn,
   setLocalPlayerHand,
   hasError,
+  localPlayerHand,
 }: UseGameStateEffects) => {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -31,6 +32,26 @@ export const useGameStateEffects = ({
 
   // Mutations
   const updateGame = useUpdateGame(gameId);
+
+  /***************/
+  // HACK: there's a bug that duplicates a tile when you're moving it around.
+  // While I don't figure  out why, this is a fugly workaround
+  /***************/
+  const TILER_ERROR_KEY = "tileError";
+  useEffect(() => {
+    const tileError = localStorage.getItem(TILER_ERROR_KEY);
+    if (tileError) {
+      localStorage.removeItem(TILER_ERROR_KEY);
+      toast(t("lobby.tileError"));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (localPlayerHand.length > PLAYER_HAND_LENGTH) {
+      localStorage.setItem(TILER_ERROR_KEY, JSON.stringify(TILER_ERROR_KEY));
+      window.location.reload();
+    }
+  }, [state?.playerHands]);
 
   /***************/
   // Indicate player should play

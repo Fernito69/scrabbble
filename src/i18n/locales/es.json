@@ -34,7 +34,8 @@
     "youLost": "¡Perdiste!",
     "notPartOfGame": "No eres parte de esta partida",
     "alreadyStarted": "La partida ya ha comenzado",
-    "tooManyPlayers": "La partida ya está llena, lo siento 😢"
+    "tooManyPlayers": "La partida ya está llena, lo siento 😢",
+    "tileError": "Lo sentimos, encontramos un problema y tuvimos que refrescar la página."
   },
   "languageSelect": {
     "title": "Seleccionar idioma",

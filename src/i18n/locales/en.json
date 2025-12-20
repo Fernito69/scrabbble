@@ -34,7 +34,8 @@
     "youLost": "You lost!",
     "notPartOfGame": "You are not part of this game",
     "alreadyStarted": "Game already started",
-    "tooManyPlayers": "Game is already full, sorry 😢"
+    "tooManyPlayers": "Game is already full, sorry 😢",
+    "tileError": "Sorry, we encountered a problem and had to refresh the page."
   },
   "languageSelect": {
     "title": "Select language",

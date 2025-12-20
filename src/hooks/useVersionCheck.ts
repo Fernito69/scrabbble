@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 
 interface VersionInfo {
   buildTime: number;
@@ -24,14 +24,14 @@ export function useVersionCheck(options?: {
     try {
       // Add cache-busting query parameter
       const response = await fetch(`/version.json?t=${Date.now()}`, {
-        cache: 'no-cache',
+        cache: "no-cache",
         headers: {
-          'Cache-Control': 'no-cache',
+          "Cache-Control": "no-cache",
         },
       });
 
       if (!response.ok) {
-        console.warn('Failed to fetch version info');
+        console.warn("Failed to fetch version info");
         return;
       }
 
@@ -41,7 +41,7 @@ export function useVersionCheck(options?: {
       if (isFirstCheckRef.current) {
         currentVersionRef.current = versionInfo.buildTime;
         isFirstCheckRef.current = false;
-        console.log('Initial version:', versionInfo.version);
+        console.log("Initial version:", versionInfo.version);
         return;
       }
 
@@ -50,17 +50,22 @@ export function useVersionCheck(options?: {
         currentVersionRef.current !== null &&
         versionInfo.buildTime !== currentVersionRef.current
       ) {
-        console.log('New version detected:', versionInfo.version);
+        console.log("New version detected:", versionInfo.version);
         setHasNewVersion(true);
         onNewVersion?.();
 
         if (autoReload) {
-          console.log('Auto-reloading...');
+          console.log("Auto-reloading...");
           window.location.reload();
         }
       }
+      console.log(
+        "No new version detected",
+        versionInfo.version,
+        new Date().toLocaleDateString()
+      );
     } catch (error) {
-      console.warn('Error checking version:', error);
+      console.warn("Error checking version:", error);
     }
   };
 

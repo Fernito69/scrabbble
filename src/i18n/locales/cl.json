@@ -33,7 +33,8 @@
     "youLost": "¡Perdiste!",
     "notPartOfGame": "Entero sapo! No eres parte de esta partida",
     "alreadyStarted": "La partida ya empezó",
-    "tooManyPlayers": "La partida ya está llena, lo siento 😢"
+    "tooManyPlayers": "La partida ya está llena, lo siento 😢",
+    "tileError": "Puchis, encontramos un problema y tuvimos que actualizar la página :("
   },
   "userConfig": {
     "changeName": "Cambiar nombre",
