@@ -36,7 +36,9 @@
     "tooManyPlayers": "La partida ya está llena, lo siento 😢",
     "tileError": "Puchis, encontramos un problema y tuvimos que actualizar la página :(",
     "yourScore": "Tu puntaje",
-    "showMore": "Mostrar más"
+    "showMore": "Mostrar más",
+    "welcomeMessage": "¡Bienvenidos! Pónganse ready...",
+    "userJoined": "¡{{userName}} se unió! Agárralo a chuchás!"
   },
   "userConfig": {
     "changeName": "Cambiar nombre",

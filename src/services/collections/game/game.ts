@@ -18,11 +18,14 @@ import { GAME_COLLECTION } from "./game.defaults";
 import { mapDbGamePayloadToGameState } from "./game.mappers";
 import { DbGamePayload } from "./game.model";
 import { buildProposeMovePayload, getInitialGamePayload } from "./game.utils";
+import { addChatMessage } from "./chat/chat";
+import { ChatMessageBase } from "./chat/chat.model";
 
 export const createGame = async (
   db: Firestore,
   userId: string,
   template: LanguageTemplate,
+  text: string,
   gameName?: string
 ): Promise<string> => {
   const payload = {
@@ -31,6 +34,12 @@ export const createGame = async (
   } satisfies Partial<DbGamePayload>;
 
   const docRef = await addDoc(collection(db, GAME_COLLECTION), payload);
+
+  // Add welcome message
+  await addChatMessage(db, docRef.id, {
+    text,
+  } satisfies ChatMessageBase);
+
   return docRef.id;
 };
 

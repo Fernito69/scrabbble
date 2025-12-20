@@ -15,12 +15,16 @@ import {
   updateGame,
 } from "./game";
 import { DbGamePayload } from "./game.model";
+import { useTranslation } from "react-i18next";
 
 export const useCreateGame = (gameName?: string) => {
   const { user } = useAuth();
+  const { t } = useTranslation();
   if (!user) throw new Error("User not found");
   return (template: LanguageTemplate, callback?: (gameId: string) => void) =>
-    createGame(db, user.uid, template, gameName).then(callback);
+    createGame(db, user.uid, template, t("lobby.welcomeMessage"), gameName).then(
+      callback
+    );
 };
 
 type UseGetGameSnapshot = {

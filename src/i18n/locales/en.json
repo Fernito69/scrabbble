@@ -37,7 +37,9 @@
     "tooManyPlayers": "Game is already full, sorry 😢",
     "tileError": "Sorry, we encountered a problem and had to refresh the page.",
     "yourScore": "Your score",
-    "showMore": "Show more"
+    "showMore": "Show more",
+    "welcomeMessage": "Welcome to Scrabble!",
+    "userJoined": "{{userName}} joined the game!"
   },
   "languageSelect": {
     "title": "Select language",

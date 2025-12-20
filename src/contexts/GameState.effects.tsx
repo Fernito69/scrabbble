@@ -12,6 +12,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useAuth } from "./AuthContext";
 import { DefaultGame, UseGameStateEffects } from "./GameState.model";
+import { useAddMessage } from "@/services/collections/game/chat/chat.hooks";
+import { ChatMessageBase } from "@/services/collections/game/chat/chat.model";
 
 export const useGameStateEffects = ({
   gameId,
@@ -32,6 +34,7 @@ export const useGameStateEffects = ({
 
   // Mutations
   const updateGame = useUpdateGame(gameId);
+  const addChatMessage = useAddMessage(gameId);
 
   /***************/
   // HACK: there's a bug that duplicates a tile when you're moving it around.
@@ -146,6 +149,11 @@ export const useGameStateEffects = ({
         [user.uid]: hand,
       },
     } satisfies Partial<DbGamePayload>;
+
+    // Add welcome message
+    addChatMessage({
+      text: t("lobby.userJoined", { userName: user.displayName }),
+    } satisfies ChatMessageBase);
 
     updateGame(payload);
 
