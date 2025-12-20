@@ -118,7 +118,7 @@ export const Chat = () => {
               const isOwnMessage = playerId === user?.uid;
               const isSystemMessage = playerId == null;
               const mainContainerCn = cn(
-                "flex",
+                "flex min-w-[30px]",
                 isSystemMessage
                   ? "justify-center"
                   : isOwnMessage
@@ -126,7 +126,7 @@ export const Chat = () => {
                   : "justify-start"
               );
               const secondaryDivCn = cn(
-                `max-w-[95%] rounded-lg p-2 flex items-center relative p-2 shadow-md`,
+                `max-w-[95%] rounded-lg p-2 flex items-center relative p-2 shadow-md min-w-[28px]`,
                 isSystemMessage
                   ? "text-gray-500 bg-gray-300 flex-col"
                   : isOwnMessage
