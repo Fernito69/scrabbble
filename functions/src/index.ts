@@ -74,6 +74,24 @@ export const onGameUpdateTrigger = functions.firestore
     /***************/
     // Add a message if it's a new turn
     /***************/
+    if (!previousGame?.gameStarted && gameStarted) {
+      functions.logger.log("GAME STARTED");
+      try {
+        addChatMessage(firestore, gameId, {
+          text: `Game started!`,
+        } satisfies ChatMessageBase);
+      } catch (error) {
+        functions.logger.error(
+          "Error adding game started message",
+          error,
+          dbGame
+        );
+      }
+    }
+
+    /***************/
+    // Add a message if it's a new turn
+    /***************/
     const previousTurn = previousGame?.currentTurn ?? 0;
 
     if (currentTurn !== previousTurn) {
