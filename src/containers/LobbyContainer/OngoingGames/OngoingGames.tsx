@@ -2,6 +2,7 @@ import { BoardDiorama } from "@/components/BoardDiorama/BoardDiorama";
 import { ConfirmationDialog } from "@/components/Dialog/ConfirmationDialog";
 import { OverlayWithLoader } from "@/components/OverlayWithLoader/OverlayWithLoader";
 import { UserAvatar } from "@/components/UserAvatar";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -26,13 +27,18 @@ import {
   playNotificationSound,
 } from "@/services/collections/game/game.utils";
 import { Trash2 } from "lucide-react";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+const GAMES_PER_PAGE = 10;
+
 export const OngoingGames = () => {
+  // State
+  const [numGamesToShow, setNumGamesToShow] = useState<number>(GAMES_PER_PAGE);
+
   // Data
-  const { playerGames, error } = useGetLastNPlayerGames();
+  const { playerGames, error } = useGetLastNPlayerGames(numGamesToShow);
   const { user } = useAuth();
 
   // Mutations
@@ -216,6 +222,18 @@ export const OngoingGames = () => {
                 </TableBody>
               </Table>
             </div>
+            {numGamesToShow <= playerGames.length && (
+              <div className="flex flex-row gap-2 items-center justify-center">
+                <Button
+                  onClick={() =>
+                    setNumGamesToShow(numGamesToShow + GAMES_PER_PAGE)
+                  }
+                  className="w-full"
+                >
+                  {t("lobby.showMore")}
+                </Button>
+              </div>
+            )}
           </>
         ) : playerGames && !error ? (
           <div className="text-center text-xl font-bold tracking-tight mt-4">

@@ -36,7 +36,8 @@
     "alreadyStarted": "Game already started",
     "tooManyPlayers": "Game is already full, sorry 😢",
     "tileError": "Sorry, we encountered a problem and had to refresh the page.",
-    "yourScore": "Your score"
+    "yourScore": "Your score",
+    "showMore": "Show more"
   },
   "languageSelect": {
     "title": "Select language",

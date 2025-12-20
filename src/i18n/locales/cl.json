@@ -35,7 +35,8 @@
     "alreadyStarted": "La partida ya empezó",
     "tooManyPlayers": "La partida ya está llena, lo siento 😢",
     "tileError": "Puchis, encontramos un problema y tuvimos que actualizar la página :(",
-    "yourScore": "Tu puntaje"
+    "yourScore": "Tu puntaje",
+    "showMore": "Mostrar más"
   },
   "userConfig": {
     "changeName": "Cambiar nombre",

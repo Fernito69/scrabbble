@@ -1,6 +1,7 @@
 import { BoardDiorama } from "@/components/BoardDiorama/BoardDiorama";
 import { OverlayWithLoader } from "@/components/OverlayWithLoader/OverlayWithLoader";
 import { UserAvatar } from "@/components/UserAvatar";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -17,12 +18,18 @@ import {
 import { useAuth } from "@/contexts/AuthContext";
 import { useGetLastNGames } from "@/services/collections/game/game.hooks";
 import { getDefaultGameName } from "@/services/collections/game/game.utils";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+const GAMES_PER_PAGE = 10;
+
 export const AllGames = () => {
+  // State
+  const [numGamesToShow, setNumGamesToShow] = useState<number>(GAMES_PER_PAGE);
+
   // Data
-  const { playerGames, error } = useGetLastNGames();
+  const { playerGames, error } = useGetLastNGames(numGamesToShow);
   const { user } = useAuth();
 
   // Hooks
@@ -137,6 +144,19 @@ export const AllGames = () => {
                 </TableBody>
               </Table>
             </div>
+            {/* TODO: REFACTOR THIS (OngoingGmaes and PastGames) */}
+            {numGamesToShow <= playerGames.length && (
+              <div className="flex flex-row gap-2 items-center justify-center">
+                <Button
+                  onClick={() =>
+                    setNumGamesToShow(numGamesToShow + GAMES_PER_PAGE)
+                  }
+                  className="w-full"
+                >
+                  {t("lobby.showMore")}
+                </Button>
+              </div>
+            )}
           </>
         ) : playerGames && !error ? (
           <div className="text-center text-xl font-bold tracking-tight mt-4">
