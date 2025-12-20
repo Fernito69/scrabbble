@@ -25,6 +25,7 @@ export const Chat = () => {
   const [inputValue, setInputValue] = useState("");
   const [isCollapsed, setIsCollapsed] = useState(false);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const lastTapRef = useRef<{ messageId: string; time: number } | null>(null);
 
   // Hooks
   const { messages, error } = useGetLastNChatMessages(gameId, 50);
@@ -87,6 +88,24 @@ export const Chat = () => {
       } satisfies Partial<ChatMessageDb>,
       id
     );
+  };
+
+  const handleTouchEnd = (id: string) => {
+    const now = Date.now();
+    const DOUBLE_TAP_DELAY = 300; // milliseconds
+
+    if (
+      lastTapRef.current &&
+      lastTapRef.current.messageId === id &&
+      now - lastTapRef.current.time < DOUBLE_TAP_DELAY
+    ) {
+      // Double tap detected
+      handleLikeComment(id);
+      lastTapRef.current = null;
+    } else {
+      // First tap
+      lastTapRef.current = { messageId: id, time: now };
+    }
   };
 
   // Collapsed state
@@ -176,6 +195,7 @@ export const Chat = () => {
                   <div
                     className={secondaryDivCn}
                     onDoubleClick={() => handleLikeComment(id)}
+                    onTouchEnd={() => handleTouchEnd(id)}
                   >
                     {numLikes > 0 && (
                       <div className="absolute -bottom-3 left-2 text-[8px] rounded-full bg-gray-800 px-[3px] py-[1px] text-white">
