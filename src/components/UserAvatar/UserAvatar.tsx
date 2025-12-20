@@ -71,15 +71,15 @@ export const UserAvatar = ({
           )}
         </div>
       </TooltipTrigger>
-      <TooltipContent className="flex flex-col items-center justify-center max-w-[600px] max-h-[600px]">
+      <TooltipContent className="flex flex-col items-center justify-center max-w-[600px] max-h-[600px] px-2">
         {userConfig?.photoURL && !hidePicture ? (
           <img
             src={userConfig.photoURL}
             alt={userConfig.displayName || "User"}
-            className="max-w-[600px] max-h-[600px]"
+            className="max-w-[592px] max-h-[592px] border border-gray-300 rounded-sm mx-2 mb-2"
           />
         ) : null}
-        <p className="font-semibold mt-2">
+        <p className="font-semibold">
           {userConfig?.displayName || "User"}
         </p>
       </TooltipContent>
