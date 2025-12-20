@@ -28,14 +28,15 @@
     "noPastGames": "You haven't finished any games yet 😢",
     "allLastGames": "Last games",
     "gameOver": "Game over!",
-    "winningPlayer": "Winning player",
-    "winningScore": "Score",
+    "winningPlayer": "Winning Player",
+    "winningScore": "Winning Score",
     "youWon": "You won!",
     "youLost": "You lost!",
     "notPartOfGame": "You are not part of this game",
     "alreadyStarted": "Game already started",
     "tooManyPlayers": "Game is already full, sorry 😢",
-    "tileError": "Sorry, we encountered a problem and had to refresh the page."
+    "tileError": "Sorry, we encountered a problem and had to refresh the page.",
+    "yourScore": "Your score"
   },
   "languageSelect": {
     "title": "Select language",

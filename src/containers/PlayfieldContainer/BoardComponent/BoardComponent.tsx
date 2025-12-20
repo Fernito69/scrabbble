@@ -133,6 +133,12 @@ export const BoardComponent = ({
               ></div>
             </div>
           </div>
+
+          {winningPlayerId != null && winningPlayerId !== user?.uid && (
+            <div className="text-lg flex flex-row gap-2 items-center border rounded-md border-gray-400 bg-gray-100 p-2 mt-2">
+              {t("lobby.yourScore")}:<b>{state.score.total[user!.uid]}</b> 😢
+            </div>
+          )}
         </OverlayWithLoader>
       )}
       <div className="flex justify-center items-center p-4 rounded-xl bg-green-700 border-green-400 border-1">
