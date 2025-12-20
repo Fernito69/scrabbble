@@ -22,9 +22,13 @@ export const useCreateGame = (gameName?: string) => {
   const { t } = useTranslation();
   if (!user) throw new Error("User not found");
   return (template: LanguageTemplate, callback?: (gameId: string) => void) =>
-    createGame(db, user.uid, template, t("lobby.welcomeMessage"), gameName).then(
-      callback
-    );
+    createGame(
+      db,
+      user.uid,
+      template,
+      t("lobby.welcomeMessage"),
+      gameName
+    ).then(callback);
 };
 
 type UseGetGameSnapshot = {
@@ -125,7 +129,7 @@ export const useGetLastNPlayerGames = (
           setError(err);
         }
       ),
-    []
+    [n]
   );
 
   return { playerGames, error };
@@ -156,7 +160,7 @@ export const useGetLastNPastGames = (
           setError(err);
         }
       ),
-    []
+    [n]
   );
 
   return { playerGames, error };
@@ -185,7 +189,7 @@ export const useGetLastNGames = (
           setError(err);
         }
       ),
-    []
+    [n]
   );
 
   console.log("useGetLastNGames", playerGames, error);
