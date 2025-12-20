@@ -1,2 +1,1 @@
-- Chat
-- EMail auth?
+- IMPLEMENT END OF GAME VOTE (distribute points)

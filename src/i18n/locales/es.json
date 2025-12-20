@@ -68,6 +68,11 @@
     "aPlayer": "Un jugador",
     "currentHand": "Tu mano actual"
   },
+  "endOfGameVote": {
+    "titlePrefix": "ha solicitado el final del juego",
+    "description": "Por favor acepta o rechaza la solicitud. Ten en cuenta que los puntos de las fichas restantes de cada jugador/a se restarán de la puntuación de cada uno/a.",
+    "aPlayer": "Un jugador"
+  },
   "readyCheckbox": {
     "ready": "¡Prepara tus nalgas!"
   },
@@ -94,7 +99,9 @@
     "requestReshuffle": "Solicitar barajado",
     "requestInitialReshuffleConfirm": "¡Qué mano tan mala! ¿Quieres solicitar un barajado?",
     "requestReshuffleConfirm": "¿Estás seguro/a de que quieres cambiar tu mano? Vas a perder el turno",
-    "recallTiles": "Recoger fichas"
+    "recallTiles": "Recoger fichas",
+    "endOfGame": "Fin de la partida",
+    "endOfGameConfirm": "¿Estás seguro/a de que quieres hacer una solicitud de fin de partida?"
   },
   "playfield": {
     "welcome": "Bienvenido, {{userName}}",

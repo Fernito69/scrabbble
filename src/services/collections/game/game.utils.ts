@@ -6,6 +6,7 @@ import {
   LetterValueMap,
   Move,
   PlayerHand,
+  PlayerScore,
   Vote,
   VoteType,
 } from "@/model/core.model";
@@ -118,6 +119,29 @@ export const getNextPlayerAndTurn = (
   const nextTurn = isEndOfTurn ? state.currentTurn + 1 : state.currentTurn;
 
   return { nextPlayerId: state.playerIds[nextPlayerIndex]!, nextTurn };
+};
+
+export const getEndOfGamePointsToSubtract = (
+  state: GameState,
+  template: LanguageTemplate
+): PlayerScore => {
+  const pointsToSubtract = Object.entries(state.playerHands).reduce(
+    (acc, [playerId, hand]) => {
+      return {
+        ...acc,
+        [playerId]: hand
+          .filter(Boolean)
+          .reduce(
+            (a, letter: LetterLiteral | null) =>
+              a + (letter != null ? template.scoreMap[letter]! : 0),
+            0
+          ),
+      } satisfies PlayerScore;
+    },
+    {} as PlayerScore
+  ) as PlayerScore;
+
+  return pointsToSubtract;
 };
 
 export const buildMovePayload = (
@@ -257,6 +281,24 @@ export const buildInitialReshuffleVotePayload = (
   } satisfies Partial<DbGamePayload>;
 
   return payload;
+};
+
+export const buildEndOfGamePayload = (
+  state: GameState,
+  user: User | null
+): Partial<DbGamePayload> => {
+  if (!user) throw new Error("User not found");
+  return {
+    currentVote: {
+      type: VoteType.END_OF_GAME,
+      proposerId: user.uid,
+      voteFinished: false,
+      votes: state.playerIds.filter(Boolean).map((id) => ({
+        playerId: id!,
+        voted: id === user!.uid ? true : null,
+      })),
+    } satisfies Vote,
+  } satisfies Partial<DbGamePayload>;
 };
 
 export const buildReshufflePayload = (

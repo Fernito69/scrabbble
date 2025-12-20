@@ -24,6 +24,7 @@ import { YourTurnMessage } from "./YourTurnMessage/YourTurnMessage";
 import { UserConfigPopover } from "@/components/UserConfigPopover/UserConfigPopover";
 import { Chat } from "@/components/Chat/Chat";
 import { LanguageInfoModal } from "../LobbyContainer/LanguageSelectDialog/LanguageInfoModal/LanguageInfoModal";
+import { EndOfGameVoteModal } from "./VoteModals/EndOfGameVoteModal/EndOfGameVoteModal";
 
 export const PlayfieldContainer = () => {
   // Hooks
@@ -55,6 +56,7 @@ export const PlayfieldContainer = () => {
     state.currentVote?.type === VoteType.INITIAL_RESHUFFLE &&
     !state.currentVote?.voteFinished &&
     state.playerIds.filter(Boolean).length > 1;
+  const showEndOfGameModal = state.currentVote?.type === VoteType.END_OF_GAME;
   const awaitingApproval =
     state?.currentVote?.type === VoteType.ACCEPT_PROPOSED_MOVE;
 
@@ -206,6 +208,9 @@ export const PlayfieldContainer = () => {
           </div>
           {showReshuffleModal && (
             <ReshuffleVoteModal vote={state!.currentVote!} />
+          )}
+          {showEndOfGameModal && (
+            <EndOfGameVoteModal vote={state!.currentVote!} />
           )}
         </div>
         <div className="max-w-7xl mx-auto">

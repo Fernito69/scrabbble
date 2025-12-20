@@ -111,7 +111,7 @@ export type Board = [
   BoardRow
 ];
 
-type PlayerScore = {
+export type PlayerScore = {
   [PlayerId: string]: number;
 };
 type ScorePerTurn = {
@@ -176,6 +176,7 @@ export enum VoteType {
   START_VOTE = "start_vote",
   ACCEPT_PROPOSED_MOVE = "accept_proposed_move",
   INITIAL_RESHUFFLE = "reshuffle",
+  END_OF_GAME = "end_of_game",
 }
 export type PlayerVote = {
   playerId: string;

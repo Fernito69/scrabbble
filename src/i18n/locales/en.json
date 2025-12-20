@@ -67,6 +67,11 @@
     "description": "Please accept or reject the request",
     "aPlayer": "A player"
   },
+  "endOfGameVote": {
+    "titlePrefix": "has requested the end of the game",
+    "description": "Please accept or reject the request. Note that the points of each one's remaing tiles will be subtracted from everyone's score.",
+    "aPlayer": "A player"
+  },
   "readyCheckbox": {
     "ready": "Get ready!"
   },
@@ -93,7 +98,9 @@
     "requestReshuffle": "Request reshuffle",
     "requestReshuffleConfirm": "Are you sure you want to change your hand? You will lose the turn",
     "requestInitialReshuffleConfirm": "What a shitty hand! Do you want to request a reshuffle?",
-    "recallTiles": "Pick tiles back"
+    "recallTiles": "Pick tiles back",
+    "endOfGame": "End of game",
+    "endOfGameConfirm": "Are you sure you want to make an end of game request?"
   },
   "playfield": {
     "welcome": "Welcome, {{userName}}",
@@ -110,8 +117,8 @@
     "linkCopied": "Invitation link copied to clipboard!",
     "gameName": "Game name:",
     "awaitingApproval": "Waiting for:",
-    "wildcardPrompt": "What letter do you want to use for the wildcard?",
-    "invalidWildcard": "The wildcard is invalid, please try another letter"
+    "invalidWildcard": "The wildcard is invalid, please try another letter",
+    "wildcardPrompt": "What letter do you want to use for the wildcard?"
   },
   "playerVotes": {
     "accept": "Accept",

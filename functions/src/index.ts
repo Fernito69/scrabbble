@@ -20,12 +20,19 @@ import { DbGamePayload } from "../../src/services/collections/game/game.model";
 import {
   buildMovePayload,
   computeRemainingTilesScore,
+  getEndOfGamePointsToSubtract,
   getInitialGamePayload,
 } from "../../src/services/collections/game/game.utils";
 
 admin.initializeApp();
 
 export const firestore = admin.firestore() as any;
+
+// Helpers
+const isAccepted = (currentVote: Vote) =>
+  currentVote.votes.every((v) => !!v.voted);
+const isRejected = (currentVote: Vote) =>
+  currentVote.votes.every((v) => v.voted === false);
 
 // Admin SDK compatible version of updateGame
 const updateGame = (
@@ -55,7 +62,7 @@ export const onGameUpdateTrigger = functions.firestore
   .document("games/{id}")
   .onUpdate(async (doc, context) => {
     const dbGame = doc.after.data() as DbGamePayload;
-    const previousGame = doc.before.data() as DbGamePayload;
+    const previousGame = doc.before.data() as DbGamePayload | undefined;
     const state: GameState = mapDbGamePayloadToGameState(dbGame);
     const gameId = context.params.id;
     const updateCurrGame = (payload: Partial<DbGamePayload>) =>
@@ -72,13 +79,14 @@ export const onGameUpdateTrigger = functions.firestore
     } = state;
 
     /***************/
-    // Add a message if it's a new turn
+    // Add a message if it's a new game
     /***************/
     if (!previousGame?.gameStarted && gameStarted) {
       functions.logger.log("GAME STARTED");
       try {
+        // TODO: localize
         addChatMessage(firestore, gameId, {
-          text: `Game started!`,
+          text: `LET'S GO!`,
         } satisfies ChatMessageBase);
       } catch (error) {
         functions.logger.error(
@@ -100,7 +108,7 @@ export const onGameUpdateTrigger = functions.firestore
       );
       try {
         addChatMessage(firestore, gameId, {
-          text: 1,
+          text: currentTurn,
         } satisfies ChatMessageBase);
       } catch (error) {
         functions.logger.error("Error adding turn message", error, dbGame);
@@ -140,7 +148,7 @@ export const onGameUpdateTrigger = functions.firestore
     /***************/
     if (currentVote?.type === VoteType.INITIAL_RESHUFFLE && !!template) {
       // Shuffle accepted
-      if (currentVote.votes.every((v) => !!v.voted)) {
+      if (isAccepted(currentVote)) {
         const payload = {
           ...getInitialGamePayload(createdByUserId, template),
           gameName,
@@ -151,7 +159,7 @@ export const onGameUpdateTrigger = functions.firestore
         return updateCurrGame(payload);
       }
       // Shuffle rejected
-      else if (currentVote.votes.every((v) => v.voted === false)) {
+      else if (isRejected(currentVote)) {
         functions.logger.log("Initial shuffle rejected");
         return updateCurrGame({
           currentVote: null,
@@ -160,12 +168,45 @@ export const onGameUpdateTrigger = functions.firestore
     }
 
     /***************/
+    // Vote for end of game
+    /***************/
+    if (currentVote?.type === VoteType.END_OF_GAME && !!template) {
+      // End of game accepted
+      if (isAccepted(currentVote)) {
+        functions.logger.log("End of game accepted");
+
+        // TODO: refactor to game.utils or something
+        const payload = {
+          gameOver: true,
+          score: { ...cloneDeep(state.score) },
+        } satisfies Partial<DbGamePayload>;
+
+        // Subtract points
+        const pointsToSubtract = getEndOfGamePointsToSubtract(state, template);
+        Object.keys(payload.score.total).forEach((playerId) => {
+          payload.score.total[playerId] -= pointsToSubtract[playerId];
+        });
+
+        return updateCurrGame(payload);
+      }
+
+      // End of game rejected
+      else if (isRejected(currentVote)) {
+        functions.logger.log("End of game rejected");
+        return updateCurrGame({
+          currentVote: null,
+        } satisfies Partial<DbGamePayload>);
+      }
+    }
+
+    /***************/
     // Vote failsafe (I've experienced some weird bugs with firebase, some kind of race condition maybe)
-    const failSafeEligibleTypes = [
+    const failSafeEligibleTypes: VoteType[] = [
       VoteType.INITIAL_RESHUFFLE,
       VoteType.ACCEPT_PROPOSED_MOVE,
       VoteType.START_VOTE,
-    ] as const;
+      VoteType.END_OF_GAME,
+    ];
 
     if (
       !!currentVote &&

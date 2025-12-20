@@ -11,13 +11,20 @@ import { PLAYER_HAND_LENGTH } from "@/model/core.defaults";
 import { PlayerHand, VoteType } from "@/model/core.model";
 import { useUpdateGame } from "@/services/collections/game/game.hooks";
 import {
+  buildEndOfGamePayload,
   buildInitialReshuffleVotePayload,
   buildProposeMovePayload,
   buildReshufflePayload,
   buildSkipTurnPayload,
   isMoveValid,
 } from "@/services/collections/game/game.utils";
-import { SendHorizontal, Shuffle, SkipForward, Undo } from "lucide-react";
+import {
+  OctagonX,
+  SendHorizontal,
+  Shuffle,
+  SkipForward,
+  Undo,
+} from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useClickToSelect } from "../../useClickToSelect.hook";
@@ -76,6 +83,11 @@ export const PlayerControls = () => {
     updateGame(buildReshufflePayload(state, user));
   };
 
+  const handleEndOfGame = () => {
+    if (!state) return;
+    updateGame(buildEndOfGamePayload(state, user));
+  };
+
   const handleRecallTiles = () => {
     if (!state) return;
     clickToSelect.clearSelection();
@@ -114,6 +126,8 @@ export const PlayerControls = () => {
     state.currentVote?.type === VoteType.ACCEPT_PROPOSED_MOVE;
   const showRecallTilesButton =
     isMyTurn && !state.currentVote && localProposedMove.length > 0;
+  const showEndOfGameButton =
+    state.tilePouch.length === 0 && !state.currentVote;
 
   const showControls =
     !proposeMoveButtonDisabled ||
@@ -121,7 +135,8 @@ export const PlayerControls = () => {
     showInitialReshuffleButton ||
     showReshuffleButton ||
     showProposedMoveCheckbox ||
-    showRecallTilesButton;
+    showRecallTilesButton ||
+    showEndOfGameButton;
 
   // Render
   return (
@@ -238,6 +253,27 @@ export const PlayerControls = () => {
             </TooltipTrigger>
             <TooltipContent>
               <p>{t("playerControls.recallTiles")}</p>
+            </TooltipContent>
+          </Tooltip>
+        )}
+        {showEndOfGameButton && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div>
+                <ConfirmationDialog
+                  title={t("playerControls.endOfGame")}
+                  description={t("playerControls.endOfGameConfirm")}
+                  onAccept={handleEndOfGame}
+                  triggerElement={
+                    <Button size="icon" variant={"destructive"}>
+                      <OctagonX className="h-4 w-4" />
+                    </Button>
+                  }
+                />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{t("playerControls.endOfGame")}</p>
             </TooltipContent>
           </Tooltip>
         )}

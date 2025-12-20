@@ -72,6 +72,12 @@
     "aPlayer": "Un jugador",
     "currentHand": "Tu mano actual"
   },
+  "endOfGameVote": {
+    "titlePrefix": "ha solicitado el final del juego",
+    "description": "Por favor acepta o rechaza la solicitud. Ten en cuenta que los puntos de las fichas restantes de cada jugador/a se restarán de la puntuación de cada uno/a.",
+    "aPlayer": "Un jugador",
+    "currentHand": "Tu mano actual"
+  },
   "readyCheckbox": {
     "ready": "¡Prepara tus nalgas!"
   },
@@ -94,8 +100,8 @@
     "requestInitialReshuffleConfirm": "¡La mano ql mala! ¿Y si partimos de nuevo?",
     "requestReshuffleConfirm": "¿Tai seguro/a de que quieres cambiar tu mano? Vas a perder el turno",
     "recallTiles": "Recoge tus fichas",
-    "wildcardPrompt": "¿Qué letra deseas usar para el comodín?",
-    "invalidWildcard": "El comodín no es válido, por favor intenta otra letra"
+    "endOfGame": "Fin de la partida",
+    "endOfGameConfirm": "¿Estás seguro/a de que quieres hacer una solicitud de fin de partida?"
   },
   "playfield": {
     "welcome": "Weeeena, {{userName}}",
@@ -110,7 +116,9 @@
     "invitePlayers": "Invita a tus miwis",
     "inviteMessage": "Te invito a jugar scrabbbbbbleeeeee! {{url}}",
     "linkCopied": "Link copiado, mándaselo a los brocas!",
-    "gameName": "Nombre de la partida:"
+    "gameName": "Nombre de la partida:",
+    "invalidWildcard": "El comodín no es válido, por favor intenta otra letra",
+    "wildcardPrompt": "¿Qué letra deseas usar para el comodín?"
   },
   "playerVotes": {
     "accept": "Aceptar",
