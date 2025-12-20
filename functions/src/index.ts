@@ -100,7 +100,7 @@ export const onGameUpdateTrigger = functions.firestore
       );
       try {
         addChatMessage(firestore, gameId, {
-          text: `Turn ${currentTurn}`,
+          text: 1,
         } satisfies ChatMessageBase);
       } catch (error) {
         functions.logger.error("Error adding turn message", error, dbGame);

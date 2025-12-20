@@ -1,7 +1,9 @@
 import { Timestamp } from "../game.model";
 
 export type ChatMessageBase = {
-  text: string;
+  // typeof text == "number" for turn messages
+  // typeof text == "string" for other messages
+  text: string | number;
   playerId?: string;
   likes?: Record<string, boolean | undefined>;
 };

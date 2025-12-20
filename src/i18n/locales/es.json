@@ -132,6 +132,7 @@
     "error": "Error al cargar mensajes",
     "collapse": "Contraer chat",
     "expand": "Expandir chat",
-    "like": "Doble clic para para 💖"
+    "like": "Doble clic para para 💖",
+    "turn": "Turno {{turn}}"
   }
 }

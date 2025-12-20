@@ -152,7 +152,7 @@ export const useGameStateEffects = ({
 
     // Add welcome message
     addChatMessage({
-      text: t("lobby.userJoined", { userName: user.displayName }),
+      text: t("lobby.userJoined", { userName: user?.displayName ?? "User" }),
     } satisfies ChatMessageBase);
 
     updateGame(payload);

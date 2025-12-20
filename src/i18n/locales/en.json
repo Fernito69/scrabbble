@@ -132,6 +132,7 @@
     "error": "Error loading messages",
     "collapse": "Collapse chat",
     "expand": "Expand chat",
-    "like": "Double click to 💖"
+    "like": "Double click to 💖",
+    "turn": "Turn {{turn}}"
   }
 }

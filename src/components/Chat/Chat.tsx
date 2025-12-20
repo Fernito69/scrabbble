@@ -21,7 +21,7 @@ export const Chat = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const lastTapRef = useRef<{ messageId: string; time: number } | null>(null);
-  const previousMessageCountRef = useRef(0);
+  const previousMessageIdRef = useRef<string>("");
 
   // Hooks
   const { messages, error } = useGetLastNChatMessages(gameId, 50);
@@ -30,8 +30,12 @@ export const Chat = () => {
 
   // Play notification sound and scroll to bottom
   useEffect(() => {
-    const currentMessageCount = messages?.length ?? 0;
-    const hasNewMessage = currentMessageCount > previousMessageCountRef.current;
+    const currentLastMessage = messages
+      ? messages[messages.length - 1]
+      : undefined;
+    const hasNewMessage =
+      currentLastMessage &&
+      currentLastMessage.id !== previousMessageIdRef.current;
 
     if (hasNewMessage) {
       scrollToChatBottom();
@@ -40,7 +44,7 @@ export const Chat = () => {
       }
     }
 
-    previousMessageCountRef.current = currentMessageCount;
+    previousMessageIdRef.current = currentLastMessage?.id ?? "";
   }, [messages, user?.uid]);
 
   useEffect(() => {
@@ -79,7 +83,8 @@ export const Chat = () => {
 
   // TODO: refactor this
   const handleLikeComment = (id: string) => {
-    if (!user) return;
+    // System messages can't be liked
+    if (!user || messages?.find((m) => m.id === id)?.playerId == null) return;
 
     const currLikes = (messages?.find((m) => m.id === id)?.likes ??
       {}) satisfies ChatMessageDb["likes"];
@@ -194,6 +199,9 @@ export const Chat = () => {
                 minute: "2-digit",
               });
               const longTimeString = createdAt.toLocaleString();
+              // Failsafe for old format turn messages
+              const isOldFormatTurnMessage =
+                isSystemMessage && typeof text === "string";
 
               return (
                 <div key={id} className={mainContainerCn}>
@@ -217,7 +225,12 @@ export const Chat = () => {
                         />
                       </div>
                     )}
-                    {isSystemMessage && (
+                    {isSystemMessage && !isOldFormatTurnMessage && (
+                      <div className="flex flow-row justify-center items-center text-semibold text-sm">
+                        {t("chat.turn", { turn: text })}
+                      </div>
+                    )}
+                    {isSystemMessage && isOldFormatTurnMessage && (
                       <div className="flex flow-row justify-center items-center text-semibold text-sm">
                         {text}
                       </div>
@@ -228,7 +241,7 @@ export const Chat = () => {
                       </div>
                     )}
                     {/* For now system message is just for the turn */}
-                    {!isSystemMessage && (
+                    {!isSystemMessage && typeof text === "string" && (
                       <div className="text-sm break-words text-start">
                         {text}
                       </div>
