@@ -51,7 +51,7 @@ export const useGameStateEffects = ({
       localStorage.setItem(TILER_ERROR_KEY, JSON.stringify(TILER_ERROR_KEY));
       window.location.reload();
     }
-  }, [state?.playerHands]);
+  }, [localPlayerHand]);
 
   /***************/
   // Indicate player should play

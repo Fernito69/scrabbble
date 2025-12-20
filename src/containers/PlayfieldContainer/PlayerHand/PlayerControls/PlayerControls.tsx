@@ -14,15 +14,14 @@ import {
   buildInitialReshuffleVotePayload,
   buildProposeMovePayload,
   buildReshufflePayload,
-  buildSkipTurnPayload,
   isMoveValid,
 } from "@/services/collections/game/game.utils";
+import { SendHorizontal, Shuffle, Undo } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import { useClickToSelect } from "../../useClickToSelect.hook";
 import { AcceptProposedMoveCheckbox } from "./AcceptProposedMoveCheckbox/AcceptProposedMoveCheckbox";
 import { ReadyCheckbox } from "./ReadyCheckbox/ReadyCheckbox";
-import { SendHorizontal, SkipForward, Shuffle, Undo } from "lucide-react";
-import { useClickToSelect } from "../../useClickToSelect.hook";
 
 export const PlayerControls = () => {
   // Hooks
@@ -58,11 +57,11 @@ export const PlayerControls = () => {
     setLocalProposedMove([]);
   };
 
-  const handleSkipTurn = () => {
-    if (!state || !user) return;
-    updateGame(buildSkipTurnPayload(user.uid, state));
-    setLocalProposedMove([]);
-  };
+  // const handleSkipTurn = () => {
+  //   if (!state || !user) return;
+  //   updateGame(buildSkipTurnPayload(user.uid, state));
+  //   setLocalProposedMove([]);
+  // };
 
   const handleInitialReshuffle = () => {
     if (!state) return;
@@ -154,7 +153,7 @@ export const PlayerControls = () => {
                 </TooltipContent>
               </Tooltip>
             )}
-            {showSkipTurnButton && (
+            {/* {showSkipTurnButton && (
               <Tooltip>
                 <TooltipTrigger asChild>
                   <div>
@@ -174,7 +173,7 @@ export const PlayerControls = () => {
                   <p>{t("playerControls.skipTurn")}</p>
                 </TooltipContent>
               </Tooltip>
-            )}
+            )} */}
           </>
         )}
         {showReadyCheckbox && <ReadyCheckbox vote={state.currentVote!} />}
@@ -210,7 +209,10 @@ export const PlayerControls = () => {
                   description={t("playerControls.requestReshuffleConfirm")}
                   onAccept={handleReshuffle}
                   triggerElement={
-                    <Button size="icon">
+                    <Button
+                      size="icon"
+                      className="bg-yellow-500 hover:bg-yellow-400"
+                    >
                       <Shuffle className="h-4 w-4" />
                     </Button>
                   }
