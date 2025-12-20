@@ -75,7 +75,9 @@ export const LanguageInfoModal = ({ template, small = false }: Props) => {
                   key={score}
                   className={i % 2 === 0 ? "bg-gray-50" : "bg-gray-100"}
                 >
-                  <TableCell>{score}</TableCell>
+                  <TableCell className="bg-muted text-muted-foreground font-semibold">
+                    {score}
+                  </TableCell>
                   {quantityRange.map((q) => {
                     const letters = (
                       Object.entries(template.scoreMap) as [

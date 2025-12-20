@@ -88,7 +88,13 @@ export const ScoreBoard = () => {
             const otherCn = i % 2 === 0 ? "bg-white" : "bg-gray-50";
             return (
               <TableRow key={i}>
-                <TableCell className={cn(otherCn, borderCn)}>
+                <TableCell
+                  className={cn(
+                    otherCn,
+                    borderCn,
+                    "bg-muted text-muted-foreground font-semibold"
+                  )}
+                >
                   {turn + 1}
                 </TableCell>
                 {playerScores.map((score, j) => (
