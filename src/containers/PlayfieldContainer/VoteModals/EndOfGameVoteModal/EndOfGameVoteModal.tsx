@@ -49,7 +49,7 @@ export const EndOfGameVoteModal = ({ vote }: Props) => {
   // Render
   return (
     <Dialog open>
-      <DialogContent className="min-w-[800px] max-w-[90vw]">
+      <DialogContent className="max-w-[99vw] xl:max-w-[55vw] lg:max-w-[90vw]">
         <button
           onClick={() => navigate("/")}
           className="absolute right-12 top-4 px-4 py-2 text-sm border border-input rounded-md hover:bg-accent"
