@@ -71,6 +71,24 @@ export const onGameUpdateTrigger = functions.firestore
       playerHands,
     } = state;
 
+    /***************/
+    // Add a message if it's a new turn
+    /***************/
+    const previousTurn = previousGame?.currentTurn ?? 0;
+
+    if (currentTurn !== previousTurn) {
+      functions.logger.log(
+        "TURN CHANGE FROM " + previousTurn + " TO " + currentTurn
+      );
+      try {
+        addChatMessage(firestore, gameId, {
+          text: `Turn ${currentTurn}`,
+        } satisfies ChatMessageBase);
+      } catch (error) {
+        functions.logger.error("Error adding turn message", error, dbGame);
+      }
+    }
+
     const presentPlayers = playerIds.filter(Boolean);
 
     /***************/
@@ -95,22 +113,7 @@ export const onGameUpdateTrigger = functions.firestore
 
       if (payload) {
         functions.logger.log("Proposed move vote finished");
-        updateCurrGame(payload);
-
-        // Add a message if it's a new turn
-        if (payload?.currentTurn !== previousGame?.currentTurn) {
-          functions.logger.log(
-            "TURN CHANGE FROM" +
-              previousGame?.currentTurn +
-              " TO " +
-              payload.currentTurn
-          );
-          addChatMessage(firestore, gameId, {
-            text: `Turn ${payload.currentTurn}`,
-          } satisfies ChatMessageBase);
-        }
-
-        return;
+        return updateCurrGame(payload);
       }
     }
 
@@ -132,12 +135,14 @@ export const onGameUpdateTrigger = functions.firestore
       // Shuffle rejected
       else if (currentVote.votes.every((v) => v.voted === false)) {
         functions.logger.log("Initial shuffle rejected");
-        return updateCurrGame({ currentVote: null });
+        return updateCurrGame({
+          currentVote: null,
+        } satisfies Partial<DbGamePayload>);
       }
     }
 
     /***************/
-    // Vote failsafe (I've experienced some weird bugs with firebase, some kind of race condition)
+    // Vote failsafe (I've experienced some weird bugs with firebase, some kind of race condition maybe)
     const failSafeEligibleTypes = [
       VoteType.INITIAL_RESHUFFLE,
       VoteType.ACCEPT_PROPOSED_MOVE,
@@ -150,7 +155,13 @@ export const onGameUpdateTrigger = functions.firestore
       currentVote.votes.every((v) => v.voted === false)
     ) {
       functions.logger.log("Failsafe: resetting currentVote");
-      return updateCurrGame({ currentVote: null });
+      try {
+        updateCurrGame({
+          currentVote: null,
+        } satisfies Partial<DbGamePayload>);
+      } catch (error) {
+        functions.logger.error("Error resetting currentVote", error, dbGame);
+      }
     }
 
     // Game is over if the pouch is empty and one player has no tiles
