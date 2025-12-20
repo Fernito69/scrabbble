@@ -4,9 +4,16 @@ import { cn } from "@/lib/utils";
 import {
   useAddMessage,
   useGetLastNChatMessages,
+  useUpdateMessage,
 } from "@/services/collections/game/chat/chat.hooks";
+import { ChatMessageDb } from "@/services/collections/game/chat/chat.model";
 import { playNotificationSound } from "@/services/collections/game/game.utils";
-import { ChevronLeft, ChevronRight, MessagesSquare, Send } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  MessagesSquare,
+  Send
+} from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { UserAvatar } from "../UserAvatar";
@@ -14,7 +21,7 @@ import { UserAvatar } from "../UserAvatar";
 export const Chat = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
-  const { gameId } = useGameContext();
+  const { gameId, state } = useGameContext();
   const [inputValue, setInputValue] = useState("");
   const [isCollapsed, setIsCollapsed] = useState(false);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
@@ -22,6 +29,7 @@ export const Chat = () => {
   // Hooks
   const { messages, error } = useGetLastNChatMessages(gameId, 50);
   const addMessage = useAddMessage(gameId);
+  const updateMessage = useUpdateMessage(gameId);
 
   // Play notification sound and scroll to bottom
   useEffect(() => {
@@ -63,6 +71,23 @@ export const Chat = () => {
       </div>
     );
   }
+
+  // TODO: refactor this
+  const handleLikeComment = (id: string) => {
+    if (!user) return;
+
+    const currLikes = (messages?.find((m) => m.id === id)?.likes ??
+      {}) satisfies ChatMessageDb["likes"];
+    updateMessage(
+      {
+        likes: {
+          ...currLikes,
+          [user.uid]: !currLikes[user.uid],
+        },
+      } satisfies Partial<ChatMessageDb>,
+      id
+    );
+  };
 
   // Collapsed state
   if (isCollapsed) {
@@ -114,9 +139,12 @@ export const Chat = () => {
             .slice()
             .reverse()
             .map((m) => {
-              const { text, createdAt, id, playerId } = m;
+              const { text, createdAt, id, playerId, likes } = m;
               const isOwnMessage = playerId === user?.uid;
               const isSystemMessage = playerId == null;
+              const numLikes = Object.values(likes ?? {}).filter(
+                Boolean
+              ).length;
               const mainContainerCn = cn(
                 "flex min-w-[30px]",
                 isSystemMessage
@@ -126,7 +154,7 @@ export const Chat = () => {
                   : "justify-start"
               );
               const secondaryDivCn = cn(
-                `max-w-[95%] rounded-lg p-2 flex items-center relative p-2 shadow-md min-w-[28px]`,
+                `max-w-[95%] rounded-lg p-2 flex items-center relative p-2 shadow-md min-w-[28px] cursor-pointer relative`,
                 isSystemMessage
                   ? "text-gray-500 bg-gray-300 flex-col"
                   : isOwnMessage
@@ -145,10 +173,22 @@ export const Chat = () => {
 
               return (
                 <div key={id} className={mainContainerCn}>
-                  <div className={secondaryDivCn}>
+                  <div
+                    className={secondaryDivCn}
+                    onDoubleClick={() => handleLikeComment(id)}
+                  >
+                    {numLikes > 0 && (
+                      <div className="absolute -bottom-3 left-2 text-[8px] rounded-full bg-gray-800 px-[3px] py-[1px] text-white">
+                        {numLikes > 1 && `${numLikes}x`}❤️
+                      </div>
+                    )}
                     {!isOwnMessage && !isSystemMessage && playerId && (
                       <div className="text-xs mr-2 flex items-top justify-start h-full">
-                        <UserAvatar userId={playerId} diameter={20} />
+                        <UserAvatar
+                          userId={playerId}
+                          diameter={20}
+                          shadingIndex={state?.playerIds.indexOf(playerId)}
+                        />
                       </div>
                     )}
                     {isSystemMessage && (

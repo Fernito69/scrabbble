@@ -1,7 +1,11 @@
 import { db } from "@/config/firebase";
 import { useEffect, useState } from "react";
-import { addChatMessage, getLastNChatMessagesSnapshot } from "./chat";
-import { ChatMessage, ChatMessageBase } from "./chat.model";
+import {
+  addChatMessage,
+  getLastNChatMessagesSnapshot,
+  updateChatMessage,
+} from "./chat";
+import { ChatMessage, ChatMessageBase, ChatMessageDb } from "./chat.model";
 
 export const useGetLastNChatMessages = (
   gameId: string,
@@ -38,6 +42,20 @@ export const useAddMessage = (gameId: string) => {
       return addChatMessage(db, gameId, message);
     } catch (err) {
       console.error("Failed to add message:", err);
+      throw err;
+    }
+  };
+};
+
+export const useUpdateMessage = (gameId: string) => {
+  return async (
+    message: Partial<ChatMessageDb>,
+    id: string
+  ): Promise<string> => {
+    try {
+      return updateChatMessage(db, gameId, id, message);
+    } catch (err) {
+      console.error("Failed to update message:", err);
       throw err;
     }
   };

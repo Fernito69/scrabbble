@@ -1,11 +1,13 @@
 import {
   addDoc,
   collection,
+  doc,
   Firestore,
   limit,
   onSnapshot,
   orderBy,
   query,
+  updateDoc,
 } from "firebase/firestore";
 import { GAME_COLLECTION } from "../game.defaults";
 import { CHAT_COLLECTION } from "./chat.defaults";
@@ -45,6 +47,18 @@ export const addChatMessage = async (
 ) => {
   const colRef = collection(db, GAME_COLLECTION, gameId, CHAT_COLLECTION);
   const docRef = await addDoc(colRef, { ...message, createdAt: new Date() });
+
+  return docRef.id;
+};
+
+export const updateChatMessage = async (
+  db: Firestore,
+  gameId: string,
+  id: string,
+  message: Partial<ChatMessageDb>
+) => {
+  const docRef = doc(db, GAME_COLLECTION, gameId, CHAT_COLLECTION, id);
+  await updateDoc(docRef, message);
 
   return docRef.id;
 };
