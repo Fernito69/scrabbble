@@ -433,3 +433,15 @@ export const getWildcardLetter = (
 
   return { collapsedWildcard, hasError };
 };
+
+export const getWinningPlayerIdAndScore = (
+  state: GameState
+): [string | undefined, number | undefined] => {
+  const res: [string | undefined, number | undefined] | undefined =
+    state.gameOver
+      ? Object.entries(state.score.total).sort(
+          ([_, score1], [, score2]) => score2 - score1
+        )[0]
+      : undefined;
+  return res ?? [undefined, undefined];
+};

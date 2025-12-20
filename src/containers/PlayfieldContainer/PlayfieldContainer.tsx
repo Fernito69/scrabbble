@@ -200,9 +200,11 @@ export const PlayfieldContainer = () => {
           )}
         </div>
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col justify-between items-center mb-8 gap-4">
-            <PlayerHand clickToSelectHandlers={clickToSelectHandlers} />
-          </div>
+          {!state.gameOver && (
+            <div className="flex flex-col justify-between items-center mb-8 gap-4">
+              <PlayerHand clickToSelectHandlers={clickToSelectHandlers} />
+            </div>
+          )}
           <div className="flex flex-row gap-2 w-full justify-center">
             <ScoreBoard />
             <Chat />

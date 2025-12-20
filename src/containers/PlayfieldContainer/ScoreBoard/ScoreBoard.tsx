@@ -10,6 +10,7 @@ import {
 import { useAuth } from "@/contexts/AuthContext";
 import { useGameContext } from "@/contexts/GameState.context";
 import { cn } from "@/lib/utils";
+import { getWinningPlayerIdAndScore } from "@/services/collections/game/game.utils";
 import { useTranslation } from "react-i18next";
 import { YourTurnMessage } from "../YourTurnMessage/YourTurnMessage";
 
@@ -45,6 +46,15 @@ export const ScoreBoard = () => {
   const presentPlayerIds = state.playerIds.filter(Boolean) as string[];
   const borderCn = "border-l ";
 
+  const [winningPlayerId] = getWinningPlayerIdAndScore(state);
+
+  const isHighlighted = (id: string) => {
+    return (
+      (state.gameOver && winningPlayerId === id) ||
+      (!state.gameOver && state.currentPlayerId === id)
+    );
+  };
+
   // Render
   return (
     <div className="rounded-lg border w-1/2 h-fit overflow-hidden">
@@ -55,17 +65,17 @@ export const ScoreBoard = () => {
               {t("scoreBoard.turn")}
             </TableHead>
             {presentPlayerIds.map((id, i) => {
-              const isCurrPlayer = state.currentPlayerId === id;
               return (
                 <TableHead
                   key={i}
-                  className={isCurrPlayer ? "bg-yellow-200" : borderCn}
+                  className={isHighlighted(id) ? "bg-yellow-200" : borderCn}
                 >
                   <div className="flex flex-row items-center justify-center gap-2">
                     <UserAvatar userId={id!} diameter={24} shadingIndex={i} />
-                    {isMyTurn && id === user!.uid && !state.currentVote && (
-                      <YourTurnMessage />
-                    )}
+                    {isMyTurn &&
+                      id === user!.uid &&
+                      !state.currentVote &&
+                      !state.gameOver && <YourTurnMessage />}
                   </div>
                 </TableHead>
               );
@@ -85,8 +95,8 @@ export const ScoreBoard = () => {
                   <TableCell
                     className={cn(
                       j ===
-                        state.playerIds.findIndex(
-                          (id) => id === state.currentPlayerId
+                        state.playerIds.findIndex((id) =>
+                          isHighlighted(id ?? "")
                         )
                         ? playerCn
                         : otherCn,

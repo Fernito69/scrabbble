@@ -3,7 +3,10 @@ import { UserAvatar } from "@/components/UserAvatar";
 import { useAuth } from "@/contexts/AuthContext";
 import { useGameContext } from "@/contexts/GameState.context";
 import { Bonus, Move } from "@/model/core.model";
-import { isMoveValid } from "@/services/collections/game/game.utils";
+import {
+  getWinningPlayerIdAndScore,
+  isMoveValid,
+} from "@/services/collections/game/game.utils";
 import { useGetPlayerName } from "@/services/collections/userConfig/userConfig.hooks";
 import { useTranslation } from "react-i18next";
 import { DraggableBoardTile } from "../TileComponent/DraggableBoardTile";
@@ -53,13 +56,7 @@ export const BoardComponent = ({
   const showWaitingForPlayers =
     !state.gameStarted && state.playerIds.filter(Boolean).length === 1;
 
-  const res: [string | undefined, number | undefined] | undefined = gameOver
-    ? Object.entries(state.score.total).sort(
-        ([_, score1], [, score2]) => score2 - score1
-      )[0]
-    : undefined;
-
-  const [winningPlayerId, winningScore] = res ?? [undefined, undefined];
+  const [winningPlayerId, winningScore] = getWinningPlayerIdAndScore(state);
 
   return (
     <div className="flex justify-center items-center relative min-h-[200px]">
