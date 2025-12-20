@@ -14,9 +14,10 @@ import {
   buildInitialReshuffleVotePayload,
   buildProposeMovePayload,
   buildReshufflePayload,
+  buildSkipTurnPayload,
   isMoveValid,
 } from "@/services/collections/game/game.utils";
-import { SendHorizontal, Shuffle, Undo } from "lucide-react";
+import { SendHorizontal, Shuffle, SkipForward, Undo } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useClickToSelect } from "../../useClickToSelect.hook";
@@ -57,11 +58,11 @@ export const PlayerControls = () => {
     setLocalProposedMove([]);
   };
 
-  // const handleSkipTurn = () => {
-  //   if (!state || !user) return;
-  //   updateGame(buildSkipTurnPayload(user.uid, state));
-  //   setLocalProposedMove([]);
-  // };
+  const handleSkipTurn = () => {
+    if (!state || !user) return;
+    updateGame(buildSkipTurnPayload(user.uid, state));
+    setLocalProposedMove([]);
+  };
 
   const handleInitialReshuffle = () => {
     if (!state) return;
@@ -153,7 +154,7 @@ export const PlayerControls = () => {
                 </TooltipContent>
               </Tooltip>
             )}
-            {/* {showSkipTurnButton && (
+            {showSkipTurnButton && (
               <Tooltip>
                 <TooltipTrigger asChild>
                   <div>
@@ -173,7 +174,7 @@ export const PlayerControls = () => {
                   <p>{t("playerControls.skipTurn")}</p>
                 </TooltipContent>
               </Tooltip>
-            )} */}
+            )}
           </>
         )}
         {showReadyCheckbox && <ReadyCheckbox vote={state.currentVote!} />}
