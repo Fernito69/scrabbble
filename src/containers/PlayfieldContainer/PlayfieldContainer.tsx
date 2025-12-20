@@ -23,6 +23,7 @@ import { useClickToSelect } from "./useClickToSelect.hook";
 import { YourTurnMessage } from "./YourTurnMessage/YourTurnMessage";
 import { UserConfigPopover } from "@/components/UserConfigPopover/UserConfigPopover";
 import { Chat } from "@/components/Chat/Chat";
+import { LanguageInfoModal } from "../LobbyContainer/LanguageSelectDialog/LanguageInfoModal/LanguageInfoModal";
 
 export const PlayfieldContainer = () => {
   // Hooks
@@ -128,7 +129,15 @@ export const PlayfieldContainer = () => {
                 }
               />
               {template && (
-                <Badge label={t("playfield.language")} value={template.name} />
+                <Badge
+                  label={t("playfield.language")}
+                  value={
+                    <div className="flex flex-row items-center gap-2">
+                      {template.name}
+                      <LanguageInfoModal template={template} small />
+                    </div>
+                  }
+                />
               )}
               {state.gameStarted && !state.gameOver && (
                 <>

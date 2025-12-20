@@ -13,6 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { cn } from "@/lib/utils";
 import { LetterLiteral, SpecialLetterLiteral } from "@/model/core.model";
 import { LanguageTemplate } from "@/services/collections/letterValueMap/languageTemplate.model";
 import { Info, Star } from "lucide-react";
@@ -20,8 +21,9 @@ import { useTranslation } from "react-i18next";
 
 interface Props {
   template: LanguageTemplate;
+  small?: boolean;
 }
-export const LanguageInfoModal = ({ template }: Props) => {
+export const LanguageInfoModal = ({ template, small = false }: Props) => {
   const { t } = useTranslation();
 
   const scoreRange: number[] = Array.from(
@@ -34,7 +36,12 @@ export const LanguageInfoModal = ({ template }: Props) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Info className="text-red-600 cursor-pointer h-8 w-8" />
+        <Info
+          className={cn(
+            "text-red-600 cursor-pointer",
+            small ? "h-5 w-5" : "h-8 w-8"
+          )}
+        />
       </DialogTrigger>
       <DialogContent className="max-w-4xl">
         <DialogTitle>
