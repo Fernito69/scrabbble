@@ -8,12 +8,7 @@ import {
 } from "@/services/collections/game/chat/chat.hooks";
 import { ChatMessageDb } from "@/services/collections/game/chat/chat.model";
 import { playNotificationSound } from "@/services/collections/game/game.utils";
-import {
-  ChevronLeft,
-  ChevronRight,
-  MessagesSquare,
-  Send
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, MessagesSquare, Send } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { UserAvatar } from "../UserAvatar";
@@ -26,6 +21,7 @@ export const Chat = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const lastTapRef = useRef<{ messageId: string; time: number } | null>(null);
+  const previousMessageCountRef = useRef(0);
 
   // Hooks
   const { messages, error } = useGetLastNChatMessages(gameId, 50);
@@ -34,10 +30,18 @@ export const Chat = () => {
 
   // Play notification sound and scroll to bottom
   useEffect(() => {
-    scrollToChatBottom();
-    if (messages?.[0]?.playerId === user?.uid) return;
-    playNotificationSound(3);
-  }, [messages]);
+    const currentMessageCount = messages?.length ?? 0;
+    const hasNewMessage = currentMessageCount > previousMessageCountRef.current;
+
+    if (hasNewMessage) {
+      scrollToChatBottom();
+      if (messages?.[0]?.playerId !== user?.uid) {
+        playNotificationSound(3);
+      }
+    }
+
+    previousMessageCountRef.current = currentMessageCount;
+  }, [messages, user?.uid]);
 
   useEffect(() => {
     scrollToChatBottom();
@@ -178,7 +182,8 @@ export const Chat = () => {
                   ? "text-gray-500 bg-gray-300 flex-col"
                   : isOwnMessage
                   ? "bg-primary text-primary-foreground flex-row"
-                  : "bg-muted text-foreground flex-row"
+                  : "bg-muted text-foreground flex-row",
+                numLikes > 0 ? "mb-2" : ""
               );
               const timeCn = cn(
                 "absolute bottom-[1px] text-[6px] mt-1 right-1",
@@ -194,12 +199,13 @@ export const Chat = () => {
                 <div key={id} className={mainContainerCn}>
                   <div
                     className={secondaryDivCn}
+                    title={t("chat.like")}
                     onDoubleClick={() => handleLikeComment(id)}
                     onTouchEnd={() => handleTouchEnd(id)}
                   >
                     {numLikes > 0 && (
-                      <div className="absolute -bottom-3 left-2 text-[8px] rounded-full bg-gray-800 px-[3px] py-[1px] text-white">
-                        {numLikes > 1 && `${numLikes}x`}❤️
+                      <div className="absolute -bottom-3 right-1 text-[8px] rounded-full bg-gray-800 px-[3px] py-[1px] text-white z-10">
+                        ❤️{numLikes > 1 && `x${numLikes}`}
                       </div>
                     )}
                     {!isOwnMessage && !isSystemMessage && playerId && (
