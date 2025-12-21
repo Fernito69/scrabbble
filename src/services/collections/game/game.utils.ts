@@ -493,9 +493,6 @@ export const computeRankingPayload = (
   games: GameState[],
   playerId: string
 ): Ranking => {
-  games = games.filter((g) => g.playerIds.includes(playerId));
-  console.log("GAMES", games);
-
   const totalPoints = games.reduce(
     (acc, game) => acc + game.score.total[playerId]!,
     0
@@ -513,8 +510,6 @@ export const computeRankingPayload = (
         }, 0),
     0
   ) / (numTurns || 1)) satisfies number;
-
-  console.log("avgPointsPerTurn", avgPointsPerTurn);
 
   const avgPointsPerMatch = totalPoints / games.length;
 
