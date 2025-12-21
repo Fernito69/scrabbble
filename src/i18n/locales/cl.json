@@ -131,7 +131,7 @@
     "totalPoints": "Puntos totales",
     "finishedMatches": "Partidas terminadas",
     "avgPointsPerTurn": "Puntos promedio por turno",
-    "avgPointsPerMatch": "Puntos promedio por partido",
+    "avgPointsPerMatch": "Puntos promedio por partida",
     "avgMatchPointsRatio": "Índice RPP",
     "mprTooltipDescription": "El Índice RPP mide el rendimiento relativo de un jugador calculando su promedio de participación de puntos en todas las partidas.",
     "mprTooltipPlayerPoints": "Puntos del jugador",

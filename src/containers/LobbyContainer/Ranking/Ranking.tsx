@@ -48,6 +48,7 @@ export const Ranking = () => {
                 <TableHead>{t("ranking.losses")}</TableHead>
                 <TableHead>{t("ranking.totalPoints")}</TableHead>
                 <TableHead>{t("ranking.winRatio")}</TableHead>
+                <TableHead>{t("ranking.avgPointsPerMatch")}</TableHead>
                 <TableHead>{t("ranking.avgPointsPerTurn")}</TableHead>
                 <TableHead>
                   <Tooltip>
@@ -92,7 +93,11 @@ export const Ranking = () => {
                     <TableCell>{r.wins}</TableCell>
                     <TableCell>{r.losses}</TableCell>
                     <TableCell>{r.totalPoints}</TableCell>
+
                     <TableCell>{(r.winRatio * 100).toFixed(1)}%</TableCell>
+                    <TableCell>
+                      {(r.totalPoints / r.finishedMatches).toFixed(1)}
+                    </TableCell>
                     <TableCell>{r.avgPointsPerTurn.toFixed(1)}</TableCell>
                     <TableCell>
                       {r.avgMatchPointsRatio?.toFixed(3) ?? "-"}

@@ -279,8 +279,9 @@ export const onGameUpdateTrigger = functions.firestore
       } satisfies Partial<DbGamePayload>;
 
       functions.logger.log("GAME OVER! Scores:", score);
+      await updateCurrGame(payload);
 
-      // Trigger ranking computation
+      // Trigger ranking computation after game has been updated
       await Promise.all(
         state.playerIds.filter(Boolean).map(async (playerId) => {
           functions.logger.log("Computing ranking for", playerId);
@@ -289,7 +290,7 @@ export const onGameUpdateTrigger = functions.firestore
       );
 
       functions.logger.log("Rankings updated");
-      return updateCurrGame(payload);
+      return;
     }
 
     functions.logger.log("End of the function. Nothing to do");
