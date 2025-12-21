@@ -129,7 +129,11 @@
     "totalPoints": "Total points",
     "finishedMatches": "Finished matches",
     "avgPointsPerTurn": "Avg points per turn",
-    "avgPointsPerMatch": "Avg points per match"
+    "avgPointsPerMatch": "Avg points per match",
+    "avgMatchPointsRatio": "MPR Index",
+    "mprTooltipDescription": "MPR Index measures a player's relative performance by calculating their average point share across all matches.",
+    "mprTooltipPlayerPoints": "Player points",
+    "mprTooltipTotalPoints": "Total match points"
   },
   "playerVotes": {
     "accept": "Accept",

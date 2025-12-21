@@ -490,9 +490,11 @@ export const getWinningPlayerIdAndScore = (
 };
 
 export const computeRankingPayload = (
-  games: GameState[],
+  games_: GameState[],
   playerId: string
 ): Ranking => {
+  const games = [...games_].filter((g) => g.playerIds.includes(playerId));
+
   const totalPoints = games.reduce(
     (acc, game) => acc + game.score.total[playerId]!,
     0
@@ -511,7 +513,14 @@ export const computeRankingPayload = (
     0
   ) / (numTurns || 1)) satisfies number;
 
-  const avgPointsPerMatch = totalPoints / games.length;
+  console.log(playerId, totalPoints, games.length);
+  const avgMatchPointsRatio = (totalPoints /
+    games.reduce((acc, g) => {
+      const a =
+        acc + Object.values(g.score.total).reduce((accc, pt) => accc + pt, 0);
+      console.log(a);
+      return a;
+    }, 0)) satisfies number;
 
   const finishedMatches = games.length;
 
@@ -529,7 +538,7 @@ export const computeRankingPayload = (
     playerId,
     totalPoints,
     avgPointsPerTurn,
-    avgPointsPerMatch,
+    avgMatchPointsRatio,
     finishedMatches,
     wins,
     losses,

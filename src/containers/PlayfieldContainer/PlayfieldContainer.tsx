@@ -1,30 +1,34 @@
+import { Chat } from "@/components/Chat/Chat";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher/LanguageSwitcher";
 import { ScrabbbbbbleLogo } from "@/components/ScrabbbbbbleLogo/ScrabbbbbbleLogo";
 import { UserAvatar } from "@/components/UserAvatar";
+import { UserConfigPopover } from "@/components/UserConfigPopover/UserConfigPopover";
 import { useAuth } from "@/contexts/AuthContext";
 import { useGameContext } from "@/contexts/GameState.context";
 import { cn } from "@/lib/utils";
 import { VoteType } from "@/model/core.model";
-import { useUpdateGame } from "@/services/collections/game/game.hooks";
-import { getDefaultGameName } from "@/services/collections/game/game.utils";
+import {
+  useUpdateGame
+} from "@/services/collections/game/game.hooks";
+import {
+  getDefaultGameName
+} from "@/services/collections/game/game.utils";
 import { useGetUserConfig } from "@/services/collections/userConfig/userConfig.hooks";
 import { DndContext, DragOverlay } from "@dnd-kit/core";
 import { Edit } from "lucide-react";
 import { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { LanguageInfoModal } from "../LobbyContainer/LanguageSelectDialog/LanguageInfoModal/LanguageInfoModal";
 import { BoardComponent } from "./BoardComponent/BoardComponent";
 import { PlayerHand } from "./PlayerHand/PlayerHand";
 import { usePlayfieldHandlers } from "./PlayfieldContainer.hooks";
 import { ScoreBoard } from "./ScoreBoard/ScoreBoard";
 import { TileComponent } from "./TileComponent/TileComponent";
-import { ReshuffleVoteModal } from "./VoteModals/ReshuffleVoteModal/ReshuffleVoteModal";
 import { useClickToSelect } from "./useClickToSelect.hook";
-import { YourTurnMessage } from "./YourTurnMessage/YourTurnMessage";
-import { UserConfigPopover } from "@/components/UserConfigPopover/UserConfigPopover";
-import { Chat } from "@/components/Chat/Chat";
-import { LanguageInfoModal } from "../LobbyContainer/LanguageSelectDialog/LanguageInfoModal/LanguageInfoModal";
 import { EndOfGameVoteModal } from "./VoteModals/EndOfGameVoteModal/EndOfGameVoteModal";
+import { ReshuffleVoteModal } from "./VoteModals/ReshuffleVoteModal/ReshuffleVoteModal";
+import { YourTurnMessage } from "./YourTurnMessage/YourTurnMessage";
 
 export const PlayfieldContainer = () => {
   // Hooks
