@@ -1,16 +1,16 @@
 import { LanguageSwitcher } from "@/components/LanguageSwitcher/LanguageSwitcher";
 import { ScrabbbbbbleLogo } from "@/components/ScrabbbbbbleLogo/ScrabbbbbbleLogo";
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { UserConfigPopover } from "@/components/UserConfigPopover/UserConfigPopover";
 import { useAuth } from "@/contexts/AuthContext";
 import { useGetUserConfig } from "@/services/collections/userConfig/userConfig.hooks";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { AllGames } from "./AllGames/AllGames";
 import { LanguageSelectDialog } from "./LanguageSelectDialog/LanguageSelectDialog";
 import { OngoingGames } from "./OngoingGames/OngoingGames";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PastGames } from "./PastGames/PastGames";
-import { Separator } from "@/components/ui/separator";
-import { AllGames } from "./AllGames/AllGames";
 import { Ranking } from "./Ranking/Ranking";
 
 export const LobbyContainer = () => {

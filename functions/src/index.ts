@@ -100,12 +100,15 @@ export const onGameUpdateTrigger = functions.firestore
       currentTurn,
       tilePouch,
       playerHands,
+      gameOver,
     } = state;
 
-    /***************/
-    // Add a message if it's a new game
-    /***************/
+    if (gameOver) return functions.logger.log("GAME ALREADY OVER!!!");
+
     if (!previousGame?.gameStarted && gameStarted) {
+      /***************/
+      // Add a message if it's a new game
+      /***************/
       functions.logger.log("GAME STARTED");
       try {
         // TODO: localize
@@ -203,6 +206,7 @@ export const onGameUpdateTrigger = functions.firestore
         const payload = {
           gameOver: true,
           score: { ...cloneDeep(state.score) },
+          currentVote: null,
         } satisfies Partial<DbGamePayload>;
 
         // Subtract points

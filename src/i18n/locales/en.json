@@ -77,8 +77,10 @@
   },
   "userConfig": {
     "changeName": "Change name",
+    "changePhoto": "Change photo",
     "logout": "Logout",
-    "enterName": "Enter new name"
+    "enterName": "Enter new name",
+    "enterPhotoURL": "Enter photo URL"
   },
   "acceptMove": {
     "acceptFrom": "Accept move from",

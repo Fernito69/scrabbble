@@ -43,7 +43,9 @@
   "userConfig": {
     "changeName": "Cambiar nombre",
     "logout": "Cerrar sesión",
-    "enterName": "Introduce un nuevo nombre"
+    "enterName": "Introduce un nuevo nombre",
+    "changePhoto": "Cambiar foto",
+    "enterPhotoURL": "Introduce la URL de la foto"
   },
   "languageSelect": {
     "title": "Seleccionar idioma",
