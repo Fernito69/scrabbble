@@ -282,11 +282,13 @@ export const onGameUpdateTrigger = functions.firestore
 
       // Trigger ranking computation
       await Promise.all(
-        state.playerIds
-          .filter(Boolean)
-          .map(async (playerId) => computeRanking(firestore, playerId!))
+        state.playerIds.filter(Boolean).map(async (playerId) => {
+          functions.logger.log("Computing ranking for", playerId);
+          return computeRanking(firestore, playerId!);
+        })
       );
 
+      functions.logger.log("Rankings updated");
       return updateCurrGame(payload);
     }
 
