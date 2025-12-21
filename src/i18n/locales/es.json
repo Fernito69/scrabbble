@@ -118,7 +118,8 @@
     "mprTooltipDescription": "El Índice RPP mide el rendimiento relativo de un jugador calculando su promedio de participación de puntos en todas las partidas.",
     "mprTooltipPlayerPoints": "Puntos del jugador",
     "mprTooltipTotalPoints": "Puntos totales de la partida",
-    "avgPointsPerMatch": "Puntos promedio por partida"
+    "avgPointsPerMatch": "Puntos promedio por partida",
+    "players": "{{numPlayers}} J."
   },
   "playfield": {
     "welcome": "Bienvenido, {{userName}}",

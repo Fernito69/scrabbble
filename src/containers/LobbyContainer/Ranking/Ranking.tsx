@@ -41,16 +41,32 @@ export const Ranking = () => {
         <div className="flex flex-col gap-2 rounded-lg border border-input relative mb-4">
           <Table className="text-xs">
             <TableHeader className="bg-muted text-xs">
-              <TableRow>
-                <TableHead>{t("ranking.player")}</TableHead>
-                <TableHead>{t("ranking.finishedMatches")}</TableHead>
-                <TableHead>{t("ranking.wins")}</TableHead>
-                <TableHead>{t("ranking.losses")}</TableHead>
-                <TableHead>{t("ranking.totalPoints")}</TableHead>
-                <TableHead>{t("ranking.winRatio")}</TableHead>
-                <TableHead>{t("ranking.avgPointsPerMatch")}</TableHead>
-                <TableHead>{t("ranking.avgPointsPerTurn")}</TableHead>
-                <TableHead>
+              <TableRow className="">
+                <TableHead className="border-r break-words" rowSpan={2}>
+                  {t("ranking.player")}
+                </TableHead>
+                <TableHead className="border-r" rowSpan={2}>
+                  {t("ranking.finishedMatches")}
+                </TableHead>
+                <TableHead className="border-r" rowSpan={2}>
+                  {t("ranking.wins")}
+                </TableHead>
+                <TableHead className="border-r" rowSpan={2}>
+                  {t("ranking.losses")}
+                </TableHead>
+                <TableHead className="border-r" rowSpan={2}>
+                  {t("ranking.totalPoints")}
+                </TableHead>
+                <TableHead className="border-r" rowSpan={2}>
+                  {t("ranking.winRatio")}
+                </TableHead>
+                <TableHead className="border-r" colSpan={3}>
+                  {t("ranking.avgPointsPerMatch")}
+                </TableHead>
+                <TableHead rowSpan={2} className="border-r">
+                  {t("ranking.avgPointsPerTurn")}
+                </TableHead>
+                <TableHead rowSpan={2} className="border-r">
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <div className="cursor-help flex flex-row items-center gap-1">
@@ -78,6 +94,17 @@ export const Ranking = () => {
                   </Tooltip>
                 </TableHead>
               </TableRow>
+              <TableRow>
+                <TableHead className="border-r">
+                  {t("ranking.players", { numPlayers: 2 })}
+                </TableHead>
+                <TableHead className="border-r">
+                  {t("ranking.players", { numPlayers: 3 })}
+                </TableHead>
+                <TableHead className="border-r">
+                  {t("ranking.players", { numPlayers: 4 })}
+                </TableHead>
+              </TableRow>
             </TableHeader>
             <TableBody>
               {(rankings ?? []).map((r, i) => {
@@ -93,11 +120,12 @@ export const Ranking = () => {
                     <TableCell>{r.wins}</TableCell>
                     <TableCell>{r.losses}</TableCell>
                     <TableCell>{r.totalPoints}</TableCell>
-
                     <TableCell>{(r.winRatio * 100).toFixed(1)}%</TableCell>
-                    <TableCell>
-                      {(r.totalPoints / r.finishedMatches).toFixed(1)}
-                    </TableCell>
+                    {([2, 3, 4] as const).map((numPlayers) => (
+                      <TableCell key={numPlayers}>
+                        {r.avgPointsPerMatch?.[numPlayers]?.toFixed(1) ?? "-"}
+                      </TableCell>
+                    ))}
                     <TableCell>{r.avgPointsPerTurn.toFixed(1)}</TableCell>
                     <TableCell>
                       {r.avgMatchPointsRatio?.toFixed(3) ?? "-"}

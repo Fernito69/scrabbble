@@ -135,7 +135,8 @@
     "avgMatchPointsRatio": "MPR Index",
     "mprTooltipDescription": "MPR Index measures a player's relative performance by calculating their average point share across all matches.",
     "mprTooltipPlayerPoints": "Player points",
-    "mprTooltipTotalPoints": "Total match points"
+    "mprTooltipTotalPoints": "Total match points",
+    "players": "{{numPlayers}} P."
   },
   "playerVotes": {
     "accept": "Accept",

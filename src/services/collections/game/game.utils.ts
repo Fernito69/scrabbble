@@ -15,7 +15,7 @@ import { User } from "firebase/auth";
 import { cloneDeep } from "lodash";
 import { LanguageTemplate } from "../letterValueMap/languageTemplate.model";
 import { DbGamePayload } from "./game.model";
-import { Ranking } from "../ranking/ranking.model";
+import { AvgPointsPerMatch, Ranking } from "../ranking/ranking.model";
 
 export const computeTilePouch = (
   quantityMap: LetterValueMap
@@ -513,6 +513,25 @@ export const computeRankingPayload = (
     0
   ) / (numTurns || 1)) satisfies number;
 
+  const avgPointsPerMatch: AvgPointsPerMatch = ([1, 2, 3, 4] as const).reduce(
+    (acc, numPlayers) => {
+      const gamesWithNumPlayers = games.filter(
+        (g) => g.playerIds.filter(Boolean).length === numPlayers
+      );
+
+      if (gamesWithNumPlayers.length === 0) return acc;
+
+      const points = gamesWithNumPlayers.reduce(
+        (accc, g) => accc + g.score.total[playerId]!,
+        0
+      );
+      return { ...acc, [numPlayers]: points / gamesWithNumPlayers.length };
+    },
+    {} satisfies {
+      [numPlayers in 2 | 3 | 4]?: number;
+    }
+  );
+
   const avgMatchPointsRatio = (totalPoints /
     games.reduce((acc, g) => {
       const a =
@@ -542,6 +561,7 @@ export const computeRankingPayload = (
     wins,
     losses,
     winRatio,
+    avgPointsPerMatch,
   } satisfies Ranking;
 
   return payload;
