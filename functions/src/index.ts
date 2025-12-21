@@ -16,9 +16,10 @@ import { ChatMessageBase } from "../../src/services/collections/game/chat/chat.m
 import { GAME_COLLECTION } from "../../src/services/collections/game/game.defaults";
 import { mapDbGamePayloadToGameState } from "../../src/services/collections/game/game.mappers";
 import { DbGamePayload } from "../../src/services/collections/game/game.model";
-
+import { RANKING_COLLECTION } from "../../src/services/collections/ranking/ranking.defaults";
 import {
   buildMovePayload,
+  computeRankingPayload,
   computeRemainingTilesScore,
   getEndOfGamePointsToSubtract,
   getInitialGamePayload,
@@ -53,6 +54,29 @@ const addChatMessage = (
     .doc(gameId)
     .collection(CHAT_COLLECTION);
   return colRef.add({ ...message, createdAt: new Date() });
+};
+
+// TODO: refactor
+const computeRanking = async (
+  firestore: admin.firestore.Firestore,
+  playerId: string
+) => {
+  const rankingRef = firestore.collection(RANKING_COLLECTION).doc(playerId);
+
+  // Get player's games
+  const games: GameState[] = (
+    await firestore
+      .collection(GAME_COLLECTION)
+      .where("playerIds", "array-contains", playerId)
+      .where("gameOver", "==", true)
+      .get()
+  ).docs.map((doc) => mapDbGamePayloadToGameState(doc.data() as DbGamePayload));
+
+  if (games.length === 0) return;
+
+  const payload = computeRankingPayload(games, playerId);
+
+  return rankingRef.set(payload);
 };
 
 /***************/
@@ -223,6 +247,10 @@ export const onGameUpdateTrigger = functions.firestore
       }
     }
 
+    /***************/
+    // GAME OVER
+    /***************/
+
     // Game is over if the pouch is empty and one player has no tiles
     const [winningPlayerId] =
       Object.entries(playerHands).find(
@@ -247,6 +275,14 @@ export const onGameUpdateTrigger = functions.firestore
       } satisfies Partial<DbGamePayload>;
 
       functions.logger.log("GAME OVER! Scores:", score);
+
+      // Trigger ranking computation
+      await Promise.all(
+        state.playerIds
+          .filter(Boolean)
+          .map(async (playerId) => computeRanking(firestore, playerId!))
+      );
+
       return updateCurrGame(payload);
     }
 

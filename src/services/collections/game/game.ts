@@ -8,18 +8,18 @@ import {
   doc,
   limit,
   onSnapshot,
+  orderBy,
   query,
   updateDoc,
   where,
-  orderBy,
 } from "firebase/firestore";
 import { LanguageTemplate } from "../letterValueMap/languageTemplate.model";
+import { addChatMessage } from "./chat/chat";
+import { ChatMessageBase } from "./chat/chat.model";
 import { GAME_COLLECTION } from "./game.defaults";
 import { mapDbGamePayloadToGameState } from "./game.mappers";
 import { DbGamePayload } from "./game.model";
 import { buildProposeMovePayload, getInitialGamePayload } from "./game.utils";
-import { addChatMessage } from "./chat/chat";
-import { ChatMessageBase } from "./chat/chat.model";
 
 export const createGame = async (
   db: Firestore,

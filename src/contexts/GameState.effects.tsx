@@ -1,5 +1,7 @@
 import { MAX_PLAYERS, PLAYER_HAND_LENGTH } from "@/model/core.defaults";
 import { PlayerIds } from "@/model/core.model";
+import { useAddMessage } from "@/services/collections/game/chat/chat.hooks";
+import { ChatMessageBase } from "@/services/collections/game/chat/chat.model";
 import { useUpdateGame } from "@/services/collections/game/game.hooks";
 import { DbGamePayload } from "@/services/collections/game/game.model";
 import {
@@ -12,8 +14,6 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useAuth } from "./AuthContext";
 import { DefaultGame, UseGameStateEffects } from "./GameState.model";
-import { useAddMessage } from "@/services/collections/game/chat/chat.hooks";
-import { ChatMessageBase } from "@/services/collections/game/chat/chat.model";
 
 export const useGameStateEffects = ({
   gameId,

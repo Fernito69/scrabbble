@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PastGames } from "./PastGames/PastGames";
 import { Separator } from "@/components/ui/separator";
 import { AllGames } from "./AllGames/AllGames";
+import { Ranking } from "./Ranking/Ranking";
 
 export const LobbyContainer = () => {
   const { t } = useTranslation();
@@ -50,7 +51,8 @@ export const LobbyContainer = () => {
             </div>
           </div>
         </div>
-        <Separator className="my-4 text-muted-foreground w-200 max-w-2xl" />
+        <Separator className="my-4 max-w-2xl" />
+        <Ranking />
         <Tabs defaultValue="ongoing">
           <TabsList
             className={

@@ -103,6 +103,17 @@
     "endOfGame": "Fin de la partida",
     "endOfGameConfirm": "¿Estás seguro/a de que quieres hacer una solicitud de fin de partida?"
   },
+  "ranking": {
+    "hallOfFame": "Salón de la fama",
+    "player": "Jugador",
+    "winRatio": "Ratio de victorias",
+    "wins": "Victorias",
+    "losses": "Derrotas",
+    "totalPoints": "Puntos totales",
+    "finishedMatches": "Partidos terminados",
+    "avgPointsPerTurn": "Puntos promedio por turno",
+    "avgPointsPerMatch": "Puntos promedio por partido"
+  },
   "playfield": {
     "welcome": "Bienvenido, {{userName}}",
     "leaveGame": "Salir de la Partida",

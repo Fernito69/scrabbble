@@ -192,7 +192,5 @@ export const useGetLastNGames = (
     [n]
   );
 
-  console.log("useGetLastNGames", playerGames, error);
-
   return { playerGames, error };
 };

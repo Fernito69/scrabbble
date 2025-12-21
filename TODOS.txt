@@ -1,1 +1,1 @@
-- IMPLEMENT END OF GAME VOTE (distribute points)
+- IMPLEMENTAR RANKING 5 primeros jugadores - Avg points per match - Avg points per turn - Total points - Total finished matches - Win/Loss ratio

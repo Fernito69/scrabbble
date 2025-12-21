@@ -15,6 +15,7 @@ import { User } from "firebase/auth";
 import { cloneDeep } from "lodash";
 import { LanguageTemplate } from "../letterValueMap/languageTemplate.model";
 import { DbGamePayload } from "./game.model";
+import { Ranking } from "../ranking/ranking.model";
 
 export const computeTilePouch = (
   quantityMap: LetterValueMap
@@ -486,4 +487,59 @@ export const getWinningPlayerIdAndScore = (
         )[0]
       : undefined;
   return res ?? [undefined, undefined];
+};
+
+export const computeRankingPayload = (
+  games: GameState[],
+  playerId: string
+): Ranking => {
+  games = games.filter((g) => g.playerIds.includes(playerId));
+  console.log("GAMES", games);
+
+  const totalPoints = games.reduce(
+    (acc, game) => acc + game.score.total[playerId]!,
+    0
+  );
+
+  let numTurns = 0;
+  const avgPointsPerTurn = (games.reduce(
+    (acc, game) =>
+      acc +
+      game.score.perTurn
+        .filter((pt) => pt.playerId === playerId)
+        .reduce((accc, pt) => {
+          numTurns++;
+          return accc + pt.score;
+        }, 0),
+    0
+  ) / (numTurns || 1)) satisfies number;
+
+  console.log("avgPointsPerTurn", avgPointsPerTurn);
+
+  const avgPointsPerMatch = totalPoints / games.length;
+
+  const finishedMatches = games.length;
+
+  const wins = games.filter(
+    (g) => g.gameOver && getWinningPlayerIdAndScore(g)[0] === playerId
+  ).length;
+
+  const losses = games.filter(
+    (g) => g.gameOver && getWinningPlayerIdAndScore(g)[0] !== playerId
+  ).length;
+
+  const winRatio = wins / (wins + losses);
+
+  const payload = {
+    playerId,
+    totalPoints,
+    avgPointsPerTurn,
+    avgPointsPerMatch,
+    finishedMatches,
+    wins,
+    losses,
+    winRatio,
+  } satisfies Ranking;
+
+  return payload;
 };

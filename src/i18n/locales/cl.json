@@ -120,6 +120,17 @@
     "invalidWildcard": "El comodín no es válido, por favor intenta otra letra",
     "wildcardPrompt": "¿Qué letra deseas usar para el comodín?"
   },
+  "ranking": {
+    "hallOfFame": "Salón de la fama",
+    "player": "Jugador",
+    "winRatio": "Ratio de victorias",
+    "wins": "Victorias",
+    "losses": "Derrotas",
+    "totalPoints": "Puntos totales",
+    "finishedMatches": "Partidos terminados",
+    "avgPointsPerTurn": "Puntos promedio por turno",
+    "avgPointsPerMatch": "Puntos promedio por partido"
+  },
   "playerVotes": {
     "accept": "Aceptar",
     "reject": "Rechazar",
