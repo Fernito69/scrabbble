@@ -35,11 +35,11 @@ export const Ranking = () => {
           <TableHeader className="bg-muted text-xs">
             <TableRow>
               <TableHead>{t("ranking.player")}</TableHead>
-              <TableHead>{t("ranking.winRatio")}</TableHead>
+              <TableHead>{t("ranking.finishedMatches")}</TableHead>
               <TableHead>{t("ranking.wins")}</TableHead>
               <TableHead>{t("ranking.losses")}</TableHead>
               <TableHead>{t("ranking.totalPoints")}</TableHead>
-              <TableHead>{t("ranking.finishedMatches")}</TableHead>
+              <TableHead>{t("ranking.winRatio")}</TableHead>
               <TableHead>{t("ranking.avgPointsPerTurn")}</TableHead>
               <TableHead>{t("ranking.avgPointsPerMatch")}</TableHead>
             </TableRow>
@@ -54,11 +54,11 @@ export const Ranking = () => {
                       {getPlayerName(r.playerId)}
                     </div>
                   </TableCell>
-                  <TableCell>{(r.winRatio * 100).toFixed(1)}%</TableCell>
+                  <TableCell>{r.finishedMatches}</TableCell>
                   <TableCell>{r.wins}</TableCell>
                   <TableCell>{r.losses}</TableCell>
                   <TableCell>{r.totalPoints}</TableCell>
-                  <TableCell>{r.finishedMatches}</TableCell>
+                  <TableCell>{(r.winRatio * 100).toFixed(1)}%</TableCell>
                   <TableCell>{r.avgPointsPerTurn.toFixed(1)}</TableCell>
                   <TableCell>{r.avgPointsPerMatch.toFixed(1)}</TableCell>
                 </TableRow>
