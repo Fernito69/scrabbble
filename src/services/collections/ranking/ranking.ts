@@ -18,7 +18,7 @@ export const getLastNRankingSnapshot = (
 ) => {
   const q = query(
     collection(db, RANKING_COLLECTION),
-    orderBy("winRatio", "desc"),
+    orderBy("avgPointsPerTurn", "desc"),
     limit(n)
   );
 
