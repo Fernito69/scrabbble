@@ -51,14 +51,14 @@ export const Ranking = () => {
                 <TableHead className="border-r" rowSpan={2}>
                   {t("ranking.wins")}
                 </TableHead>
-                <TableHead className="border-r" rowSpan={2}>
+                {/* <TableHead className="border-r" rowSpan={2}>
                   {t("ranking.losses")}
+                </TableHead> */}
+                <TableHead className="border-r" rowSpan={2}>
+                  {t("ranking.winRatio")}
                 </TableHead>
                 <TableHead className="border-r" rowSpan={2}>
                   {t("ranking.totalPoints")}
-                </TableHead>
-                <TableHead className="border-r" rowSpan={2}>
-                  {t("ranking.winRatio")}
                 </TableHead>
                 <TableHead className="border-r" colSpan={3}>
                   {t("ranking.avgPointsPerMatch")}
@@ -118,9 +118,9 @@ export const Ranking = () => {
                     </TableCell>
                     <TableCell>{r.finishedMatches}</TableCell>
                     <TableCell>{r.wins}</TableCell>
-                    <TableCell>{r.losses}</TableCell>
-                    <TableCell>{r.totalPoints}</TableCell>
+                    {/* <TableCell>{r.losses}</TableCell> */}
                     <TableCell>{(r.winRatio * 100).toFixed(1)}%</TableCell>
+                    <TableCell>{r.totalPoints}</TableCell>
                     {([2, 3, 4] as const).map((numPlayers) => (
                       <TableCell key={numPlayers}>
                         {r.avgPointsPerMatch?.[numPlayers]?.toFixed(1) ?? "-"}
