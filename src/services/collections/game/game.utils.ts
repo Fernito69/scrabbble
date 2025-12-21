@@ -513,7 +513,6 @@ export const computeRankingPayload = (
     0
   ) / (numTurns || 1)) satisfies number;
 
-  console.log(playerId, totalPoints, games.length);
   const avgMatchPointsRatio = (totalPoints /
     games.reduce((acc, g) => {
       const a =
