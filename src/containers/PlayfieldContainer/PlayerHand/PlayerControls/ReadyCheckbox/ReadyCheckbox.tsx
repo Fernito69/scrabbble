@@ -3,7 +3,6 @@ import { useGameContext } from "@/contexts/GameState.context";
 import { cn } from "@/lib/utils";
 import { Vote } from "@/model/core.model";
 import { useUpdateGame } from "@/services/collections/game/game.hooks";
-import { getInitGamePayload } from "@/services/collections/game/game.utils";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { VoteCheckboxes } from "../VoteCheckboxes/VoteCheckboxes";
@@ -38,6 +37,7 @@ export const ReadyCheckbox = ({ vote }: Props) => {
   // Effects
 
   // New player joined
+  // TODO: refactor this to the trigger
   useEffect(() => {
     // This means a new player joined the game
     if (isGameOrganizer && numPlayers > vote.votes.length) {
@@ -54,19 +54,6 @@ export const ReadyCheckbox = ({ vote }: Props) => {
           ],
         },
       });
-    }
-  }, [vote]);
-
-  // Vote passed!
-  useEffect(() => {
-    // This means all players are ready, so we start the game
-    if (
-      isGameOrganizer &&
-      state &&
-      !state.gameStarted &&
-      vote.votes.every((v) => v.voted)
-    ) {
-      updateGame(getInitGamePayload(state));
     }
   }, [vote]);
 

@@ -22,6 +22,7 @@ import {
   computeRankingPayload,
   computeRemainingTilesScore,
   getEndOfGamePointsToSubtract,
+  getInitGamePayload,
   getInitialGamePayload,
 } from "../../src/services/collections/game/game.utils";
 
@@ -102,11 +103,19 @@ export const onGameUpdateTrigger = functions.firestore
 
     if (gameOver) return functions.logger.log("GAME ALREADY OVER!!!");
 
-    if (!previousGame?.gameStarted && gameStarted) {
-      /***************/
-      // Add a message if it's a new game
-      /***************/
+    /***************/
+    // Start the game!!!!!
+    /***************/
+    if (
+      !gameStarted &&
+      currentVote?.type === VoteType.START_VOTE &&
+      isAccepted(currentVote)
+    ) {
+      // Vote passed!
+      await updateCurrGame(getInitGamePayload(state));
+
       functions.logger.log("GAME STARTED");
+
       try {
         // TODO: localize
         addChatMessage(gameId, {
@@ -119,6 +128,8 @@ export const onGameUpdateTrigger = functions.firestore
           dbGame
         );
       }
+
+      return;
     }
 
     /***************/
@@ -236,27 +247,29 @@ export const onGameUpdateTrigger = functions.firestore
 
     /***************/
     // Vote failsafe (I've experienced some weird bugs with firebase, some kind of race condition maybe)
-    const failSafeEligibleTypes: VoteType[] = [
-      VoteType.INITIAL_RESHUFFLE,
-      VoteType.ACCEPT_PROPOSED_MOVE,
-      VoteType.START_VOTE,
-      VoteType.END_OF_GAME,
-    ];
 
-    if (
-      !!currentVote &&
-      failSafeEligibleTypes.includes(currentVote.type) &&
-      currentVote.votes.every((v) => v.voted === false)
-    ) {
-      functions.logger.log("Failsafe: resetting currentVote");
-      try {
-        updateCurrGame({
-          currentVote: null,
-        } satisfies Partial<DbGamePayload>);
-      } catch (error) {
-        functions.logger.error("Error resetting currentVote", error, dbGame);
-      }
-    }
+    // DISABLED FOR NOW
+
+    // const failSafeEligibleTypes: VoteType[] = [
+    //   VoteType.INITIAL_RESHUFFLE,
+    //   VoteType.ACCEPT_PROPOSED_MOVE,
+    //   VoteType.END_OF_GAME,
+    // ];
+
+    // if (
+    //   !!currentVote &&
+    //   failSafeEligibleTypes.includes(currentVote.type) &&
+    //   currentVote.votes.every((v) => v.voted === false)
+    // ) {
+    //   functions.logger.log("Failsafe: resetting currentVote");
+    //   try {
+    //     updateCurrGame({
+    //       currentVote: null,
+    //     } satisfies Partial<DbGamePayload>);
+    //   } catch (error) {
+    //     functions.logger.error("Error resetting currentVote", error, dbGame);
+    //   }
+    // }
 
     /***************/
     // GAME OVER
