@@ -20,8 +20,16 @@ import {
   useUpdateUserConfig,
 } from "@/services/collections/userConfig/userConfig.hooks";
 import { UserConfig } from "@/services/collections/userConfig/userConfig.model";
-import { ChevronDown, ChevronUp, CircleQuestionMark } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronUp,
+  CircleQuestionMark,
+  ArrowUp,
+  ArrowDown,
+} from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useRankingSort, SortField } from "./useRankingSort";
+import { getColor } from "./ranking.utils";
 
 const NUM_RANKINGS_TO_SHOW = 10;
 
@@ -34,6 +42,10 @@ export const Ranking = () => {
   const userConfig = useGetUserConfig();
   const updateUserConfig = useUpdateUserConfig();
 
+  // Sorting
+  const { sortField, sortDirection, toggleSort, sortedRankings } =
+    useRankingSort(rankings);
+
   // TODO: proper error thingie
   if (error || !rankings || rankings.length === 0 || false) {
     return null;
@@ -44,6 +56,41 @@ export const Ranking = () => {
     updateUserConfig({
       rankingCollapsed: !(userConfig?.rankingCollapsed ?? true),
     } satisfies Partial<UserConfig>);
+  };
+
+  // Helper component for sortable table headers
+  const SortableTableHead = ({
+    field,
+    children,
+    className = "",
+    rowSpan,
+    colSpan,
+  }: {
+    field: SortField;
+    children: React.ReactNode;
+    className?: string;
+    rowSpan?: number;
+    colSpan?: number;
+  }) => {
+    const isActive = sortField === field;
+    return (
+      <TableHead
+        className={`${className} cursor-pointer hover:bg-gray-100 transition-colors select-none`}
+        onClick={() => toggleSort(field)}
+        rowSpan={rowSpan}
+        colSpan={colSpan}
+      >
+        <div className="flex items-center justify-center gap-1">
+          {children}
+          {isActive &&
+            (sortDirection === "asc" ? (
+              <ArrowUp className="h-3 w-3" />
+            ) : (
+              <ArrowDown className="h-3 w-3" />
+            ))}
+        </div>
+      </TableHead>
+    );
   };
 
   return (
@@ -98,30 +145,33 @@ export const Ranking = () => {
                     {/* <TableHead className="border-r" rowSpan={2}>
                   {t("ranking.losses")}
                 </TableHead> */}
-                    <TableHead
+                    <SortableTableHead
+                      field="winRatio"
                       className="border-r whitespace-normal break-words"
                       rowSpan={2}
                     >
                       {t("ranking.winRatio")}
-                    </TableHead>
-                    <TableHead
+                    </SortableTableHead>
+                    <SortableTableHead
+                      field="totalPoints"
                       className="border-r whitespace-normal break-words"
                       rowSpan={2}
                     >
                       {t("ranking.totalPoints")}
-                    </TableHead>
+                    </SortableTableHead>
                     <TableHead
                       className="border-r whitespace-normal break-words"
                       colSpan={3}
                     >
                       {t("ranking.avgPointsPerMatch")}
                     </TableHead>
-                    <TableHead
+                    <SortableTableHead
+                      field="avgPointsPerTurn"
                       rowSpan={2}
                       className="border-r whitespace-normal break-words"
                     >
                       {t("ranking.avgPointsPerTurn")}
-                    </TableHead>
+                    </SortableTableHead>
                     <TableHead
                       colSpan={3}
                       className="border-r whitespace-normal break-words"
@@ -154,31 +204,49 @@ export const Ranking = () => {
                     </TableHead>
                   </TableRow>
                   <TableRow>
-                    <TableHead className="border-r whitespace-normal break-words">
+                    <SortableTableHead
+                      field="avgPointsPerMatch-2"
+                      className="border-r whitespace-normal break-words"
+                    >
                       {t("ranking.players", { numPlayers: 2 })}
-                    </TableHead>
-                    <TableHead className="border-r whitespace-normal break-words">
+                    </SortableTableHead>
+                    <SortableTableHead
+                      field="avgPointsPerMatch-3"
+                      className="border-r whitespace-normal break-words"
+                    >
                       {t("ranking.players", { numPlayers: 3 })}
-                    </TableHead>
-                    <TableHead className="border-r whitespace-normal break-words">
+                    </SortableTableHead>
+                    <SortableTableHead
+                      field="avgPointsPerMatch-4"
+                      className="border-r whitespace-normal break-words"
+                    >
                       {t("ranking.players", { numPlayers: 4 })}
-                    </TableHead>
-                    <TableHead className="border-r whitespace-normal break-words">
+                    </SortableTableHead>
+                    <SortableTableHead
+                      field="avgMatchPointsRatio-2"
+                      className="border-r whitespace-normal break-words"
+                    >
                       {t("ranking.players", { numPlayers: 2 })}
-                    </TableHead>
-                    <TableHead className="border-r whitespace-normal break-words">
+                    </SortableTableHead>
+                    <SortableTableHead
+                      field="avgMatchPointsRatio-3"
+                      className="border-r whitespace-normal break-words"
+                    >
                       {t("ranking.players", { numPlayers: 3 })}
-                    </TableHead>
-                    <TableHead className="border-r whitespace-normal break-words">
+                    </SortableTableHead>
+                    <SortableTableHead
+                      field="avgMatchPointsRatio-4"
+                      className="border-r whitespace-normal break-words"
+                    >
                       {t("ranking.players", { numPlayers: 4 })}
-                    </TableHead>
+                    </SortableTableHead>
                   </TableRow>
                 </>
               )}
             </TableHeader>
             {!userConfig?.rankingCollapsed && (
               <TableBody>
-                {(rankings ?? []).map((r, i) => {
+                {sortedRankings.map((r, i) => {
                   return (
                     <TableRow key={i} className="odd:bg-white even:bg-gray-50">
                       <TableCell>
@@ -190,7 +258,14 @@ export const Ranking = () => {
                       <TableCell>{r.finishedMatches}</TableCell>
                       {/* <TableCell>{r.wins}</TableCell> */}
                       {/* <TableCell>{r.losses}</TableCell> */}
-                      <TableCell>{(r.winRatio * 100).toFixed(1)}%</TableCell>
+                      <TableCell>
+                        <span
+                          style={{ color: getColor(r.winRatio) }}
+                          className="font-semibold"
+                        >
+                          {(r.winRatio * 100).toFixed(1)}%
+                        </span>
+                      </TableCell>
                       <TableCell>{r.totalPoints}</TableCell>
                       {([2, 3, 4] as const).map((numPlayers) => (
                         <TableCell key={numPlayers}>

@@ -24,6 +24,7 @@ import { useClickToSelect } from "./useClickToSelect.hook";
 import { EndOfGameVoteModal } from "./VoteModals/EndOfGameVoteModal/EndOfGameVoteModal";
 import { ReshuffleVoteModal } from "./VoteModals/ReshuffleVoteModal/ReshuffleVoteModal";
 import { YourTurnMessage } from "./YourTurnMessage/YourTurnMessage";
+import { UserConfigPopover } from "@/components/UserConfigPopover/UserConfigPopover";
 
 export const PlayfieldContainer = () => {
   // Hooks
@@ -37,7 +38,7 @@ export const PlayfieldContainer = () => {
   const {
     sensors,
     handleDragStart,
-    handleDragEnd,    
+    handleDragEnd,
     handleLeave,
     handleInvitePlayers,
     activeLetter,
@@ -100,7 +101,8 @@ export const PlayfieldContainer = () => {
                   {t("playfield.invitePlayers")}
                 </button>
               )}
-              <LanguageSwitcher />             
+              <LanguageSwitcher />
+              <UserConfigPopover />
             </div>
           </div>
 
