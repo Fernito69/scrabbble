@@ -532,12 +532,6 @@ export const computeRankingPayload = (
     }
   );
 
-  // const avgMatchPointsRatio = (totalPoints /
-  //   games.reduce((acc, g) => {
-  //     const a =
-  //       acc + Object.values(g.score.total).reduce((accc, pt) => accc + pt, 0);
-  //     return a;
-  //   }, 0)) satisfies number;
   const avgMatchPointsRatio = ([1, 2, 3, 4] as const).reduce(
     (acc, numPlayers) => {
       const gamesWithNumPlayers = games.filter(

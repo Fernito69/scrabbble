@@ -223,8 +223,9 @@ export const onGameUpdateTrigger = functions.firestore
           payload.score.total[playerId] -= pointsToSubtract[playerId];
         });
 
+        await updateCurrGame(payload);
         await triggerRankingComputation();
-        return updateCurrGame(payload);
+        return;
       }
 
       // End of game rejected
