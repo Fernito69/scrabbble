@@ -72,8 +72,8 @@ export const LobbyContainer = () => {
           <TabsList
             className={
               isAdmin
-                ? "w-200 w-min-500 grid grid-cols-3 gap-4"
-                : "w-200 w-min-500 grid grid-cols-2 gap-4"
+                ? "w-200 w-min-500 grid grid-cols-3 gap-2"
+                : "w-200 w-min-500 grid grid-cols-2 gap-2"
             }
           >
             <TabsTrigger value="ongoing">{t("lobby.yourGames")}</TabsTrigger>
