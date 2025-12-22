@@ -68,30 +68,34 @@ export const LobbyContainer = () => {
         <Tabs
           onValueChange={handleTabValueChange}
           defaultValue={userConfig?.currentTab ?? "ongoing"}
+          className="w-full max-w-4xl min-h-[900px]"
         >
           <TabsList
             className={
               isAdmin
-                ? "w-200 w-min-500 grid grid-cols-3 gap-2"
-                : "w-200 w-min-500 grid grid-cols-2 gap-2"
+                ? "w-full grid grid-cols-3 gap-2"
+                : "w-full grid grid-cols-2 gap-2"
             }
           >
             <TabsTrigger value="ongoing">{t("lobby.yourGames")}</TabsTrigger>
             <TabsTrigger value="waiting">{t("lobby.pastGames")}</TabsTrigger>
             {isAdmin && (
-              <TabsTrigger value="all-last">
-                {t("lobby.allLastGames")}
+              <TabsTrigger
+                value="all-last"
+                className="data-[state=active]:bg-red-500 hover:bg-red-200 hover:text-yellow-100"
+              >
+                {t("lobby.allLastGames")} (ONLY FOR ADMINS)
               </TabsTrigger>
             )}
           </TabsList>
-          <TabsContent value="ongoing">
+          <TabsContent value="ongoing" className="min-h-[200px]">
             <OngoingGames />
           </TabsContent>
-          <TabsContent value="waiting">
+          <TabsContent value="waiting" className="min-h-[200px]">
             <PastGames />
           </TabsContent>
           {isAdmin && (
-            <TabsContent value="all-last">
+            <TabsContent value="all-last" className="min-h-[200px]">
               <AllGames />
             </TabsContent>
           )}
