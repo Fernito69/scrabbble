@@ -4,7 +4,10 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { UserConfigPopover } from "@/components/UserConfigPopover/UserConfigPopover";
 import { useAuth } from "@/contexts/AuthContext";
-import { useGetUserConfig } from "@/services/collections/userConfig/userConfig.hooks";
+import {
+  useGetUserConfig,
+  useUpdateUserConfig,
+} from "@/services/collections/userConfig/userConfig.hooks";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AllGames } from "./AllGames/AllGames";
@@ -12,6 +15,7 @@ import { LanguageSelectDialog } from "./LanguageSelectDialog/LanguageSelectDialo
 import { OngoingGames } from "./OngoingGames/OngoingGames";
 import { PastGames } from "./PastGames/PastGames";
 import { Ranking } from "./Ranking/Ranking";
+import { UserConfig } from "@/services/collections/userConfig/userConfig.model";
 
 export const LobbyContainer = () => {
   const { t } = useTranslation();
@@ -22,6 +26,14 @@ export const LobbyContainer = () => {
 
   // Data
   const userConfig = useGetUserConfig();
+  const updateUserConfig = useUpdateUserConfig();
+
+  if (!userConfig) return null;
+
+  // Handlers
+  const handleTabValueChange = (value: string) => {
+    updateUserConfig({ currentTab: value } satisfies Partial<UserConfig>);
+  };
 
   // Consts
   const userName = userConfig?.displayName ?? user?.email;
@@ -53,7 +65,10 @@ export const LobbyContainer = () => {
         </div>
         <Separator className="my-4 max-w-2xl" />
         <Ranking />
-        <Tabs defaultValue="ongoing">
+        <Tabs
+          onValueChange={handleTabValueChange}
+          defaultValue={userConfig?.currentTab ?? "ongoing"}
+        >
           <TabsList
             className={
               isAdmin

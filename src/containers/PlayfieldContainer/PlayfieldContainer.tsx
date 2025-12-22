@@ -7,15 +7,11 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useGameContext } from "@/contexts/GameState.context";
 import { cn } from "@/lib/utils";
 import { VoteType } from "@/model/core.model";
-import {
-  useUpdateGame
-} from "@/services/collections/game/game.hooks";
-import {
-  getDefaultGameName
-} from "@/services/collections/game/game.utils";
+import { useUpdateGame } from "@/services/collections/game/game.hooks";
+import { getDefaultGameName } from "@/services/collections/game/game.utils";
 import { useGetUserConfig } from "@/services/collections/userConfig/userConfig.hooks";
 import { DndContext, DragOverlay } from "@dnd-kit/core";
-import { Edit } from "lucide-react";
+import { ChevronLeft, Edit } from "lucide-react";
 import { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -93,8 +89,9 @@ export const PlayfieldContainer = () => {
               )}
               <button
                 onClick={() => navigate("/")}
-                className="px-4 py-2 text-sm border border-input rounded-md hover:bg-accent"
+                className="px-2 py-2 text-sm text-white border border-input rounded-md bg-primary hover:bg-primary/90 flex flex-row items-center gap-2"
               >
+                <ChevronLeft className="h-4 w-4" />
                 {t("playfield.backToHome")}
               </button>
               {!state.gameStarted && (

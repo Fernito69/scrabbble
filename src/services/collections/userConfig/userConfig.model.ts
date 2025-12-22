@@ -6,6 +6,8 @@ export type UserConfigBase = {
   language?: Language;
   photoURL?: string;
   isAdmin?: boolean;
+  rankingCollapsed?: boolean;
+  currentTab?: string;
 };
 
 export type UserConfig = UserConfigBase & {
