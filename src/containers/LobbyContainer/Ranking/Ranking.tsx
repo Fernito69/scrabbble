@@ -48,9 +48,9 @@ export const Ranking = () => {
                 <TableHead className="border-r" rowSpan={2}>
                   {t("ranking.finishedMatches")}
                 </TableHead>
-                <TableHead className="border-r" rowSpan={2}>
+                {/* <TableHead className="border-r" rowSpan={2}>
                   {t("ranking.wins")}
-                </TableHead>
+                </TableHead> */}
                 {/* <TableHead className="border-r" rowSpan={2}>
                   {t("ranking.losses")}
                 </TableHead> */}
@@ -66,7 +66,7 @@ export const Ranking = () => {
                 <TableHead rowSpan={2} className="border-r">
                   {t("ranking.avgPointsPerTurn")}
                 </TableHead>
-                <TableHead rowSpan={2} className="border-r">
+                <TableHead colSpan={3} className="border-r">
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <div className="cursor-help flex flex-row items-center gap-1">
@@ -104,6 +104,15 @@ export const Ranking = () => {
                 <TableHead className="border-r">
                   {t("ranking.players", { numPlayers: 4 })}
                 </TableHead>
+                <TableHead className="border-r">
+                  {t("ranking.players", { numPlayers: 2 })}
+                </TableHead>
+                <TableHead className="border-r">
+                  {t("ranking.players", { numPlayers: 3 })}
+                </TableHead>
+                <TableHead className="border-r">
+                  {t("ranking.players", { numPlayers: 4 })}
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -117,7 +126,7 @@ export const Ranking = () => {
                       </div>
                     </TableCell>
                     <TableCell>{r.finishedMatches}</TableCell>
-                    <TableCell>{r.wins}</TableCell>
+                    {/* <TableCell>{r.wins}</TableCell> */}
                     {/* <TableCell>{r.losses}</TableCell> */}
                     <TableCell>{(r.winRatio * 100).toFixed(1)}%</TableCell>
                     <TableCell>{r.totalPoints}</TableCell>
@@ -127,9 +136,11 @@ export const Ranking = () => {
                       </TableCell>
                     ))}
                     <TableCell>{r.avgPointsPerTurn.toFixed(1)}</TableCell>
-                    <TableCell>
-                      {r.avgMatchPointsRatio?.toFixed(3) ?? "-"}
-                    </TableCell>
+                    {([2, 3, 4] as const).map((numPlayers) => (
+                      <TableCell key={numPlayers}>
+                        {r.avgMatchPointsRatio?.[numPlayers]?.toFixed(3) ?? "-"}
+                      </TableCell>
+                    ))}
                   </TableRow>
                 );
               })}

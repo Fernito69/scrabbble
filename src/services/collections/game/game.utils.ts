@@ -15,7 +15,7 @@ import { User } from "firebase/auth";
 import { cloneDeep } from "lodash";
 import { LanguageTemplate } from "../letterValueMap/languageTemplate.model";
 import { DbGamePayload } from "./game.model";
-import { AvgPointsPerMatch, Ranking } from "../ranking/ranking.model";
+import { PointPerNumPlayer, Ranking } from "../ranking/ranking.model";
 
 export const computeTilePouch = (
   quantityMap: LetterValueMap
@@ -513,7 +513,7 @@ export const computeRankingPayload = (
     0
   ) / (numTurns || 1)) satisfies number;
 
-  const avgPointsPerMatch: AvgPointsPerMatch = ([1, 2, 3, 4] as const).reduce(
+  const avgPointsPerMatch: PointPerNumPlayer = ([1, 2, 3, 4] as const).reduce(
     (acc, numPlayers) => {
       const gamesWithNumPlayers = games.filter(
         (g) => g.playerIds.filter(Boolean).length === numPlayers
@@ -532,13 +532,36 @@ export const computeRankingPayload = (
     }
   );
 
-  const avgMatchPointsRatio = (totalPoints /
-    games.reduce((acc, g) => {
-      const a =
-        acc + Object.values(g.score.total).reduce((accc, pt) => accc + pt, 0);
-      console.log(a);
-      return a;
-    }, 0)) satisfies number;
+  // const avgMatchPointsRatio = (totalPoints /
+  //   games.reduce((acc, g) => {
+  //     const a =
+  //       acc + Object.values(g.score.total).reduce((accc, pt) => accc + pt, 0);
+  //     return a;
+  //   }, 0)) satisfies number;
+  const avgMatchPointsRatio = ([1, 2, 3, 4] as const).reduce(
+    (acc, numPlayers) => {
+      const gamesWithNumPlayers = games.filter(
+        (g) => g.playerIds.filter(Boolean).length === numPlayers
+      );
+
+      if (gamesWithNumPlayers.length === 0) return acc;
+
+      const playerPoints = gamesWithNumPlayers.reduce((acc, g) => {
+        const a = acc + g.score.total[playerId]!;
+        return a;
+      }, 0);
+      const totalPoints = gamesWithNumPlayers.reduce((acc, g) => {
+        const a =
+          acc + Object.values(g.score.total).reduce((accc, pt) => accc + pt, 0);
+        return a;
+      }, 0);
+
+      return { ...acc, [numPlayers]: playerPoints / totalPoints };
+    },
+    {} satisfies {
+      [numPlayers in 2 | 3 | 4]?: number;
+    }
+  );
 
   const finishedMatches = games.length;
 

@@ -1,6 +1,6 @@
 //  Avg points per match - Avg points per turn - Total points - Total finished matches - Win/Loss ratio
 
-export type AvgPointsPerMatch = {
+export type PointPerNumPlayer = {
   [numPlayers in 2 | 3 | 4]?: number;
 };
 
@@ -8,12 +8,11 @@ export type Ranking = {
   playerId: string;
   totalPoints: number;
   // Match points ratio: avg (player's points per match / total points per match)
-  avgMatchPointsRatio: number;
+  avgMatchPointsRatio: PointPerNumPlayer;
   avgPointsPerTurn: number;
-  avgPointsPerMatch: AvgPointsPerMatch;
+  avgPointsPerMatch: PointPerNumPlayer;
   finishedMatches: number;
   wins: number;
   losses: number;
   winRatio: number;
-  WIDX?: number;
 };
