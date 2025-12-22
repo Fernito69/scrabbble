@@ -30,7 +30,8 @@ admin.initializeApp();
 export const firestore = admin.firestore() as any;
 
 // Helpers
-const isAccepted = (currentVote: Vote) => currentVote.votes.every(Boolean);
+const isAccepted = (currentVote: Vote) =>
+  currentVote.votes.every((v) => !!v.voted);
 const isRejected = (currentVote: Vote) =>
   currentVote.votes.every((v) => v.voted === false);
 
