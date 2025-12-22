@@ -38,20 +38,17 @@ export const useRankingSort = (rankings: Ranking[] | undefined) => {
 
       // Extract the values based on the sort field
       if (sortField.startsWith("avgPointsPerMatch-")) {
-        const numPlayers = parseInt(
-          sortField.split("-")[1]
-        ) as 2 | 3 | 4;
+        const numPlayers = parseInt(sortField.split("-")[1]) as 2 | 3 | 4;
         aValue = a.avgPointsPerMatch[numPlayers];
         bValue = b.avgPointsPerMatch[numPlayers];
       } else if (sortField.startsWith("avgMatchPointsRatio-")) {
-        const numPlayers = parseInt(
-          sortField.split("-")[1]
-        ) as 2 | 3 | 4;
+        const numPlayers = parseInt(sortField.split("-")[1]) as 2 | 3 | 4;
         aValue = a.avgMatchPointsRatio[numPlayers];
         bValue = b.avgMatchPointsRatio[numPlayers];
       } else {
-        aValue = a[sortField];
-        bValue = b[sortField];
+        // sortField is now narrowed to direct properties of Ranking
+        aValue = a[sortField as keyof Pick<Ranking, "winRatio" | "totalPoints" | "avgPointsPerTurn">];
+        bValue = b[sortField as keyof Pick<Ranking, "winRatio" | "totalPoints" | "avgPointsPerTurn">];
       }
 
       // Handle undefined values (players who haven't played with that number of players)
