@@ -42,10 +42,10 @@ export const Ranking = () => {
           <Table className="text-xs">
             <TableHeader className="bg-muted text-xs">
               <TableRow className="">
-                <TableHead className="border-r break-words" rowSpan={2}>
+                <TableHead className="border-r whitespace-normal break-words" rowSpan={2}>
                   {t("ranking.player")}
                 </TableHead>
-                <TableHead className="border-r" rowSpan={2}>
+                <TableHead className="border-r whitespace-normal break-words" rowSpan={2}>
                   {t("ranking.finishedMatches")}
                 </TableHead>
                 {/* <TableHead className="border-r" rowSpan={2}>
@@ -54,19 +54,19 @@ export const Ranking = () => {
                 {/* <TableHead className="border-r" rowSpan={2}>
                   {t("ranking.losses")}
                 </TableHead> */}
-                <TableHead className="border-r" rowSpan={2}>
+                <TableHead className="border-r whitespace-normal break-words" rowSpan={2}>
                   {t("ranking.winRatio")}
                 </TableHead>
-                <TableHead className="border-r" rowSpan={2}>
+                <TableHead className="border-r whitespace-normal break-words" rowSpan={2}>
                   {t("ranking.totalPoints")}
                 </TableHead>
-                <TableHead className="border-r" colSpan={3}>
+                <TableHead className="border-r whitespace-normal break-words" colSpan={3}>
                   {t("ranking.avgPointsPerMatch")}
                 </TableHead>
-                <TableHead rowSpan={2} className="border-r">
+                <TableHead rowSpan={2} className="border-r whitespace-normal break-words">
                   {t("ranking.avgPointsPerTurn")}
                 </TableHead>
-                <TableHead colSpan={3} className="border-r">
+                <TableHead colSpan={3} className="border-r whitespace-normal break-words">
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <div className="cursor-help flex flex-row items-center gap-1">
@@ -95,22 +95,22 @@ export const Ranking = () => {
                 </TableHead>
               </TableRow>
               <TableRow>
-                <TableHead className="border-r">
+                <TableHead className="border-r whitespace-normal break-words">
                   {t("ranking.players", { numPlayers: 2 })}
                 </TableHead>
-                <TableHead className="border-r">
+                <TableHead className="border-r whitespace-normal break-words">
                   {t("ranking.players", { numPlayers: 3 })}
                 </TableHead>
-                <TableHead className="border-r">
+                <TableHead className="border-r whitespace-normal break-words">
                   {t("ranking.players", { numPlayers: 4 })}
                 </TableHead>
-                <TableHead className="border-r">
+                <TableHead className="border-r whitespace-normal break-words">
                   {t("ranking.players", { numPlayers: 2 })}
                 </TableHead>
-                <TableHead className="border-r">
+                <TableHead className="border-r whitespace-normal break-words">
                   {t("ranking.players", { numPlayers: 3 })}
                 </TableHead>
-                <TableHead className="border-r">
+                <TableHead className="border-r whitespace-normal break-words">
                   {t("ranking.players", { numPlayers: 4 })}
                 </TableHead>
               </TableRow>
