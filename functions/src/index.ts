@@ -27,7 +27,7 @@ import {
 
 admin.initializeApp();
 
-export const firestore = admin.firestore() as any;
+export const firestore = admin.firestore();
 
 // Helpers
 const isAccepted = (currentVote: Vote) =>
@@ -37,17 +37,17 @@ const isRejected = (currentVote: Vote) =>
 
 // Admin SDK compatible version of updateGame
 const updateGame = (
-  db: admin.firestore.Firestore,
   id: string,
-  game: Partial<DbGamePayload>
+  game: Partial<DbGamePayload>,
+  db = firestore
 ) => {
   const docRef = db.collection(GAME_COLLECTION).doc(id);
   return docRef.update({ ...game, lastModifiedAt: new Date() });
 };
 const addChatMessage = (
-  db: admin.firestore.Firestore,
   gameId: string,
-  message: ChatMessageBase
+  message: ChatMessageBase,
+  db = firestore
 ) => {
   const colRef = db
     .collection(GAME_COLLECTION)
@@ -57,15 +57,12 @@ const addChatMessage = (
 };
 
 // TODO: refactor
-const computeRanking = async (
-  firestore: admin.firestore.Firestore,
-  playerId: string
-) => {
-  const rankingRef = firestore.collection(RANKING_COLLECTION).doc(playerId);
+const computeRanking = async (playerId: string, db = firestore) => {
+  const rankingRef = db.collection(RANKING_COLLECTION).doc(playerId);
 
   // Get player's games
   const games: GameState[] = (
-    await firestore
+    await db
       .collection(GAME_COLLECTION)
       .where("playerIds", "array-contains", playerId)
       .where("gameOver", "==", true)
@@ -90,7 +87,7 @@ export const onGameUpdateTrigger = functions.firestore
     const state: GameState = mapDbGamePayloadToGameState(dbGame);
     const gameId = context.params.id;
     const updateCurrGame = (payload: Partial<DbGamePayload>) =>
-      updateGame(firestore, gameId, payload);
+      updateGame(gameId, payload);
 
     const { template, createdByUserId, gameName } = dbGame;
     const {
@@ -112,7 +109,7 @@ export const onGameUpdateTrigger = functions.firestore
       functions.logger.log("GAME STARTED");
       try {
         // TODO: localize
-        addChatMessage(firestore, gameId, {
+        addChatMessage(gameId, {
           text: `LET'S GO!`,
         } satisfies ChatMessageBase);
       } catch (error) {
@@ -134,7 +131,7 @@ export const onGameUpdateTrigger = functions.firestore
         "TURN CHANGE FROM " + previousTurn + " TO " + currentTurn
       );
       try {
-        addChatMessage(firestore, gameId, {
+        addChatMessage(gameId, {
           text: currentTurn,
         } satisfies ChatMessageBase);
       } catch (error) {
@@ -198,7 +195,7 @@ export const onGameUpdateTrigger = functions.firestore
       Promise.all(
         state.playerIds.filter(Boolean).map(async (playerId) => {
           functions.logger.log("Computing ranking for", playerId);
-          return computeRanking(firestore, playerId!);
+          return computeRanking(playerId!);
         })
       );
 
