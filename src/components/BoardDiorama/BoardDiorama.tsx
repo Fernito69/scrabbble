@@ -11,7 +11,7 @@ export const BoardDiorama = ({ game }: Props) => {
 
   // Render
   return (
-    <div className="flex justify-center items-center border border-green-800 min-w-[60px]">
+    <div className="flex justify-center items-center border border-green-800 w-[62px]">
       <div className="grid grid-cols-15 gap-0">
         {board.map((row, yIndex) =>
           row.map(({ tile, bonus }, xIndex) => {
