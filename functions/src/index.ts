@@ -194,6 +194,14 @@ export const onGameUpdateTrigger = functions.firestore
       }
     }
 
+    const triggerRankingComputation = async () =>
+      Promise.all(
+        state.playerIds.filter(Boolean).map(async (playerId) => {
+          functions.logger.log("Computing ranking for", playerId);
+          return computeRanking(firestore, playerId!);
+        })
+      );
+
     /***************/
     // Vote for end of game
     /***************/
@@ -215,6 +223,7 @@ export const onGameUpdateTrigger = functions.firestore
           payload.score.total[playerId] -= pointsToSubtract[playerId];
         });
 
+        await triggerRankingComputation();
         return updateCurrGame(payload);
       }
 
@@ -282,12 +291,7 @@ export const onGameUpdateTrigger = functions.firestore
       await updateCurrGame(payload);
 
       // Trigger ranking computation after game has been updated
-      await Promise.all(
-        state.playerIds.filter(Boolean).map(async (playerId) => {
-          functions.logger.log("Computing ranking for", playerId);
-          return computeRanking(firestore, playerId!);
-        })
-      );
+      await triggerRankingComputation();
 
       functions.logger.log("Rankings updated");
       return;
