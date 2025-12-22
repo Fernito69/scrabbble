@@ -2,7 +2,6 @@ import { Chat } from "@/components/Chat/Chat";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher/LanguageSwitcher";
 import { ScrabbbbbbleLogo } from "@/components/ScrabbbbbbleLogo/ScrabbbbbbleLogo";
 import { UserAvatar } from "@/components/UserAvatar";
-import { UserConfigPopover } from "@/components/UserConfigPopover/UserConfigPopover";
 import { useAuth } from "@/contexts/AuthContext";
 import { useGameContext } from "@/contexts/GameState.context";
 import { cn } from "@/lib/utils";
@@ -38,8 +37,7 @@ export const PlayfieldContainer = () => {
   const {
     sensors,
     handleDragStart,
-    handleDragEnd,
-    handleSignOut,
+    handleDragEnd,    
     handleLeave,
     handleInvitePlayers,
     activeLetter,
@@ -102,14 +100,7 @@ export const PlayfieldContainer = () => {
                   {t("playfield.invitePlayers")}
                 </button>
               )}
-              <LanguageSwitcher />
-              <button
-                onClick={handleSignOut}
-                className="px-4 py-2 text-sm border border-input rounded-md hover:bg-accent mr-2"
-              >
-                {t("playfield.signOut")}
-              </button>
-              <UserConfigPopover />
+              <LanguageSwitcher />             
             </div>
           </div>
 

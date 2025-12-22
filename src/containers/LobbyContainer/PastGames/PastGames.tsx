@@ -17,7 +17,10 @@ import {
 } from "@/components/ui/tooltip";
 import { useAuth } from "@/contexts/AuthContext";
 import { useGetLastNPastGames } from "@/services/collections/game/game.hooks";
-import { getDefaultGameName } from "@/services/collections/game/game.utils";
+import {
+  getDefaultGameName,
+  getWinningPlayerIdAndScore,
+} from "@/services/collections/game/game.utils";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -74,9 +77,9 @@ export const PastGames = () => {
                       ? fullName.slice(0, maxLength) + "…"
                       : fullName;
 
-                    const [winnerId] = Object.entries(game.score.total).sort(
-                      ([_, b1], [__, b2]) => b2 - b1
-                    )[0];
+                    const [winnerId] = getWinningPlayerIdAndScore(game);
+
+                    if (!winnerId) return null;
 
                     return (
                       <TableRow

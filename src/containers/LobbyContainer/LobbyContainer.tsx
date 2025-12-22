@@ -10,7 +10,7 @@ import {
 } from "@/services/collections/userConfig/userConfig.hooks";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { AllGames } from "./AllGames/AllGames";
+import { AllPlayersPastGames } from "./AllPlayersPastGames/AllPlayersPastGames";
 import { LanguageSelectDialog } from "./LanguageSelectDialog/LanguageSelectDialog";
 import { OngoingGames } from "./OngoingGames/OngoingGames";
 import { PastGames } from "./PastGames/PastGames";
@@ -96,7 +96,7 @@ export const LobbyContainer = () => {
           </TabsContent>
           {isAdmin && (
             <TabsContent value="all-last" className="min-h-[200px]">
-              <AllGames />
+              <AllPlayersPastGames />
             </TabsContent>
           )}
         </Tabs>
