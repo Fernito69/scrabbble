@@ -15,7 +15,7 @@ import { User } from "firebase/auth";
 import { cloneDeep } from "lodash";
 import { LanguageTemplate } from "../letterValueMap/languageTemplate.model";
 import { DbGamePayload } from "./game.model";
-import { PointPerNumPlayer, Ranking } from "../ranking/ranking.model";
+import { PointsPerNumPlayer, Ranking } from "../ranking/ranking.model";
 
 export const computeTilePouch = (
   quantityMap: LetterValueMap
@@ -495,7 +495,7 @@ export const computeRankingPayload = (
 ): Ranking => {
   const games = [...games_].filter((g) => g.playerIds.includes(playerId));
 
-  const totalPoints = games.reduce(
+  const totalPoints: number = games.reduce(
     (acc, game) => acc + game.score.total[playerId]!,
     0
   );
@@ -513,7 +513,7 @@ export const computeRankingPayload = (
     0
   ) / (numTurns || 1)) satisfies number;
 
-  const avgPointsPerMatch: PointPerNumPlayer = ([1, 2, 3, 4] as const).reduce(
+  const avgPointsPerMatch: PointsPerNumPlayer = ([2, 3, 4] as const).reduce(
     (acc, numPlayers) => {
       const gamesWithNumPlayers = games.filter(
         (g) => g.playerIds.filter(Boolean).length === numPlayers
@@ -527,47 +527,40 @@ export const computeRankingPayload = (
       );
       return { ...acc, [numPlayers]: points / gamesWithNumPlayers.length };
     },
-    {} satisfies {
-      [numPlayers in 2 | 3 | 4]?: number;
-    }
-  );
+    {}
+  ) satisfies PointsPerNumPlayer;
 
-  const avgMatchPointsRatio = ([1, 2, 3, 4] as const).reduce(
-    (acc, numPlayers) => {
-      const gamesWithNumPlayers = games.filter(
-        (g) => g.playerIds.filter(Boolean).length === numPlayers
-      );
+  const avgMatchPointsRatio = ([2, 3, 4] as const).reduce((acc, numPlayers) => {
+    const gamesWithNumPlayers = games.filter(
+      (g) => g.playerIds.filter(Boolean).length === numPlayers
+    );
 
-      if (gamesWithNumPlayers.length === 0) return acc;
+    if (gamesWithNumPlayers.length === 0) return acc;
 
-      const playerPoints = gamesWithNumPlayers.reduce((acc, g) => {
-        const a = acc + g.score.total[playerId]!;
-        return a;
-      }, 0);
-      const totalPoints = gamesWithNumPlayers.reduce((acc, g) => {
-        const a =
-          acc + Object.values(g.score.total).reduce((accc, pt) => accc + pt, 0);
-        return a;
-      }, 0);
+    const playerPoints = gamesWithNumPlayers.reduce(
+      (acc, g) => acc + g.score.total[playerId]!,
+      0
+    );
+    const totalPoints = gamesWithNumPlayers.reduce(
+      (acc, g) =>
+        acc + Object.values(g.score.total).reduce((accc, pt) => accc + pt, 0),
+      0
+    );
 
-      return { ...acc, [numPlayers]: playerPoints / totalPoints };
-    },
-    {} satisfies {
-      [numPlayers in 2 | 3 | 4]?: number;
-    }
-  );
+    return { ...acc, [numPlayers]: playerPoints / totalPoints };
+  }, {}) satisfies PointsPerNumPlayer;
 
-  const finishedMatches = games.length;
+  const finishedMatches: number = games.length;
 
-  const wins = games.filter(
+  const wins: number = games.filter(
     (g) => g.gameOver && getWinningPlayerIdAndScore(g)[0] === playerId
   ).length;
 
-  const losses = games.filter(
+  const losses: number = games.filter(
     (g) => g.gameOver && getWinningPlayerIdAndScore(g)[0] !== playerId
   ).length;
 
-  const winRatio = wins / (wins + losses);
+  const winRatio: number = wins / (wins + losses);
 
   const payload = {
     playerId,
