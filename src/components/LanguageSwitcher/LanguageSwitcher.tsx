@@ -8,12 +8,7 @@ import { useTranslation } from "react-i18next";
 import { Languages } from "lucide-react";
 import { Language } from "@/services/collections/letterValueMap/languageTemplate.model";
 import { useUpdateUserConfig } from "@/services/collections/userConfig/userConfig.hooks";
-
-const LANGUAGES = [
-  { code: Language.EN, label: "🇬🇧/🇺🇸" },
-  { code: Language.ES, label: "🇪🇸" },
-  { code: Language.CL, label: "🇨🇱" },
-] as const;
+import { LANGUAGES } from "@/services/collections/game/game.defaults";
 
 export const LanguageSwitcher = () => {
   const { t, i18n } = useTranslation();

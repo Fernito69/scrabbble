@@ -109,11 +109,13 @@ export const useGetLastNPlayerGames = (
 ): {
   playerGames: (GameState & { id: string })[] | undefined;
   error: string | undefined;
+  templates: LanguageTemplate[];
 } => {
   const { user } = useAuth();
   const [playerGames, setGames] = useState<
     (GameState & { id: string })[] | undefined
   >();
+  const [templates, setTemplates] = useState<LanguageTemplate[]>([]);
   const [error, setError] = useState<string | undefined>();
 
   useEffect(
@@ -122,8 +124,9 @@ export const useGetLastNPlayerGames = (
         db,
         user!.uid,
         n,
-        (data) => {
-          setGames(data);
+        (gameStates, templates) => {
+          setGames(gameStates);
+          setTemplates(templates);
         },
         (err) => {
           setError(err);
@@ -132,7 +135,7 @@ export const useGetLastNPlayerGames = (
     [n]
   );
 
-  return { playerGames, error };
+  return { playerGames, error, templates };
 };
 
 export const useGetLastNPastGames = (
@@ -140,11 +143,13 @@ export const useGetLastNPastGames = (
 ): {
   playerGames: (GameState & { id: string })[] | undefined;
   error: string | undefined;
+  templates: LanguageTemplate[];
 } => {
   const { user } = useAuth();
   const [playerGames, setGames] = useState<
     (GameState & { id: string })[] | undefined
   >();
+  const [templates, setTemplates] = useState<LanguageTemplate[]>([]);
   const [error, setError] = useState<string | undefined>();
 
   useEffect(
@@ -153,8 +158,9 @@ export const useGetLastNPastGames = (
         db,
         user!.uid,
         n,
-        (data) => {
-          setGames(data);
+        (games, templates) => {
+          setGames(games);
+          setTemplates(templates);
         },
         (err) => {
           setError(err);
@@ -163,7 +169,7 @@ export const useGetLastNPastGames = (
     [n]
   );
 
-  return { playerGames, error };
+  return { playerGames, error, templates };
 };
 
 export const useGetLastNGames = (
@@ -171,19 +177,22 @@ export const useGetLastNGames = (
 ): {
   playerGames: (GameState & { id: string })[] | undefined;
   error: string | undefined;
+  templates: LanguageTemplate[];
 } => {
   const [playerGames, setGames] = useState<
     (GameState & { id: string })[] | undefined
   >();
   const [error, setError] = useState<string | undefined>();
+  const [templates, setTemplates] = useState<LanguageTemplate[]>([]);
 
   useEffect(
     () =>
       getLastNGamesSnapshot(
         db,
         n,
-        (data) => {
-          setGames(data);
+        (games, templates) => {
+          setGames(games);
+          setTemplates(templates);
         },
         (err) => {
           setError(err);
@@ -192,5 +201,5 @@ export const useGetLastNGames = (
     [n]
   );
 
-  return { playerGames, error };
+  return { playerGames, error, templates };
 };

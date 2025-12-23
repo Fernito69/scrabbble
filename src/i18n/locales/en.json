@@ -39,7 +39,8 @@
     "yourScore": "Your score",
     "showMore": "Show more",
     "welcomeMessage": "Welcome to Scrabble!",
-    "userJoined": "{{userName}} joined the game!"
+    "userJoined": "{{userName}} joined the game!",
+    "language": "Language"
   },
   "languageSelect": {
     "title": "Select language",

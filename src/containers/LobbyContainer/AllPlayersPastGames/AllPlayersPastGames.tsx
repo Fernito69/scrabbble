@@ -32,7 +32,7 @@ export const AllPlayersPastGames = () => {
   const [numGamesToShow, setNumGamesToShow] = useState<number>(GAMES_PER_PAGE);
 
   // Data
-  const { playerGames, error } = useGetLastNGames(numGamesToShow);
+  const { playerGames, error, templates } = useGetLastNGames(numGamesToShow);
   const { user } = useAuth();
 
   // Hooks
@@ -56,6 +56,7 @@ export const AllPlayersPastGames = () => {
                   <TableRow>
                     <TableHead colSpan={2}>{t("lobby.gameName")}</TableHead>
                     <TableHead>{t("lobby.lastModifiedAt")}</TableHead>
+                    <TableHead>{t("lobby.language")}</TableHead>
                     <TableHead>{t("lobby.players")}</TableHead>
                     <TableHead>{t("lobby.scores")}</TableHead>
                     <TableHead>{t("lobby.winner")}</TableHead>
@@ -113,6 +114,7 @@ export const AllPlayersPastGames = () => {
                             game?.lastModifiedAt ?? game.createdAt
                           ).toLocaleString()}
                         </TableCell>
+                        <TableCell>{templates[i].name}</TableCell>
                         <TableCell>
                           <div className="flex flex-row gap-2 whitespace-nowrap tracking-tight">
                             {playerIds.map((id, idx) => (

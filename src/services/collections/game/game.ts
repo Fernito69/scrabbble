@@ -115,11 +115,16 @@ export const reshuffleInitialPlayerHands = async (
   await updateGame(db, gameId, payload);
 };
 
+type GetLastNPlayerGamesSnapshotCallback = (
+  gameStates: (GameState & { id: string })[],
+  templates: LanguageTemplate[]
+) => void;
+
 export const getLastNPlayerGamesSnapshot = (
   db: Firestore,
   userId: string,
   n: number,
-  callback: (data: (GameState & { id: string })[]) => void,
+  callback: GetLastNPlayerGamesSnapshotCallback,
   errorCallback: (err: string) => void
 ) => {
   const q = query(
@@ -132,11 +137,14 @@ export const getLastNPlayerGamesSnapshot = (
 
   const unsubscribe = onSnapshot(q, {
     next: (collSnap) => {
-      const data = collSnap.docs.map((d) => ({
+      const gameStates = collSnap.docs.map((d) => ({
         ...mapDbGamePayloadToGameState(d.data() as DbGamePayload),
         id: d.id,
       }));
-      callback(data);
+      const templates = collSnap.docs.map(
+        (d) => (d.data() as DbGamePayload).template
+      );
+      callback(gameStates, templates);
     },
     error: (err) => errorCallback(err.message),
   });
@@ -150,7 +158,7 @@ export const getLastNPastGamesSnapshot = (
   db: Firestore,
   userId: string,
   n: number,
-  callback: (data: (GameState & { id: string })[]) => void,
+  callback: GetLastNPlayerGamesSnapshotCallback,
   errorCallback: (err: string) => void
 ) => {
   const q = query(
@@ -163,11 +171,14 @@ export const getLastNPastGamesSnapshot = (
 
   const unsubscribe = onSnapshot(q, {
     next: (collSnap) => {
-      const data = collSnap.docs.map((d) => ({
+      const games = collSnap.docs.map((d) => ({
         ...mapDbGamePayloadToGameState(d.data() as DbGamePayload),
         id: d.id,
       }));
-      callback(data);
+      const templates = collSnap.docs.map(
+        (d) => (d.data() as DbGamePayload).template
+      );
+      callback(games, templates);
     },
     error: (err) => errorCallback(err.message),
   });
@@ -178,7 +189,7 @@ export const getLastNPastGamesSnapshot = (
 export const getLastNGamesSnapshot = (
   db: Firestore,
   n: number,
-  callback: (data: (GameState & { id: string })[]) => void,
+  callback: GetLastNPlayerGamesSnapshotCallback,
   errorCallback: (err: string) => void
 ) => {
   const q = query(
@@ -190,11 +201,14 @@ export const getLastNGamesSnapshot = (
 
   const unsubscribe = onSnapshot(q, {
     next: (collSnap) => {
-      const data = collSnap.docs.map((d) => ({
+      const games = collSnap.docs.map((d) => ({
         ...mapDbGamePayloadToGameState(d.data() as DbGamePayload),
         id: d.id,
       }));
-      callback(data);
+      const templates = collSnap.docs.map(
+        (d) => (d.data() as DbGamePayload).template
+      );
+      callback(games, templates);
     },
     error: (err) => errorCallback(err.message),
   });

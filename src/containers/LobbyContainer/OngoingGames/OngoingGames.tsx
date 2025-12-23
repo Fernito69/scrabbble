@@ -38,7 +38,9 @@ export const OngoingGames = () => {
   const [numGamesToShow, setNumGamesToShow] = useState<number>(GAMES_PER_PAGE);
 
   // Data
-  const { playerGames, error } = useGetLastNPlayerGames(numGamesToShow);
+  const { playerGames, error, templates } =
+    useGetLastNPlayerGames(numGamesToShow);
+
   const { user } = useAuth();
 
   // Mutations
@@ -87,6 +89,7 @@ export const OngoingGames = () => {
                   <TableRow>
                     <TableHead colSpan={2}>{t("lobby.gameName")}</TableHead>
                     <TableHead>{t("lobby.createdAt")}</TableHead>
+                    <TableHead>{t("lobby.language")}</TableHead>
                     <TableHead>{t("lobby.players")}</TableHead>
                     <TableHead>{t("lobby.scores")}</TableHead>
                     <TableHead>{t("lobby.currentMove")}</TableHead>
@@ -143,6 +146,7 @@ export const OngoingGames = () => {
                         <TableCell>
                           {new Date(game.createdAt).toLocaleString()}
                         </TableCell>
+                        <TableCell>{templates[i].name}</TableCell>
                         <TableCell>
                           <div className="flex flex-row gap-2 whitespace-nowrap tracking-tight">
                             {playerIds.map((id, idx) => (

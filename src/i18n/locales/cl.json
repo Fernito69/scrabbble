@@ -38,7 +38,8 @@
     "yourScore": "Tu puntaje",
     "showMore": "Mostrar más",
     "welcomeMessage": "¡Bienvenidos! Pónganse ready...",
-    "userJoined": "¡{{userName}} se unió! Agárralo a chuchás!"
+    "userJoined": "¡{{userName}} se unió! Agárralo a chuchás!",
+    "language": "Idioma"
   },
   "userConfig": {
     "changeName": "Cambiar nombre",
