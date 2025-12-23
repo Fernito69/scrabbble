@@ -227,6 +227,8 @@ export const onGameUpdateTrigger = functions.firestore
 
         // Subtract points
         const pointsToSubtract = getEndOfGamePointsToSubtract(state, template);
+        functions.logger.log("Subtracting points", pointsToSubtract);
+        
         Object.keys(payload.score.total).forEach((playerId) => {
           payload.score.total[playerId] -= pointsToSubtract[playerId];
         });
