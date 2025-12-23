@@ -29,7 +29,7 @@ import {
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useRankingSort, SortField } from "./useRankingSort";
-import { getColor } from "./ranking.utils";
+import { getColor, MCR_COLOR_RANGE } from "./ranking.utils";
 
 const NUM_RANKINGS_TO_SHOW = 10;
 
@@ -248,7 +248,7 @@ export const Ranking = () => {
               <TableBody>
                 {sortedRankings.map((r, i) => {
                   return (
-                    <TableRow key={i} className="odd:bg-white even:bg-gray-50">
+                    <TableRow key={i} className="odd:bg-white even:bg-[#fefefe]">
                       <TableCell>
                         <div className="flex flex-row items-center gap-2">
                           <UserAvatar userId={r.playerId} diameter={24} />
@@ -273,12 +273,32 @@ export const Ranking = () => {
                         </TableCell>
                       ))}
                       <TableCell>{r.avgPointsPerTurn.toFixed(1)}</TableCell>
-                      {([2, 3, 4] as const).map((numPlayers) => (
-                        <TableCell key={numPlayers}>
-                          {r.avgMatchPointsRatio?.[numPlayers]?.toFixed(3) ??
-                            "-"}
-                        </TableCell>
-                      ))}
+                      {([2, 3, 4] as const).map((numPlayers) => {
+                        const np =
+                          numPlayers === 2
+                            ? r.avgMatchPointsRatio?.[numPlayers]
+                            : r.avgMatchPointsRatio?.[numPlayers];
+                        return (
+                          <TableCell
+                            key={numPlayers}
+                            style={
+                              r.avgMatchPointsRatio?.[numPlayers]
+                                ? {
+                                    color: getColor(
+                                      np ?? 1,
+                                      0,
+                                      1,
+                                      1 / numPlayers,
+                                      MCR_COLOR_RANGE
+                                    ),
+                                  }
+                                : undefined
+                            }
+                          >
+                            {np?.toFixed(3) ?? "-"}
+                          </TableCell>
+                        );
+                      })}
                     </TableRow>
                   );
                 })}
