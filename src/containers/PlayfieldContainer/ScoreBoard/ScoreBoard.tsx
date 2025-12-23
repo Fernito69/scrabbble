@@ -123,7 +123,7 @@ export const ScoreBoard = () => {
             {presentPlayerIds.map((id, i) => (
               <TableCell
                 key={i}
-                className={state.currentPlayerId === id ? "bg-yellow-200" : ""}
+                className={isHighlighted(id) ? "bg-yellow-200" : borderCn}
               >
                 <div className="flex-1 flex items-center justify-center">
                   {state.score.total[id] ?? 0}
