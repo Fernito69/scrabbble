@@ -17,7 +17,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useAuth } from "@/contexts/AuthContext";
-import { usePopulateRanking } from "@/hooks/usePopulateRanking";
 import { VoteType } from "@/model/core.model";
 import {
   useDeleteGame,
@@ -63,8 +62,6 @@ export const OngoingGames = () => {
   const prevNumGamesWhereItsPlayersTurn = useRef<number>(
     numGamesWhereItsPlayersTurn
   );
-
-  usePopulateRanking();
 
   useEffect(() => {
     if (numGamesWhereItsPlayersTurn > prevNumGamesWhereItsPlayersTurn.current) {
