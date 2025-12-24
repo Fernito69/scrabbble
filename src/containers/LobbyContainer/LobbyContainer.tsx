@@ -68,7 +68,7 @@ export const LobbyContainer = () => {
         <Tabs
           onValueChange={handleTabValueChange}
           defaultValue={userConfig?.currentTab ?? "ongoing"}
-          className="w-full max-w-4xl min-h-[900px]"
+          className="w-full max-w-5xl min-h-[900px]"
         >
           <TabsList
             className={
