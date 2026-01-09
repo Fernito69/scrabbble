@@ -15,7 +15,7 @@
     "currentMove": "Quién juega",
     "currentTurn": "Turno",
     "loadingGames": "Cargando partidas en curso...",
-    "noGames": "No tienes partidas en curso 😢 ¡Crea una ahora!",
+    "noGames": "No tienes partidas en curso 😢",
     "missingGame": "Esta partida ya no existe 😢",
     "deleteGame": "Eliminar partida",
     "deleteGameConfirm": "¿Estás seguro de que quieres eliminar esta partida?",
@@ -39,7 +39,8 @@
     "showMore": "Mostrar más",
     "welcomeMessage": "¡Bienvenidos! Pónganse ready...",
     "userJoined": "¡{{userName}} se unió! Agárralo a chuchás!",
-    "language": "Idioma"
+    "language": "Idioma",
+    "createOne": "¡Crea una ahora!"
   },
   "userConfig": {
     "changeName": "Cambiar nombre",

@@ -30,12 +30,14 @@ import { Trash2 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { LanguageSelectDialog } from "../LanguageSelectDialog/LanguageSelectDialog";
 
 const GAMES_PER_PAGE = 10;
 
 export const OngoingGames = () => {
   // State
   const [numGamesToShow, setNumGamesToShow] = useState<number>(GAMES_PER_PAGE);
+  const [isCreatingGame, setIsCreatingGame] = useState<boolean>(false);
 
   // Data
   const { playerGames, error, templates } =
@@ -240,8 +242,18 @@ export const OngoingGames = () => {
             )}
           </>
         ) : playerGames && !error ? (
-          <div className="text-center text-xl font-bold tracking-tight mt-4">
+          <div className="justify-center text-xl items-center flex flex-row tracking-tight mt-4">
             {t("lobby.noGames")}
+            <button
+              onClick={() => setIsCreatingGame(true)}
+              disabled={isCreatingGame}
+              className="w-fit px-4 py-1 ml-3 text-sm bg-primary text-primary-foreground rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {t("lobby.createOne")}
+            </button>
+            {isCreatingGame && (
+              <LanguageSelectDialog close={() => setIsCreatingGame(false)} />
+            )}
           </div>
         ) : error ? (
           <div className="text-center text-xl font-bold tracking-tight mt-4">

@@ -19,6 +19,8 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import { LanguageInfoModal } from "./LanguageInfoModal/LanguageInfoModal";
+import { uniqBy } from "lodash";
+import { Timestamp } from "@/services/collections/game/game.model";
 
 interface Props {
   close: () => void;
@@ -63,11 +65,20 @@ export const LanguageSelectDialog = ({ close }: Props) => {
   };
 
   // Consts
-  const options = templates.map((template) => ({
-    value: template.name,
-    label: template.name,
-    template,
-  }));
+  const options = uniqBy(
+    templates
+      .map((template) => ({
+        value: template.name,
+        label: template.name,
+        template,
+      }))
+      .sort(
+        (a, b) =>
+          (a.template.createdAt as Timestamp).seconds -
+          (b.template.createdAt as Timestamp).seconds
+      ),
+    "value"
+  );
   const selectedOption = options.find(
     (option) => option.value === selectedTemplate?.name
   );

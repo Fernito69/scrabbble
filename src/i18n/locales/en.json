@@ -15,7 +15,7 @@
     "currentMove": "Current move",
     "currentTurn": "Turn",
     "loadingGames": "Loading ongoing games...",
-    "noGames": "No ongoing games 😢 Create one now!",
+    "noGames": "No ongoing games 😢",
     "missingGame": "This game doesn't exist anymore 😢",
     "deleteGame": "Delete game",
     "deleteGameConfirm": "Are you sure you want to delete this game?",
@@ -40,7 +40,8 @@
     "showMore": "Show more",
     "welcomeMessage": "Welcome to Scrabble!",
     "userJoined": "{{userName}} joined the game!",
-    "language": "Language"
+    "language": "Language",
+    "createOne": "Create one now!"
   },
   "languageSelect": {
     "title": "Select language",
