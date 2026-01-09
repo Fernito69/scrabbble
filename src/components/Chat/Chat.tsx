@@ -13,6 +13,8 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { UserAvatar } from "../UserAvatar";
 
+const FULL_DATE_THRESHOLD_LENGTH = 9;
+
 export const Chat = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
@@ -199,6 +201,7 @@ export const Chat = () => {
                 minute: "2-digit",
               });
               const longTimeString = createdAt.toLocaleString();
+
               // Failsafe for old format turn messages
               const isOldFormatTurnMessage =
                 isSystemMessage && typeof text === "string";
@@ -247,7 +250,12 @@ export const Chat = () => {
                       </div>
                     )}
                     {!isSystemMessage && (
-                      <div className={timeCn}>{timeString}</div>
+                      <div className={timeCn}>
+                        {typeof text === "string" &&
+                        text.length >= FULL_DATE_THRESHOLD_LENGTH
+                          ? longTimeString
+                          : timeString}
+                      </div>
                     )}
                   </div>
                 </div>
