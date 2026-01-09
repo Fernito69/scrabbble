@@ -14,6 +14,7 @@ import { TileComponent } from "../TileComponent/TileComponent";
 import { useClickToSelect } from "../useClickToSelect.hook";
 import { DroppableBoardSquare } from "./DroppableBoardSquare";
 import { ProposedMoveScoreIndicator } from "./ProposedMoveScoreIndicator";
+import { useState } from "react";
 
 const bonusColorMap: Record<Bonus, string> = {
   [Bonus.DOUBLE_LETTER]: "bg-blue-200",
@@ -36,11 +37,19 @@ interface BoardComponentProps {
 export const BoardComponent = ({
   clickToSelectHandlers,
 }: BoardComponentProps) => {
+  // State
+  const [showGameOver, setGameOver] = useState<boolean>(true);
+
   // Context
   const { state, template, localProposedMove } = useGameContext();
   const { user } = useAuth();
   const { t } = useTranslation();
   const getUserName = useGetPlayerName();
+
+  // Handlers
+  const handleCloseGameOver = () => {
+    setGameOver(false);
+  };
 
   // Render
   if (!template || !state) return null;
@@ -67,8 +76,8 @@ export const BoardComponent = ({
           </div>
         </OverlayWithLoader>
       )}
-      {gameOver && winningPlayerId != null && (
-        <OverlayWithLoader hideLoader>
+      {gameOver && winningPlayerId != null && showGameOver && (
+        <OverlayWithLoader hideLoader close={handleCloseGameOver}>
           <div className="text-2xl font-semibold">{t("lobby.gameOver")}</div>
           <div className="text-xl font-semibold flex flex-row gap-2 items-center">
             {t("lobby.winningPlayer")}:
