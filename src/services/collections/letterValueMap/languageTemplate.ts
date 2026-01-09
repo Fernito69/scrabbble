@@ -42,7 +42,7 @@ export const initLanguageTemplate = async (db: Firestore): Promise<void> => {
   const colRef = collection(db, LANGUAGE_TEMPLATE_COLLECTION);
   const docSnap = await getDocs(colRef);
 
-  // TODO: why does this sometimes not work? Added a workaround meanwhile at LanguageSelectDialog.tsx
+  // TODO: why does this sometimes return 0 when that's not true? Added a workaround meanwhile at LanguageSelectDialog.tsx
   if (docSnap.docs.length > 0) {
     return;
   }
