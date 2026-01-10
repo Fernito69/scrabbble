@@ -1,14 +1,13 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { useGameContext } from "@/contexts/GameState.context";
 import { cn } from "@/lib/utils";
+import { PLAYER_COLORS } from "@/services/collections/game/game.defaults";
 import { useGetPlayerName } from "@/services/collections/userConfig/userConfig.hooks";
 
 interface Props {
   playerId: string;
   colorIndex?: number;
 }
-
-const colorMap = ["bg-red-300", "bg-green-300", "bg-blue-300", "bg-yellow-300"];
 
 export const PlayerBadge = ({ playerId, colorIndex }: Props) => {
   // Context
@@ -23,7 +22,7 @@ export const PlayerBadge = ({ playerId, colorIndex }: Props) => {
   const playerIdx = state?.playerIds.indexOf(playerId) ?? -1;
   const className = cn(
     "flex flex-row gap-2 py-[2px] px-2 rounded-full w-fit items-center",
-    colorMap[colorIndex ?? playerIdx]
+    PLAYER_COLORS[colorIndex ?? playerIdx].badgeBg
   );
   const isCurrentPlayer = user?.uid === playerId;
 

@@ -8,6 +8,7 @@ export type UserConfigBase = {
   isAdmin?: boolean;
   rankingCollapsed?: boolean;
   currentTab?: string;
+  showTilePlayerColors?: boolean;
 };
 
 export type UserConfig = UserConfigBase & {

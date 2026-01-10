@@ -122,7 +122,8 @@
     "gameName": "Game name:",
     "awaitingApproval": "Waiting for:",
     "invalidWildcard": "The wildcard is invalid, please try another letter",
-    "wildcardPrompt": "What letter do you want to use for the wildcard?"
+    "wildcardPrompt": "What letter do you want to use for the wildcard?",
+    "showTilePlayerColors": "Show player colors"
   },
   "ranking": {
     "hallOfFame": "Hall of Fame",

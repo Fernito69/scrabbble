@@ -60,6 +60,8 @@ export const DraggableBoardTile = ({
         letter={letter}
         isProposedMove
         wildcardValue={wildcardValue}
+        x={x}
+        y={y}
       />
     </div>
   );

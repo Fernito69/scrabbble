@@ -31,6 +31,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { LanguageSelectDialog } from "../LanguageSelectDialog/LanguageSelectDialog";
+import { Switch } from "@/components/ui";
+import {
+  useGetUserConfig,
+  useUpdateUserConfig,
+} from "@/services/collections/userConfig/userConfig.hooks";
 
 const GAMES_PER_PAGE = 10;
 
@@ -40,6 +45,7 @@ export const OngoingGames = () => {
   const [isCreatingGame, setIsCreatingGame] = useState<boolean>(false);
 
   // Data
+  const userConfig = useGetUserConfig();
   const { playerGames, error, templates } =
     useGetLastNPlayerGames(numGamesToShow);
 
@@ -47,6 +53,7 @@ export const OngoingGames = () => {
 
   // Mutations
   const deleteGame = useDeleteGame();
+  const updateUserConfig = useUpdateUserConfig();
 
   // Hooks
   const { t } = useTranslation();
@@ -67,12 +74,20 @@ export const OngoingGames = () => {
     numGamesWhereItsPlayersTurn
   );
 
+  // Effects
   useEffect(() => {
     if (numGamesWhereItsPlayersTurn > prevNumGamesWhereItsPlayersTurn.current) {
       playNotificationSound(3);
     }
     prevNumGamesWhereItsPlayersTurn.current = numGamesWhereItsPlayersTurn;
   }, [numGamesWhereItsPlayersTurn]);
+
+  // Handlers
+  const handleToggleShowTilePlayerColors = () => {
+    updateUserConfig({
+      showTilePlayerColors: !userConfig?.showTilePlayerColors,
+    });
+  };
 
   // Render
   return (
@@ -89,7 +104,19 @@ export const OngoingGames = () => {
               <Table className="text-xs">
                 <TableHeader className="bg-muted text-xs">
                   <TableRow>
-                    <TableHead colSpan={2}>{t("lobby.gameName")}</TableHead>
+                    <TableHead>{t("lobby.gameName")}</TableHead>
+                    <TableHead>
+                      <div
+                        className="flex items-center h-4 justify-center"
+                        title={t("playfield.showTilePlayerColors")}
+                      >
+                        <Switch
+                          className="scale-75"
+                          checked={userConfig?.showTilePlayerColors}
+                          onCheckedChange={handleToggleShowTilePlayerColors}
+                        />
+                      </div>
+                    </TableHead>
                     <TableHead>{t("lobby.createdAt")}</TableHead>
                     <TableHead>{t("lobby.language")}</TableHead>
                     <TableHead>{t("lobby.players")}</TableHead>

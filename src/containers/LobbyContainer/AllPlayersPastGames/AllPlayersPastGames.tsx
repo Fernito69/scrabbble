@@ -1,6 +1,7 @@
 import { BoardDiorama } from "@/components/BoardDiorama/BoardDiorama";
 import { OverlayWithLoader } from "@/components/OverlayWithLoader/OverlayWithLoader";
 import { UserAvatar } from "@/components/UserAvatar";
+import { Switch } from "@/components/ui";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -21,6 +22,10 @@ import {
   getDefaultGameName,
   getWinningPlayerIdAndScore,
 } from "@/services/collections/game/game.utils";
+import {
+  useGetUserConfig,
+  useUpdateUserConfig,
+} from "@/services/collections/userConfig/userConfig.hooks";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -31,13 +36,22 @@ export const AllPlayersPastGames = () => {
   // State
   const [numGamesToShow, setNumGamesToShow] = useState<number>(GAMES_PER_PAGE);
 
-  // Data
+  // Data & Mutations
   const { playerGames, error, templates } = useGetLastNGames(numGamesToShow);
   const { user } = useAuth();
+  const userConfig = useGetUserConfig();
+  const updateUserConfig = useUpdateUserConfig();
 
   // Hooks
   const { t } = useTranslation();
   const navigate = useNavigate();
+
+  // Handlers
+  const handleToggleShowTilePlayerColors = () => {
+    updateUserConfig({
+      showTilePlayerColors: !userConfig?.showTilePlayerColors,
+    });
+  };
 
   // Render
   return (
@@ -54,7 +68,19 @@ export const AllPlayersPastGames = () => {
               <Table className="text-xs">
                 <TableHeader className="bg-muted text-xs">
                   <TableRow>
-                    <TableHead colSpan={2}>{t("lobby.gameName")}</TableHead>
+                    <TableHead>{t("lobby.gameName")}</TableHead>
+                    <TableHead>
+                      <div
+                        className="flex items-center h-4 justify-center"
+                        title={t("playfield.showTilePlayerColors")}
+                      >
+                        <Switch
+                          className="scale-75"
+                          checked={userConfig?.showTilePlayerColors}
+                          onCheckedChange={handleToggleShowTilePlayerColors}
+                        />
+                      </div>
+                    </TableHead>
                     <TableHead>{t("lobby.lastModifiedAt")}</TableHead>
                     <TableHead>{t("lobby.language")}</TableHead>
                     <TableHead>{t("lobby.players")}</TableHead>

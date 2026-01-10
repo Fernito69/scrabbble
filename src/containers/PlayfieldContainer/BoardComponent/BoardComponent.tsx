@@ -17,10 +17,11 @@ import { ProposedMoveScoreIndicator } from "./ProposedMoveScoreIndicator";
 import { useState } from "react";
 
 const bonusColorMap: Record<Bonus, string> = {
-  [Bonus.DOUBLE_LETTER]: "bg-blue-200",
-  [Bonus.DOUBLE_WORD]: "bg-yellow-200",
-  [Bonus.TRIPLE_LETTER]: "bg-blue-600 text-white",
-  [Bonus.TRIPLE_WORD]: "bg-red-600 text-white",
+  [Bonus.DOUBLE_LETTER]: "bg-gradient-to-br from-blue-300 to-blue-100",
+  [Bonus.DOUBLE_WORD]: "bg-gradient-to-br from-yellow-300 to-yellow-200",
+  [Bonus.TRIPLE_LETTER]:
+    "bg-gradient-to-br from-blue-700 to-blue-600 text-white",
+  [Bonus.TRIPLE_WORD]: "bg-gradient-to-br from-red-700 to-red-500 text-white",
 };
 
 const bonusMessageMap: Record<Bonus, string[]> = {
@@ -170,7 +171,7 @@ export const BoardComponent = ({
 
                 const squareColor = bonus
                   ? bonusColorMap[bonus]
-                  : "bg-green-600";
+                  : "bg-gradient-to-br from-green-900 to-green-700";
 
                 // Empty square
                 if (!letter) {
@@ -237,6 +238,8 @@ export const BoardComponent = ({
                         letter={letter}
                         isProposedMove={false}
                         wildcardValue={wildcardValue}
+                        x={xIndex}
+                        y={yIndex}
                       />
                     )}
                   </DroppableBoardSquare>

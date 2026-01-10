@@ -8,7 +8,10 @@ import { cn } from "@/lib/utils";
 import { VoteType } from "@/model/core.model";
 import { useUpdateGame } from "@/services/collections/game/game.hooks";
 import { getDefaultGameName } from "@/services/collections/game/game.utils";
-import { useGetUserConfig } from "@/services/collections/userConfig/userConfig.hooks";
+import {
+  useGetUserConfig,
+  useUpdateUserConfig,
+} from "@/services/collections/userConfig/userConfig.hooks";
 import { DndContext, DragOverlay } from "@dnd-kit/core";
 import { ChevronLeft, Edit } from "lucide-react";
 import { ReactNode } from "react";
@@ -25,6 +28,7 @@ import { EndOfGameVoteModal } from "./VoteModals/EndOfGameVoteModal/EndOfGameVot
 import { ReshuffleVoteModal } from "./VoteModals/ReshuffleVoteModal/ReshuffleVoteModal";
 import { YourTurnMessage } from "./YourTurnMessage/YourTurnMessage";
 import { UserConfigPopover } from "@/components/UserConfigPopover/UserConfigPopover";
+import { Switch } from "@/components/ui";
 
 export const PlayfieldContainer = () => {
   // Hooks
@@ -44,10 +48,18 @@ export const PlayfieldContainer = () => {
     activeLetter,
   } = usePlayfieldHandlers(clickToSelectHandlers.clearSelection);
 
-  // Data
+  // Data & Mutations
   const userConfig = useGetUserConfig();
+  const updateUserConfig = useUpdateUserConfig();
 
   if (!state) return null;
+
+  // Handlers
+  const handleToggleShowTilePlayerColors = () => {
+    updateUserConfig({
+      showTilePlayerColors: !userConfig?.showTilePlayerColors,
+    });
+  };
 
   // Consts
   const userName = userConfig?.displayName ?? user?.email;
@@ -112,7 +124,7 @@ export const PlayfieldContainer = () => {
               <Badge
                 label={t("playfield.players")}
                 value={
-                  <div className="flex flex-row gap-2 ">
+                  <div className="flex flex-row gap-2">
                     {(state.playerIds ?? []).filter(Boolean).map((v, i) => (
                       <UserAvatar
                         key={i}
@@ -194,6 +206,18 @@ export const PlayfieldContainer = () => {
                   />
                 </>
               )}
+              <Badge
+                label={t("playfield.showTilePlayerColors")}
+                value={
+                  <div className="flex items-center h-4">
+                    <Switch
+                      className="scale-75"
+                      checked={userConfig?.showTilePlayerColors}
+                      onCheckedChange={handleToggleShowTilePlayerColors}
+                    />
+                  </div>
+                }
+              />
             </div>
 
             <div className="flex gap-4 justify-center items-start">

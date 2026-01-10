@@ -11,7 +11,13 @@ interface Props {
   onClick?: () => void;
 }
 
-export const SortableTile = ({ id, letter, index, isSelected, onClick }: Props) => {
+export const SortableTile = ({
+  id,
+  letter,
+  index,
+  isSelected,
+  onClick,
+}: Props) => {
   const {
     attributes,
     listeners,

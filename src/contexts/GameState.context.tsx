@@ -61,9 +61,9 @@ export const GameStateProvider = ({
 
   // Functions
   const getPlayerNumber = useCallback(
-    (playerId: string) => {
+    (playerId: string, getIdx: boolean = false) => {
       const playerIdx = state?.playerIds.indexOf(playerId)!;
-      return playerIdx + 1;
+      return playerIdx + (getIdx ? 0 : 1);
     },
     [state?.playerIds]
   );

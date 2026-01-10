@@ -9,7 +9,7 @@ export interface GameInterface {
   gameId: string;
   numPlayers: number;
   isGameOrganizer: boolean;
-  getPlayerNumber: (playerId: string) => number;
+  getPlayerNumber: (playerId: string, getIdx?: boolean) => number;
   localProposedMove: Move[];
   localPlayerHand: PlayerHand;
   setLocalProposedMove: (move: Move[]) => void;

@@ -139,7 +139,8 @@
     "gameName": "Nombre de la partida:",
     "awaitingApproval": "Esperando a:",
     "wildcardPrompt": "¿Qué letra deseas usar para el comodín?",
-    "invalidWildcard": "El comodín no es válido, por favor intenta otra letra"
+    "invalidWildcard": "El comodín no es válido, por favor intenta otra letra",
+    "showTilePlayerColors": "Colores de jugadores"
   },
   "playerVotes": {
     "accept": "Aceptar",

@@ -25,6 +25,11 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { LanguageSelectDialog } from "../LanguageSelectDialog/LanguageSelectDialog";
+import { Switch } from "@/components/ui";
+import {
+  useGetUserConfig,
+  useUpdateUserConfig,
+} from "@/services/collections/userConfig/userConfig.hooks";
 
 const GAMES_PER_PAGE = 10;
 
@@ -33,13 +38,22 @@ export const PastGames = () => {
   const [numGamesToShow, setNumGamesToShow] = useState<number>(GAMES_PER_PAGE);
   const [isCreatingGame, setIsCreatingGame] = useState<boolean>(false);
 
-  // Data
+  // Data & Mutations
   const { playerGames, error, templates } = useGetLastNPastGames();
+  const userConfig = useGetUserConfig();
   const { user } = useAuth();
+  const updateUserConfig = useUpdateUserConfig();
 
   // Hooks
   const { t } = useTranslation();
   const navigate = useNavigate();
+
+  // Handlers
+  const handleToggleShowTilePlayerColors = () => {
+    updateUserConfig({
+      showTilePlayerColors: !userConfig?.showTilePlayerColors,
+    });
+  };
 
   // Render
   return (
@@ -56,7 +70,19 @@ export const PastGames = () => {
               <Table className="text-xs">
                 <TableHeader className="bg-muted text-xs">
                   <TableRow>
-                    <TableHead colSpan={2}>{t("lobby.gameName")}</TableHead>
+                    <TableHead>{t("lobby.gameName")}</TableHead>
+                    <TableHead>
+                      <div
+                        className="flex items-center h-4 justify-center"
+                        title={t("playfield.showTilePlayerColors")}
+                      >
+                        <Switch
+                          className="scale-75"
+                          checked={userConfig?.showTilePlayerColors}
+                          onCheckedChange={handleToggleShowTilePlayerColors}
+                        />
+                      </div>
+                    </TableHead>
                     <TableHead>{t("lobby.lastModifiedAt")}</TableHead>
                     <TableHead>{t("lobby.language")}</TableHead>
                     <TableHead>{t("lobby.players")}</TableHead>
