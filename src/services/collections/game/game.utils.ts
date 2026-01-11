@@ -128,7 +128,7 @@ export const isMoveValid = (
   }
 
   // Validate length
-  if (move.length < 2) {
+  if (move.length < 1) {
     res.valid = false;
     res.error = t("moveValidation.moveTooShort");
     return res;
