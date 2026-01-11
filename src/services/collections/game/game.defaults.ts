@@ -11,14 +11,25 @@ export const LANGUAGES = [
 export const PLAYER_COLORS = [
   // player 1
   {
+    badgeBg: "bg-blue-300",
+    tile: {
+      bg: "bg-blue-50",
+      border: "border-blue-400",
+      text: "text-blue-600",
+    },
+    glow: "96, 165, 250",
+  },
+  // player 2
+  {
     badgeBg: "bg-red-300",
     tile: {
       bg: "bg-red-50",
       border: "border-red-400",
       text: "text-red-600",
     },
+    glow: "248, 113, 113",
   },
-  // player 2
+  // player 3
   {
     badgeBg: "bg-green-300",
     tile: {
@@ -26,15 +37,7 @@ export const PLAYER_COLORS = [
       border: "border-green-400",
       text: "text-green-600",
     },
-  },
-  // player 3
-  {
-    badgeBg: "bg-blue-300",
-    tile: {
-      bg: "bg-blue-50",
-      border: "border-blue-400",
-      text: "text-blue-600",
-    },
+    glow: "74, 222, 128",
   },
   // player 4
   {
@@ -44,5 +47,6 @@ export const PLAYER_COLORS = [
       border: "border-yellow-400",
       text: "text-yellow-600",
     },
+    glow: "250, 204, 21",
   },
 ] as const;

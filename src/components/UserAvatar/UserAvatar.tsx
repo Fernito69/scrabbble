@@ -4,6 +4,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { PLAYER_COLORS } from "@/services/collections/game/game.defaults";
 import { getInitials } from "@/services/collections/userConfig/useConfig.utils";
 import { useUserConfigSnapshot } from "@/services/collections/userConfig/userConfig.hooks";
 
@@ -15,13 +16,6 @@ interface UserAvatarProps {
   hidePicture?: boolean;
 }
 
-const glowColors = [
-  "96, 165, 250", // blue-500
-  "248, 113, 113", // red-500
-  "74, 222, 128", // green-500
-  "250, 204, 21", // yellow-500
-] as const;
-
 export const UserAvatar = ({
   userId,
   diameter = 40,
@@ -32,7 +26,8 @@ export const UserAvatar = ({
   const userConfig = useUserConfigSnapshot(userId);
   const initials = getInitials(userConfig?.displayName);
 
-  const glowColor = shadingIndex != null ? glowColors[shadingIndex] : undefined;
+  const glowColor =
+    shadingIndex != null ? PLAYER_COLORS[shadingIndex].glow : undefined;
   const glowStyle = glowColor
     ? {
         boxShadow: `
@@ -79,9 +74,7 @@ export const UserAvatar = ({
             className="max-w-[592px] max-h-[592px] border border-gray-300 rounded-sm mx-2 mb-2"
           />
         ) : null}
-        <p className="font-semibold">
-          {userConfig?.displayName || "User"}
-        </p>
+        <p className="font-semibold">{userConfig?.displayName || "User"}</p>
       </TooltipContent>
     </Tooltip>
   );
