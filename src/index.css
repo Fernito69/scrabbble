@@ -57,3 +57,73 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .animate-bg-cycle.animate-border-spin {
+    animation: bg-cycle 2s ease-in-out infinite,
+      border-spin 1.5s linear infinite,
+      text-pulse 2s ease-in-out infinite,
+      pulse-scale 2s ease-in-out infinite;
+    background-color: rgb(253 224 71);
+    border-color: rgb(0 0 0);
+    color: rgb(153 27 27);
+    z-index: 50;
+    position: relative;
+  }
+
+  .animate-bg-cycle {
+    animation: bg-cycle 2s ease-in-out infinite;
+    background-color: rgb(253 224 71);
+  }
+
+  @keyframes bg-cycle {
+    0%,
+    100% {
+      background-color: rgb(253 224 71);
+    }
+    50% {
+      background-color: rgb(255 255 90);
+    }
+  }
+
+  .animate-border-spin {
+    animation: border-spin 1.5s linear infinite;
+    border-color: rgb(239 68 68);
+  }
+
+  @keyframes border-spin {
+    0% {
+      border-color: rgb(234 179 8);
+    }
+    25% {
+      border-color: rgb(249 115 22);
+    }
+    50% {
+      border-color: rgb(239 68 68);
+    }
+    75% {
+      border-color: rgb(249 115 22);
+    }
+    100% {
+      border-color: rgb(234 179 8);
+    }
+  }
+
+  @keyframes text-pulse {
+    0%, 100% {
+      color: rgb(153 27 27);
+    }
+    50% {
+      color: rgb(255 90 90);
+    }
+  }
+
+  @keyframes pulse-scale {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+  }
+}

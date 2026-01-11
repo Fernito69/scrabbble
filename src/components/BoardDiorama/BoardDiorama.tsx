@@ -23,7 +23,7 @@ export const BoardDiorama = ({ game }: Props) => {
 
   // Render
   return (
-    <div className="flex justify-center items-center border border-green-800 w-[62px]">
+    <div className="flex justify-center items-center border border-green-500 w-[62px] rounded-sm">
       <div className="grid grid-cols-15 gap-0">
         {board.map((row, yIndex) =>
           row.map(({ tile, bonus }, xIndex) => {
@@ -67,7 +67,7 @@ export const BoardDiorama = ({ game }: Props) => {
               "w-[4px] h-[4px]",
               letter
                 ? proposedMove
-                  ? "border border-red-500"
+                  ? "border animate-border-spin animate-bg-cycle"
                   : inactiveTileColor
                 : ""
             );

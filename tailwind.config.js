@@ -85,6 +85,17 @@ export default {
             boxShadow: "0 0 40px rgba(255, 215, 0, 1), 0 0 80px rgba(255, 0, 255, 0.8), 0 0 100px rgba(0, 255, 255, 0.6)",
           },
         },
+        "border-spin": {
+          "0%": { borderColor: "rgb(239 68 68)" },
+          "25%": { borderColor: "rgb(249 115 22)" },
+          "50%": { borderColor: "rgb(234 179 8)" },
+          "75%": { borderColor: "rgb(249 115 22)" },
+          "100%": { borderColor: "rgb(239 68 68)" },
+        },
+        "bg-cycle": {
+          "0%, 100%": { backgroundColor: "rgb(253 224 71)" },
+          "50%": { backgroundColor: "rgb(147 197 253)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -92,6 +103,8 @@ export default {
         "pulse-scale": "pulse-scale 1s ease-in-out infinite",
         "gradient": "gradient 3s ease infinite",
         "glow": "glow 2s ease-in-out infinite",
+        "border-spin": "border-spin 1.5s linear infinite",
+        "bg-cycle": "bg-cycle 2s ease-in-out infinite",
       },
     },
   },

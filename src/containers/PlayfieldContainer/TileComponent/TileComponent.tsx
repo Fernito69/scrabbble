@@ -46,10 +46,10 @@ export const TileComponent = ({
   }
 
   const tileClassName = cn(
-    "h-12 w-12 flex items-center justify-center text-2xl border-2 rounded-md h-full shadow select-none",
+    "h-12 w-12 flex items-center justify-center text-2xl rounded-md h-full shadow select-none",
     isProposedMove
-      ? "border-red-500 bg-yellow-300 text-red-800 animate-pulse-scale"
-      : inactiveTileColor
+      ? "border-2 animate-border-spin animate-bg-cycle text-red-800"
+      : cn("border-2", inactiveTileColor)
   );
 
   // Render
