@@ -166,6 +166,7 @@
   "moveValidation": {
     "firstMoveTooShort": "First move should be longer than 1 letter",
     "firstMoveNotCentered": "First move should pass through the center of the board",
+    "firstMoveHasGaps": "First move can't have gaps between tiles",
     "moveTooShort": "Move is too short",
     "invalidMove": "This doesn't seem to be a valid move"
   }

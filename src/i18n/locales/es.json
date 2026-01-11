@@ -166,6 +166,7 @@
   "moveValidation": {
     "firstMoveTooShort": "La primera jugada debe tener más de 1 letra",
     "firstMoveNotCentered": "La primera jugada debe pasar por el centro del tablero",
+    "firstMoveHasGaps": "La primera jugada no puede tener espacios entre fichas",
     "moveTooShort": "La jugada es demasiado corta",
     "invalidMove": "Esta jugada no parece ser válida"
   }

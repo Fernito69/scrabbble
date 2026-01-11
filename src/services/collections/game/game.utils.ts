@@ -92,17 +92,37 @@ export const isMoveValid = (
   };
 
   // Check for first move
-  // It should be longer than 1 letter and pass through the center of the board
   if (state.currentTurn === 1 && state.score.perTurn.length === 0) {
+    // It should pass through the center of the board
     res.valid = move.some((m) => m.x === 7 && m.y === 7);
     if (!res.valid) {
       res.error = t("moveValidation.firstMoveNotCentered");
       return res;
     }
 
+    // It should be longer than 1 letter
     res.valid = move.length > 1;
     if (!res.valid) {
       res.error = t("moveValidation.firstMoveTooShort");
+      return res;
+    }
+
+    // It can't have gaps
+    const gapChecker = (coord: "x" | "y") =>
+      move
+        .map((m) => m[coord])
+        .sort((a, b) => a - b)
+        .every((v, i, a) => {
+          if (i === 0) return true;
+          const diff = Math.abs(v - a[i - 1]);
+          console.log("arr", a);
+          return diff === 1 || diff === 0;
+        });
+
+    res.valid = (["x", "y"] as const).every(gapChecker);
+
+    if (!res.valid) {
+      res.error = t("moveValidation.firstMoveHasGaps");
       return res;
     }
   }
