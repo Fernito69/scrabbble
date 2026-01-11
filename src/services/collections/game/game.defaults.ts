@@ -24,7 +24,7 @@ export const PLAYER_COLORS = [
     badgeBg: "bg-red-300",
     tile: {
       bg: "bg-red-50",
-      border: "border-red-300",
+      border: "border-red-400",
       text: "text-red-600",
     },
     glowColor: "248, 113, 113",
@@ -34,7 +34,7 @@ export const PLAYER_COLORS = [
     badgeBg: "bg-yellow-300",
     tile: {
       bg: "bg-yellow-50",
-      border: "border-yellow-300",
+      border: "border-yellow-400",
       text: "text-yellow-600",
     },
     glowColor: "250, 204, 21",
@@ -44,7 +44,7 @@ export const PLAYER_COLORS = [
     badgeBg: "bg-purple-300",
     tile: {
       bg: "bg-purple-50",
-      border: "border-purple-300",
+      border: "border-purple-400",
       text: "text-purple-600",
     },
     glowColor: "189, 36, 255",

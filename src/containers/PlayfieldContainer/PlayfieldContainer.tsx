@@ -71,6 +71,7 @@ export const PlayfieldContainer = () => {
   const awaitingApproval =
     state?.currentVote?.type === VoteType.ACCEPT_PROPOSED_MOVE;
 
+  // Render
   return (
     <DndContext
       sensors={sensors}

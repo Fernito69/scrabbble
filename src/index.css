@@ -60,10 +60,8 @@
 
 @layer utilities {
   .animate-bg-cycle.animate-border-spin {
-    animation: bg-cycle 2s ease-in-out infinite,
-      border-spin 1.5s linear infinite,
-      text-pulse 2s ease-in-out infinite,
-      pulse-scale 2s ease-in-out infinite;
+    animation: bg-cycle 2s ease-in-out infinite, border-spin 2s linear infinite,
+      text-pulse 2s ease-in-out infinite, pulse-scale 2s ease-in-out infinite;
     background-color: rgb(253 224 71);
     border-color: rgb(0 0 0);
     color: rgb(153 27 27);
@@ -93,24 +91,25 @@
 
   @keyframes border-spin {
     0% {
-      border-color: rgb(234 179 8);
+      border-color: rgb(255 4 50);
     }
     25% {
-      border-color: rgb(249 115 22);
+      border-color: rgb(249, 207, 22);
     }
     50% {
-      border-color: rgb(239 68 68);
+      border-color: rgb(8, 255, 34);
     }
     75% {
-      border-color: rgb(249 115 22);
+      border-color: rgb(249, 207, 22);
     }
     100% {
-      border-color: rgb(234 179 8);
+      border-color: rgb(255 4 50);
     }
   }
 
   @keyframes text-pulse {
-    0%, 100% {
+    0%,
+    100% {
       color: rgb(153 27 27);
     }
     50% {
@@ -119,7 +118,8 @@
   }
 
   @keyframes pulse-scale {
-    0%, 100% {
+    0%,
+    100% {
       transform: scale(1);
     }
     50% {

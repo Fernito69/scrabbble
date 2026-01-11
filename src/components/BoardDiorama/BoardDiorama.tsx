@@ -5,8 +5,8 @@ import { useGetUserConfig } from "@/services/collections/userConfig/userConfig.h
 
 export const bonusColorMap: Record<Bonus, string> = {
   [Bonus.DOUBLE_LETTER]: "bg-gradient-to-br from-blue-300 to-blue-50",
-  [Bonus.DOUBLE_WORD]: "bg-gradient-to-br from-yellow-300 to-yellow-200",
-  [Bonus.TRIPLE_LETTER]: "bg-gradient-to-br from-blue-600 to-blue-500",
+  [Bonus.DOUBLE_WORD]: "bg-gradient-to-br from-yellow-200 to-yellow-100",
+  [Bonus.TRIPLE_LETTER]: "bg-gradient-to-br from-blue-700 to-blue-500",
   [Bonus.TRIPLE_WORD]: "bg-gradient-to-br from-red-600 to-red-400",
 };
 
