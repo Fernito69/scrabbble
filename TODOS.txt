@@ -1,2 +1,2 @@
-- PINTAR FICHAS PUESTAS EN BOARD DEL COLOR DEL PLAYER (hacerlo opcional con toghgle?)
-- CREAR REPLAY WHEN GAME OVER
+- Fix start game vote menu padding
+- Fix player hand black cuadrados on drag no deberían moverse

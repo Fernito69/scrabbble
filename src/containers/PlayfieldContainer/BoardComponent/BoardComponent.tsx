@@ -155,7 +155,7 @@ export const BoardComponent = ({
           )}
         </OverlayWithLoader>
       )}
-      <div className="flex justify-center items-center p-4 rounded-xl bg-green-600 border border-green-500 border-1">
+      <div className="flex justify-center items-center p-4 rounded-xl bg-green-600 border border-r-green-700 border-t-green-700 border-b-green-500 border-l-green-500 border-1">
         <div className="relative">
           <div className="grid grid-cols-15 gap-0 w-[720px]">
             {board.map((row, yIndex) =>
