@@ -1,2 +1,3 @@
 - Fix start game vote menu padding
 - Fix player hand black cuadrados on drag no deberían moverse
+- Use dict apis, when available. e.g. https://rae-api.com/docs/api-reference/

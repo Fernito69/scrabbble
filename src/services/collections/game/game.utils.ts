@@ -108,6 +108,7 @@ export const isMoveValid = (
     }
 
     // It can't have gaps
+    // TODO: optimize this (use move.length vs maxIdx - minIdx + 1)
     const gapChecker = (coord: "x" | "y") =>
       move
         .map((m) => m[coord])
@@ -115,7 +116,6 @@ export const isMoveValid = (
         .every((v, i, a) => {
           if (i === 0) return true;
           const diff = Math.abs(v - a[i - 1]);
-          console.log("arr", a);
           return diff === 1 || diff === 0;
         });
 

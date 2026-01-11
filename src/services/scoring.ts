@@ -31,9 +31,6 @@ const dirMapping: Record<Dir, Tuple> = {
   [Dir.RIGHT]: [1, 0],
 };
 
-// const HORIZONTAL_DIRS = [Dir.LEFT, Dir.RIGHT] as const;
-// const VERTICAL_DIRS = [Dir.UP, Dir.DOWN] as const;
-
 type WordLetter = {
   letter: Move & { score: number };
   bonus: Bonus | undefined;
