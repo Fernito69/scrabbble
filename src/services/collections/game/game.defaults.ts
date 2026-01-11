@@ -17,36 +17,36 @@ export const PLAYER_COLORS = [
       border: "border-blue-400",
       text: "text-blue-600",
     },
-    glow: "96, 165, 250",
+    glowColor: "96, 165, 250",
   },
   // player 2
   {
     badgeBg: "bg-red-300",
     tile: {
       bg: "bg-red-50",
-      border: "border-red-400",
+      border: "border-red-300",
       text: "text-red-600",
     },
-    glow: "248, 113, 113",
+    glowColor: "248, 113, 113",
   },
-  // player 3
-  {
-    badgeBg: "bg-green-300",
-    tile: {
-      bg: "bg-green-50",
-      border: "border-green-400",
-      text: "text-green-600",
-    },
-    glow: "74, 222, 128",
-  },
-  // player 4
+  // player 31
   {
     badgeBg: "bg-yellow-300",
     tile: {
       bg: "bg-yellow-50",
-      border: "border-yellow-400",
+      border: "border-yellow-300",
       text: "text-yellow-600",
     },
-    glow: "250, 204, 21",
+    glowColor: "250, 204, 21",
+  },
+  // player 4
+  {
+    badgeBg: "bg-purple-300",
+    tile: {
+      bg: "bg-purple-50",
+      border: "border-purple-300",
+      text: "text-purple-600",
+    },
+    glowColor: "189, 36, 255",
   },
 ] as const;

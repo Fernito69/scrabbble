@@ -52,6 +52,15 @@ export const TileComponent = ({
       : cn("border-2", inactiveTileColor)
   );
 
+  const scoreClassName = cn(
+    "text-red-800 font-semibold",
+    userConfig?.showTilePlayerColors &&
+      playerIdx != null &&
+      PLAYER_COLORS[playerIdx].tile.text != null
+      ? PLAYER_COLORS[playerIdx].tile.text
+      : ""
+  );
+
   // Render
   return (
     <div className="relative h-12 w-12">
@@ -65,8 +74,8 @@ export const TileComponent = ({
         )}
       </div>
       {letterScore > 0 && (
-        <div className="absolute bottom-[2px] right-1 text-[10px]">
-          <i className="text-red-800 font-bold">{letterScore}</i>
+        <div className="absolute bottom-[1px] right-1 text-[10px]">
+          <p className={scoreClassName}>{letterScore}</p>
         </div>
       )}
     </div>

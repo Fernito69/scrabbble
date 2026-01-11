@@ -4,9 +4,9 @@ import { PLAYER_COLORS } from "@/services/collections/game/game.defaults";
 import { useGetUserConfig } from "@/services/collections/userConfig/userConfig.hooks";
 
 export const bonusColorMap: Record<Bonus, string> = {
-  [Bonus.DOUBLE_LETTER]: "bg-gradient-to-br from-blue-300 to-blue-100",
+  [Bonus.DOUBLE_LETTER]: "bg-gradient-to-br from-blue-300 to-blue-50",
   [Bonus.DOUBLE_WORD]: "bg-gradient-to-br from-yellow-300 to-yellow-200",
-  [Bonus.TRIPLE_LETTER]: "bg-gradient-to-br from-blue-600 to-blue-400",
+  [Bonus.TRIPLE_LETTER]: "bg-gradient-to-br from-blue-600 to-blue-500",
   [Bonus.TRIPLE_WORD]: "bg-gradient-to-br from-red-600 to-red-400",
 };
 
@@ -23,7 +23,7 @@ export const BoardDiorama = ({ game }: Props) => {
 
   // Render
   return (
-    <div className="flex justify-center items-center border border-green-500 w-[62px] rounded-sm">
+    <div className="flex justify-center items-center border-[3px] border-green-500 w-16 rounded-md">
       <div className="grid grid-cols-15 gap-0">
         {board.map((row, yIndex) =>
           row.map(({ tile, bonus }, xIndex) => {

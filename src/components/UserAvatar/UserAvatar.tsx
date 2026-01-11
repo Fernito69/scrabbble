@@ -27,7 +27,7 @@ export const UserAvatar = ({
   const initials = getInitials(userConfig?.displayName);
 
   const glowColor =
-    shadingIndex != null ? PLAYER_COLORS[shadingIndex].glow : undefined;
+    shadingIndex != null ? PLAYER_COLORS[shadingIndex].glowColor : undefined;
   const glowStyle = glowColor
     ? {
         boxShadow: `
