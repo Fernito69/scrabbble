@@ -109,7 +109,7 @@ export const isMoveValid = (
 
     // It can't have gaps
     // TODO: optimize this (use move.length vs maxIdx - minIdx + 1)
-    res.valid = (["x", "y"] as const).every((coord: "x" | "y") =>
+    res.valid = (["x", "y"] as const).every((coord) =>
       move
         .map((m) => m[coord])
         .sort((a, b) => a - b)
