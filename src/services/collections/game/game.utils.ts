@@ -109,7 +109,7 @@ export const isMoveValid = (
 
     // It can't have gaps
     // TODO: optimize this (use move.length vs maxIdx - minIdx + 1)
-    const gapChecker = (coord: "x" | "y") =>
+    res.valid = (["x", "y"] as const).every((coord: "x" | "y") =>
       move
         .map((m) => m[coord])
         .sort((a, b) => a - b)
@@ -117,9 +117,8 @@ export const isMoveValid = (
           if (i === 0) return true;
           const diff = Math.abs(v - a[i - 1]);
           return diff === 1 || diff === 0;
-        });
-
-    res.valid = (["x", "y"] as const).every(gapChecker);
+        })
+    );
 
     if (!res.valid) {
       res.error = t("moveValidation.firstMoveHasGaps");
@@ -128,18 +127,21 @@ export const isMoveValid = (
   }
 
   // Validate length
-  if (move.length < 1) {
-    res.valid = false;
+  res.valid = move.length >= 1;
+  if (res.valid) {
     res.error = t("moveValidation.moveTooShort");
     return res;
   }
 
-  // Finally, check if the move is a straight line (kind of a good proxy)
+  // Finally, check if the letters are in a straight line (kind of a good proxy)
   res.valid =
     new Set(move.map(({ x }) => x)).size === 1 ||
     new Set(move.map(({ y }) => y)).size === 1;
 
-  res.error = res.valid ? undefined : t("moveValidation.invalidMove");
+  if (!res.valid) {
+    res.error = t("moveValidation.invalidMove");
+    return res;
+  }
 
   return res;
 };
