@@ -14,6 +14,7 @@ import { TileComponent } from "../TileComponent/TileComponent";
 import { useClickToSelect } from "../useClickToSelect.hook";
 import { DroppableBoardSquare } from "./DroppableBoardSquare";
 import { ProposedMoveScoreIndicator } from "./ProposedMoveScoreIndicator";
+import { ProposedMoveErrorIndicator } from "./ProposedMoveErrorIndicator";
 import { useState } from "react";
 
 const bonusColorMap: Record<Bonus, string> = {
@@ -67,6 +68,9 @@ export const BoardComponent = ({
     !state.gameStarted && state.playerIds.filter(Boolean).length === 1;
 
   const [winningPlayerId, winningScore] = getWinningPlayerIdAndScore(state);
+  const validationResult = activeProposedMove
+    ? isMoveValid(activeProposedMove, state, t)
+    : undefined;
 
   return (
     <div className="flex justify-center items-center relative min-h-[200px]">
@@ -252,12 +256,18 @@ export const BoardComponent = ({
           {activeProposedMove &&
             activeProposedMove.length > 0 &&
             user &&
-            isMoveValid(activeProposedMove, state.currentTurn).valid && (
+            validationResult &&
+            (validationResult.valid ? (
               <ProposedMoveScoreIndicator
                 proposedMove={activeProposedMove}
                 playerId={user.uid}
               />
-            )}
+            ) : validationResult.error ? (
+              <ProposedMoveErrorIndicator
+                proposedMove={activeProposedMove}
+                errorMessage={validationResult.error}
+              />
+            ) : null)}
         </div>
       </div>
     </div>

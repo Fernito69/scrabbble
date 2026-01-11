@@ -28,7 +28,7 @@ export const SPANISH_SCORE_MAP: LetterValueMap = {
   x: 8,
   y: 4,
   z: 10,
-  // Spanish letters
+  // Spanish-specific letters
   ñ: 8,
   ch: 5,
   rr: 8,
@@ -62,7 +62,7 @@ export const SPANISH_LETTER_QUANTITY_MAP: LetterValueMap = {
   x: 1,
   y: 1,
   z: 1,
-  // Spanish letters
+  // Spanish-specific letters
   ñ: 1,
   ch: 1,
   rr: 1,
@@ -96,11 +96,13 @@ export const GERMAN_SCORE_MAP: LetterValueMap = {
   x: 8,
   y: 10,
   z: 3,
+  // German-specific letters
   k: 4,
   w: 3,
   ä: 6,
   ü: 6,
   ö: 8,
+  // Wildcard
   "0": 0,
 };
 
@@ -129,11 +131,13 @@ export const GERMAN_LETTER_QUANTITY_MAP: LetterValueMap = {
   x: 1,
   y: 1,
   z: 1,
+  // German-specific letters
   k: 2,
   w: 1,
   ä: 1,
   ü: 1,
   ö: 1,
+  // Wildcard
   "0": 2,
 };
 
@@ -162,8 +166,10 @@ export const ENGLISH_SCORE_MAP: LetterValueMap = {
   x: 8,
   y: 4,
   z: 10,
+  // English-specific letters
   k: 5,
   w: 4,
+  // Wildcard
   "0": 0,
 };
 
@@ -192,12 +198,15 @@ export const ENGLISH_LETTER_QUANTITY_MAP: LetterValueMap = {
   x: 1,
   y: 2,
   z: 1,
+  // English-specific letters
   k: 1,
   w: 2,
+  // Wildcard
   "0": 2,
 };
 
 export const EMPTY_BOARD: Board = [
+  // 1st row
   [
     { bonus: Bonus.TRIPLE_WORD },
     {},
@@ -215,6 +224,7 @@ export const EMPTY_BOARD: Board = [
     {},
     { bonus: Bonus.TRIPLE_WORD },
   ],
+  // 2nd row
   [
     {},
     { bonus: Bonus.DOUBLE_WORD },
@@ -232,6 +242,7 @@ export const EMPTY_BOARD: Board = [
     { bonus: Bonus.DOUBLE_WORD },
     {},
   ],
+  // 3rd row
   [
     {},
     {},
@@ -249,6 +260,7 @@ export const EMPTY_BOARD: Board = [
     {},
     {},
   ],
+  // 4th row
   [
     { bonus: Bonus.DOUBLE_LETTER },
     {},
@@ -266,6 +278,7 @@ export const EMPTY_BOARD: Board = [
     {},
     { bonus: Bonus.DOUBLE_LETTER },
   ],
+  // 5th row
   [
     {},
     {},
@@ -283,6 +296,7 @@ export const EMPTY_BOARD: Board = [
     {},
     {},
   ],
+  // 6th row
   [
     {},
     { bonus: Bonus.TRIPLE_LETTER },
@@ -300,6 +314,7 @@ export const EMPTY_BOARD: Board = [
     { bonus: Bonus.TRIPLE_LETTER },
     {},
   ],
+  // 7th row
   [
     {},
     {},
@@ -317,6 +332,7 @@ export const EMPTY_BOARD: Board = [
     {},
     {},
   ],
+  // 8th row (center row)
   [
     { bonus: Bonus.TRIPLE_WORD },
     {},
@@ -334,6 +350,7 @@ export const EMPTY_BOARD: Board = [
     {},
     { bonus: Bonus.TRIPLE_WORD },
   ],
+  // 9th row
   [
     {},
     {},
@@ -351,6 +368,7 @@ export const EMPTY_BOARD: Board = [
     {},
     {},
   ],
+  // 10th row
   [
     {},
     { bonus: Bonus.TRIPLE_LETTER },
@@ -368,6 +386,7 @@ export const EMPTY_BOARD: Board = [
     { bonus: Bonus.TRIPLE_LETTER },
     {},
   ],
+  // 11th row
   [
     {},
     {},
@@ -385,6 +404,7 @@ export const EMPTY_BOARD: Board = [
     {},
     {},
   ],
+  // 12th row
   [
     { bonus: Bonus.DOUBLE_LETTER },
     {},
@@ -402,6 +422,7 @@ export const EMPTY_BOARD: Board = [
     {},
     { bonus: Bonus.DOUBLE_LETTER },
   ],
+  // 13th row
   [
     {},
     {},
@@ -419,6 +440,7 @@ export const EMPTY_BOARD: Board = [
     {},
     {},
   ],
+  // 14th row
   [
     {},
     { bonus: Bonus.DOUBLE_WORD },
@@ -436,6 +458,7 @@ export const EMPTY_BOARD: Board = [
     { bonus: Bonus.DOUBLE_WORD },
     {},
   ],
+  // 15th row
   [
     { bonus: Bonus.TRIPLE_WORD },
     {},

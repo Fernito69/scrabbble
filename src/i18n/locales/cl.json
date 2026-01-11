@@ -162,5 +162,11 @@
     "expand": "Expandir chat",
     "like": "Doble clic para 💖",
     "turn": "Turno {{turn}}"
+  },
+  "moveValidation": {
+    "firstMoveTooShort": "La primera jugada tiene que tener más de 1 letra, po",
+    "firstMoveNotCentered": "La primera jugada tiene que pasar por el centro del tablero",
+    "moveTooShort": "La jugada es muy corta",
+    "invalidMove": "Esta jugada no es válida"
   }
 }

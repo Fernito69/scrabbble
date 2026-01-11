@@ -162,5 +162,11 @@
     "expand": "Expand chat",
     "like": "Double click to 💖",
     "turn": "Turn {{turn}}"
+  },
+  "moveValidation": {
+    "firstMoveTooShort": "First move should be longer than 1 letter",
+    "firstMoveNotCentered": "First move should pass through the center of the board",
+    "moveTooShort": "Move is too short",
+    "invalidMove": "This doesn't seem to be a valid move"
   }
 }

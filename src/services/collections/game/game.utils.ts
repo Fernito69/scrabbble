@@ -31,7 +31,7 @@ export const computeTilePouch = (
 export const getInitGamePayload = (
   state: GameState
 ): Partial<DbGamePayload> => {
-  // Shuffle players random (for now)
+  // Shuffle players at random (for now)
   const playerIds = cloneDeep(state.playerIds)
     .sort(() => Math.random() - 0.5)
     .sort((a, b) => (a === null ? 1 : b === null ? -1 : 0));
@@ -72,39 +72,56 @@ export const drawCards = (
   return { hand: newHand, tilePouch: newTilePouch };
 };
 
-// It's not perfect, but at least let's us check whether it's a straight line
-export const isMoveValid = (
-  move: Move[],
-  turn: number | undefined
-): {
+// export const isMoveValid = (move: Move[], state: GameState) => {
+//   const res = _isMoveValid(move, state);
+//   res.error && console.log("ERROR",res.error);
+//   return res;
+// };
+
+type ValidationResult = {
   valid: boolean;
   error?: string;
-} => {
-  let valid: boolean = true;
+};
+export const isMoveValid = (
+  move: Move[],
+  state: GameState,
+  t: (key: string) => string
+): ValidationResult => {
+  const res: ValidationResult = {
+    valid: true,
+  };
 
   // Check for first move
-  if (turn === 0 || turn === undefined) {
-    valid = move.length < 2;
-    return { valid, error: "First move should be longer than 1 letter" };
+  // It should be longer than 1 letter and pass through the center of the board
+  if (state.currentTurn === 1 && state.score.perTurn.length === 0) {
+    res.valid = move.length > 1;
+    if (!res.valid) {
+      res.error = t("moveValidation.firstMoveTooShort");
+      return res;
+    }
+
+    res.valid = move.some((m) => m.x === 7 && m.y === 7);
+    if (!res.valid) {
+      res.error = t("moveValidation.firstMoveNotCentered");
+      return res;
+    }
   }
 
-  // Check if the move is valid
-  if (move.length === 0) {
-    valid = false;
-    return { valid, error: "Empty move" };
+  // Validate length
+  if (move.length < 2) {
+    res.valid = false;
+    res.error = t("moveValidation.moveTooShort");
+    return res;
   }
 
-  if (move.length < 2) return { valid };
-
-  // Check if the move is a straight line
-  valid =
+  // Finally, check if the move is a straight line (kind of a good proxy)
+  res.valid =
     new Set(move.map(({ x }) => x)).size === 1 ||
     new Set(move.map(({ y }) => y)).size === 1;
 
-  return {
-    valid,
-    error: valid ? undefined : "It doesn't seem to be a valid move",
-  };
+  res.error = res.valid ? undefined : t("moveValidation.invalidMove");
+
+  return res;
 };
 
 export const getNextPlayerAndTurn = (
@@ -423,7 +440,7 @@ export const computeRemainingTilesScore = (
         playerHand
           .filter(Boolean)
           .map((t) => template.scoreMap[t!] ?? 0)
-          .reduce((accc, score) => accc + score, 0)
+          .reduce((acc2, score) => acc2 + score, 0)
       );
     },
     0
@@ -471,20 +488,18 @@ export const getWildcardLetter = (
 export const getWinningPlayerIdAndScore = (
   state: GameState
 ): [string | undefined, number | undefined] => {
-  const res: [string | undefined, number | undefined] | undefined =
-    state.gameOver
-      ? Object.entries(state.score.total).sort(
-          ([_, score1], [, score2]) => score2 - score1
-        )[0]
-      : undefined;
-  return res ?? [undefined, undefined];
+  return state.gameOver
+    ? Object.entries(state.score.total).sort(
+        ([_, score1], [, score2]) => score2 - score1
+      )[0]
+    : [undefined, undefined];
 };
 
 export const computeRankingPayload = (
   games_: GameState[],
   playerId: string
 ): Ranking => {
-  const games = [...games_].filter((g) => g.playerIds.includes(playerId));
+  const games = games_.filter((g) => g.playerIds.includes(playerId));
 
   const totalPoints: number = games.reduce(
     (acc, game) => acc + game.score.total[playerId]!,
@@ -497,9 +512,9 @@ export const computeRankingPayload = (
       acc +
       game.score.perTurn
         .filter((pt) => pt.playerId === playerId)
-        .reduce((accc, pt) => {
+        .reduce((acc2, pt) => {
           numTurns++;
-          return accc + pt.score;
+          return acc2 + pt.score;
         }, 0),
     0
   ) / (numTurns || 1)) satisfies number;
@@ -513,7 +528,7 @@ export const computeRankingPayload = (
       if (gamesWithNumPlayers.length === 0) return acc;
 
       const points = gamesWithNumPlayers.reduce(
-        (accc, g) => accc + g.score.total[playerId]!,
+        (acc2, g) => acc2 + g.score.total[playerId]!,
         0
       );
       return { ...acc, [numPlayers]: points / gamesWithNumPlayers.length };
@@ -534,7 +549,7 @@ export const computeRankingPayload = (
     );
     const totalPoints = gamesWithNumPlayers.reduce(
       (acc, g) =>
-        acc + Object.values(g.score.total).reduce((accc, pt) => accc + pt, 0),
+        acc + Object.values(g.score.total).reduce((acc2, pt) => acc2 + pt, 0),
       0
     );
 

@@ -107,7 +107,7 @@ export const PlayerControls = () => {
   };
 
   // Consts
-  const { valid, error } = isMoveValid(localProposedMove, state.currentTurn);
+  const { valid, error } = isMoveValid(localProposedMove, state, t);
 
   const showReadyCheckbox =
     state.currentVote?.type === VoteType.START_VOTE &&
