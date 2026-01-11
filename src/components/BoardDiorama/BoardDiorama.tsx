@@ -52,7 +52,7 @@ export const BoardDiorama = ({ game }: Props) => {
               tileOwnerId != null ? playerIds.indexOf(tileOwnerId)! : undefined;
 
             let inactiveTileColor: string =
-              "border border-gray-400 bg-gray-100 text-gray-400 rounded-xs";
+              "border bg-gray-100 rounded-xs border-r-gray-500 border-t-gray-500 border-l-gray-400 border-b-gray-400";
 
             if (playerIdx != null && userConfig?.showTilePlayerColors) {
               inactiveTileColor = cn(

@@ -35,7 +35,8 @@ export const TileComponent = ({
   const playerIdx: number | undefined =
     tileOwnerId != null ? getPlayerNumber(tileOwnerId, true) : undefined;
 
-  let inactiveTileColor: string = "border-gray-300 bg-gray-50 text-gray-400";
+  let inactiveTileColor: string =
+    "border-r-gray-400 border-t-gray-400 border-l-gray-300 border-b-gray-300 bg-gray-100 text-gray-400";
 
   if (userConfig?.showTilePlayerColors && playerIdx != null) {
     inactiveTileColor = cn(
@@ -46,10 +47,10 @@ export const TileComponent = ({
   }
 
   const tileClassName = cn(
-    "h-12 w-12 flex items-center justify-center text-2xl rounded-md h-full shadow select-none",
+    "h-12 w-12 flex items-center justify-center text-2xl rounded-md shadow select-none border-2",
     isProposedMove
-      ? "border-2 animate-border-spin animate-bg-cycle text-red-800"
-      : cn("border-2", inactiveTileColor)
+      ? "animate-border-spin animate-bg-cycle text-red-800"
+      : inactiveTileColor
   );
 
   const scoreClassName = cn(
@@ -58,6 +59,8 @@ export const TileComponent = ({
       playerIdx != null &&
       PLAYER_COLORS[playerIdx].tile.text != null
       ? PLAYER_COLORS[playerIdx].tile.text
+      : isProposedMove
+      ? "text-gray-500 opacity-50"
       : ""
   );
 
@@ -74,8 +77,11 @@ export const TileComponent = ({
         )}
       </div>
       {letterScore > 0 && (
-        <div className="absolute bottom-[1px] right-1 text-[10px]">
-          <p className={scoreClassName}>{letterScore}</p>
+        <div
+          className={"absolute bottom-[1px] right-1 text-[10px]"}
+          style={{ zIndex: 100 }}
+        >
+          <span className={scoreClassName}>{letterScore}</span>
         </div>
       )}
     </div>

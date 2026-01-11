@@ -54,7 +54,7 @@ export const SortableTile = ({
       {...listeners}
       {...attributes}
       onClick={handleClick}
-      className={`flex w-16 h-16 bg-gray-500 border border-black rounded-md items-center justify-center ${
+      className={`flex w-16 h-16 bg-gradient-to-br from-gray-800 to-gray-600 border border-black rounded-md items-center justify-center ${
         isSelected ? "ring-4 ring-yellow-400" : ""
       }`}
     >
