@@ -79,7 +79,7 @@ export const TileComponent = ({
       {letterScore > 0 && (
         <div
           className={"absolute bottom-[1px] right-1 text-[10px]"}
-          style={{ zIndex: 100 }}
+          style={{ zIndex: isProposedMove ? 100 : undefined }}
         >
           <span className={scoreClassName}>{letterScore}</span>
         </div>
