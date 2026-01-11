@@ -94,15 +94,15 @@ export const isMoveValid = (
   // Check for first move
   // It should be longer than 1 letter and pass through the center of the board
   if (state.currentTurn === 1 && state.score.perTurn.length === 0) {
-    res.valid = move.length > 1;
-    if (!res.valid) {
-      res.error = t("moveValidation.firstMoveTooShort");
-      return res;
-    }
-
     res.valid = move.some((m) => m.x === 7 && m.y === 7);
     if (!res.valid) {
       res.error = t("moveValidation.firstMoveNotCentered");
+      return res;
+    }
+
+    res.valid = move.length > 1;
+    if (!res.valid) {
+      res.error = t("moveValidation.firstMoveTooShort");
       return res;
     }
   }
