@@ -8,6 +8,7 @@ import {
 import { cloneDeep } from "lodash";
 import { LanguageTemplate } from "./collections/letterValueMap/languageTemplate.model";
 import { bonusMultiplierMap } from "./collections/game/game.utils";
+import { PLAYER_HAND_LENGTH } from "@/model/core.defaults";
 
 interface ScoringResult {
   score: number;
@@ -21,10 +22,9 @@ enum Dir {
   RIGHT = "right",
 }
 
-type Tuple = [number, number];
+type Vector = [number, number];
 
-// X, Y, and opposite direction
-const dirMapping: Record<Dir, Tuple> = {
+const dirVectorMapping: Record<Dir, Vector> = {
   [Dir.UP]: [0, -1],
   [Dir.DOWN]: [0, 1],
   [Dir.LEFT]: [-1, 0],
@@ -37,12 +37,13 @@ type WordLetter = {
 };
 
 type Word = {
-  horizontal: boolean;
+  isHorizontal: boolean;
   word: WordLetter[];
 };
 
-const LETTER_BONUSES = [Bonus.DOUBLE_LETTER, Bonus.TRIPLE_LETTER] as Bonus[];
-const WORD_BONUSES = [Bonus.DOUBLE_WORD, Bonus.TRIPLE_WORD] as Bonus[];
+const LETTER_BONUSES: Bonus[] = [Bonus.DOUBLE_LETTER, Bonus.TRIPLE_LETTER];
+const WORD_BONUSES: Bonus[] = [Bonus.DOUBLE_WORD, Bonus.TRIPLE_WORD];
+const HORIZONTAL_DIRS: Dir[] = [Dir.LEFT, Dir.RIGHT];
 
 export class ScoringService {
   private board: Board;
@@ -53,15 +54,15 @@ export class ScoringService {
     this.template = template;
   }
 
-  // Returns updated board
+  // Scores and returns updated board
   public score(playerMove: PlayerMove): ScoringResult {
-    const { move: moves } = playerMove;
+    const { move } = playerMove;
 
-    // Identify words formed by the move
+    // Identify all words formed by the move
     const words: Word[] = [];
 
-    for (const move of moves) {
-      const { letter, x, y } = move;
+    for (const movePart of move) {
+      const { letter, x, y } = movePart;
       const { bonus, tile } = this.board[y][x];
 
       if (tile) {
@@ -70,66 +71,65 @@ export class ScoringService {
         );
       }
 
-      // Helpers
-      const getDiff = (
-        moves: Move[],
-        dim: "x" | "y",
-        multi: 1 | -1
-      ): number => {
-        return (
-          Array(this.board.length)
-            .fill(0)
-            .map((_, i) => i + 1)
-            .find((dif) => {
-              const yIndex = dim === "x" ? y : y + multi * dif;
-              const xIndex = dim === "y" ? x : x + multi * dif;
-              return (
-                !this.board[yIndex]?.[xIndex]?.tile &&
-                !moves.some((m) => m.x === xIndex && m.y === yIndex)
-              );
-            })! - 1
-        );
-      };
+      /* Helpers */
+
+      // Checks if there is a tile in the given coordinate
+      const coordHasTile = (x: number, y: number): boolean =>
+        !!this.board[y]?.[x]?.tile || move.some((m) => m.x === x && m.y === y);
+
+      // Returns the number of squares between the current
+      // x,y coords and the first empty square in the given direction.
+      const getNumSquaresToNextEmptySquare = (dir: Dir): number =>
+        Array.from({ length: this.board.length }, (_, i) => i + 1).find(
+          (diff) =>
+            !coordHasTile(
+              !HORIZONTAL_DIRS.includes(dir)
+                ? x
+                : x + (dir === Dir.RIGHT ? 1 : -1) * diff,
+              HORIZONTAL_DIRS.includes(dir)
+                ? y
+                : y + (dir === Dir.DOWN ? 1 : -1) * diff
+            )
+        )! - 1;
 
       // Check in all directions for a neighboring letter
-      for (const [dir, [dx, dy]] of Object.entries(dirMapping)) {
-        const newX = x + dx;
-        const newY = y + dy;
+      const dirVectors = Object.entries(dirVectorMapping) as [Dir, Vector][];
 
-        const neighborExists =
-          this.board[newY]?.[newX]?.tile ||
-          moves.some((m) => m.x === newX && m.y === newY);
+      for (const [dir, [dx, dy]] of dirVectors) {
+        const x2 = x + dx;
+        const y2 = y + dy;
 
-        if (!neighborExists) continue;
+        // Ignore direction if no neighboring tile exists
+        if (!coordHasTile(x2, y2)) continue;
 
-        // Check the word's orientation (horizontal or vertical)
-        const horizontal = dir === Dir.LEFT || dir === Dir.RIGHT;
-
+        // Begin compiling the word
+        const isHorizontal = HORIZONTAL_DIRS.includes(dir);
         const word: Word = {
-          horizontal,
+          isHorizontal,
           word: [],
         };
 
-        if (horizontal) {
+        // TODO: I don't like this if statement, try to generalize horizontal/vertical cases?
+        /********************/
+        // If horizontal word
+        /********************/
+        if (isHorizontal) {
           // Check all the way to the left and right to find the start/end of the word
-          const wordStartX = x - getDiff(moves, "x", -1);
-          const wordEndX = x + getDiff(moves, "x", 1);
+          const wordStartX = x - getNumSquaresToNextEmptySquare(Dir.LEFT);
+          const wordEndX = x + getNumSquaresToNextEmptySquare(Dir.RIGHT);
 
           // Add letters to the word
           for (let x2 = wordStartX; x2 <= wordEndX; x2++) {
-            const moveLetter: Move | undefined = moves.find(
+            const moveLetter: Move | undefined = move.find(
               (m) => m.x === x2 && m.y === y
             );
 
-            // Check if the letter is already accounted for
-            // This only counts for the letters that are not in the move
-            const alreadyAccountedFor = words.some(
-              ({ horizontal: thisWordHorizontal, word }) => {
-                return word.some(
-                  ({ letter: l }) =>
-                    l.x === x2 && l.y === y && horizontal === thisWordHorizontal
-                );
-              }
+            // Check if the letter is already accounted for in another horizontal word
+            const alreadyAccountedFor = words.some((w) =>
+              w.word.some(
+                ({ letter: l }) =>
+                  l.x === x2 && l.y === y && isHorizontal === w.isHorizontal
+              )
             );
 
             if (alreadyAccountedFor) {
@@ -167,23 +167,25 @@ export class ScoringService {
           }
 
           words.push(word);
-        } else {
+        }
+        /********************/
+        // If vertical word
+        /********************/
+        else {
           // Check all the way to up and down to find the start/end of the word
-          const wordStartY = y - getDiff(moves, "y", -1);
-          const wordEndY = y + getDiff(moves, "y", 1);
+          const wordStartY = y - getNumSquaresToNextEmptySquare(Dir.UP);
+          const wordEndY = y + getNumSquaresToNextEmptySquare(Dir.DOWN);
 
           // Add letters to the word
           for (let y2 = wordStartY; y2 <= wordEndY; y2++) {
-            const moveLetter = moves.find((m) => m.x === x && m.y === y2);
+            const moveLetter = move.find((m) => m.x === x && m.y === y2);
 
-            // Check if the letter is already accounted for
-            const alreadyAccountedFor = words.some(
-              ({ horizontal: thisWordHorizontal, word }) => {
-                return word.some(
-                  ({ letter: l }) =>
-                    l.x === x && l.y === y2 && horizontal === thisWordHorizontal
-                );
-              }
+            // Check if the letter is already accounted for in another vertical word
+            const alreadyAccountedFor = words.some((w) =>
+              w.word.some(
+                ({ letter: l }) =>
+                  l.x === x && l.y === y2 && isHorizontal === w.isHorizontal
+              )
             );
 
             if (alreadyAccountedFor) {
@@ -247,7 +249,7 @@ export class ScoringService {
     });
 
     // Using all 7 letters gives you extra 50 points
-    if (moves.length === 7) {
+    if (move.length === PLAYER_HAND_LENGTH) {
       score += 50;
     }
 
