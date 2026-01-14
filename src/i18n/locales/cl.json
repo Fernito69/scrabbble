@@ -123,7 +123,8 @@
     "gameName": "Nombre de la partida:",
     "invalidWildcard": "El comodín no es válido, por favor intenta otra letra",
     "wildcardPrompt": "¿Qué letra deseas usar para el comodín?",
-    "showTilePlayerColors": "Colores de jugadores"
+    "showTilePlayerColors": "Colores de jugadores",
+    "awaitingApproval": "Esperando a:"
   },
   "ranking": {
     "hallOfFame": "Salón de la fama",
